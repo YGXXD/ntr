@@ -14,9 +14,9 @@ struct property_traits;
 template <typename ClassT, typename T>
 struct property_traits<T ClassT::*>
 {
-    using cpp_class = ClassT;
     using type = T;
     using pointer = T ClassT::*;
+    using cpp_class = ClassT;
 };
 
 } // namespace detail
