@@ -1,5 +1,6 @@
 #include "../ntr/ntr.h"
 #include <iostream>
+#include <any>
 
 class MyClass
 {
@@ -42,7 +43,7 @@ struct nclass<MyClass>
     static inline constexpr auto properties =
         std::make_tuple(nproperty("int", &MyClass::m_int), nproperty("float", &MyClass::m_float),
                         nproperty("point", &MyClass::get_point, &MyClass::set_point));
-    
+
     template <size_t ID>
     static inline constexpr auto get_field()
     {
@@ -63,14 +64,12 @@ int main(int argc, char* argv[])
 
     auto functions = ntr::nclass<MyClass>::functions;
     auto propertys = ntr::nclass<MyClass>::properties;
-    std::get<0>(functions)(&obj);
-    std::get<1>(functions)(&obj, 2.0f);
-    std::get<0>(functions)(&obj);
-
+    std::get<0>(functions).call(&obj);
+    std::get<1>(functions).call(&obj, 2.0f);
+    std::get<0>(functions).call(&obj);
     std::get<2>(propertys).set(&obj, &obj);
     std::cout << std::get<2>(propertys).get(&obj) << std::endl;
 
-    ntr::nclass<MyClass>::get_field<ntr::function_id<MyClass>("print")>()(&obj);
-
+    ntr::nclass<MyClass>::get_field<ntr::function_id<MyClass>("print")>().call(&obj);
     return 0;
 }

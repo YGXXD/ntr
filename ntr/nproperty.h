@@ -2,51 +2,83 @@
 
 #include <string_view>
 #include "detail/function_traits.h"
-#include "detail/property_traits.h"
 
 namespace ntr
 {
+
+template <typename Impl, typename T>
+struct iproperty
+{
+    inline constexpr auto get_name() const { return static_cast<const Impl*>(this)->get_name_impl(); }
+};
+
+template <typename Impl, typename ClassT, typename T>
+struct iproperty<Impl, T ClassT::*> : iproperty<Impl, void>
+{
+    inline constexpr T get(const ClassT* instance) const { return static_cast<const Impl*>(this)->get_impl(instance); }
+
+    inline constexpr void set(ClassT* instance, T&& value) const
+    {
+        static_cast<const Impl*>(this)->set_impl(instance, std::forward<T>(value));
+    }
+};
 
 template <typename... Args>
 struct property_impl;
 
 template <typename P>
-struct property_impl<P>
+struct property_impl<P> : iproperty<property_impl<P>, P>
 {
-    using traits = detail::property_traits<P>;
-    using cpp_class = typename traits::cpp_class;
+    template <typename Impl, typename T>
+    friend struct iproperty;
 
     constexpr property_impl(std::string_view&& pname, P&& mptr) : name(pname), object_pointer(mptr) {}
 
-    constexpr auto get_name() const { return name; }
-
-    inline constexpr auto get(const cpp_class* obj) const { return (obj->*object_pointer); }
-
-    inline void set(cpp_class* obj, const typename traits::type& value) const { (obj->*object_pointer) = value; }
-
 private:
+    constexpr auto get_name_impl() const { return name; }
+
+    template <typename ClassT>
+    inline constexpr auto get_impl(ClassT&& instance) const
+    {
+        return (std::forward<ClassT>(instance)->*object_pointer);
+    }
+
+    template <typename ClassT, typename T>
+    inline void set_impl(ClassT&& instance, T&& value) const
+    {
+        (std::forward<ClassT>(instance)->*object_pointer) = std::forward<T>(value);
+    }
+
     std::string_view name;
     P object_pointer;
 };
 
 template <typename Get, typename Set>
 struct property_impl<Get, Set>
+    : iproperty<property_impl<Get, Set>,
+                typename detail::function_traits<Get>::result detail::function_traits<Get>::cpp_class::*>
 {
-    using getter_traits = detail::function_traits<Get>;
-    using cpp_class = typename getter_traits::cpp_class;
+    template <typename Impl, typename T>
+    friend struct iproperty;
 
     constexpr property_impl(std::string_view&& pname, Get&& getter, Set&& setter)
         : name(pname), getter_pointer(getter), setter_pointer(setter)
     {
     }
 
-    constexpr auto get_name() const { return name; }
+private:
+    constexpr auto get_name_impl() const { return name; }
 
-    inline constexpr auto get(const cpp_class* obj) const { return (obj->*getter_pointer)(); }
-
-    inline void set(cpp_class* obj, const typename getter_traits::result& value) const
+    template <typename ClassT>
+    inline constexpr auto get_impl(ClassT&& instance) const
     {
-        (obj->*setter_pointer)(value);
+        return (std::forward<ClassT>(instance)->*getter_pointer)();
+    }
+
+    template <typename ClassT, typename T>
+    inline void set_impl(ClassT&& instance, T&& value) const
+    {
+        (std::forward<ClassT>(instance)->*setter_pointer)(std::forward<T>(value));
     }
 
 private:
