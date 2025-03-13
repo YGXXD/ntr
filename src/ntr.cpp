@@ -37,10 +37,22 @@ template <>
 struct nclass<MyClass>
 {
     static inline constexpr auto functions =
-        std::make_tuple(nfunction { &MyClass::print }, nfunction { &MyClass::multiply });
+        std::make_tuple(nfunction("print", &MyClass::print), nfunction("multiply", &MyClass::multiply));
 
-    static inline auto propertys = std::make_tuple(nproperty(&MyClass::m_int), nproperty(&MyClass::m_float),
-                                                   nproperty(&MyClass::get_point, &MyClass::set_point));
+    static inline constexpr auto properties =
+        std::make_tuple(nproperty("int", &MyClass::m_int), nproperty("float", &MyClass::m_float),
+                        nproperty("point", &MyClass::get_point, &MyClass::set_point));
+    
+    template <size_t ID>
+    static inline constexpr auto get_field()
+    {
+        constexpr auto type = ID & 0xc0000000;
+        constexpr auto idx = ID & 0x3fffffff;
+        if constexpr (type == 0)
+            return std::get<idx>(functions);
+        else if constexpr (type == 1)
+            return std::get<idx>(properties);
+    }
 };
 
 } // namespace ntr
@@ -50,14 +62,15 @@ int main(int argc, char* argv[])
     MyClass obj(1, 2.0f, nullptr);
 
     auto functions = ntr::nclass<MyClass>::functions;
-    auto propertys = ntr::nclass<MyClass>::propertys;
-
+    auto propertys = ntr::nclass<MyClass>::properties;
     std::get<0>(functions)(&obj);
     std::get<1>(functions)(&obj, 2.0f);
     std::get<0>(functions)(&obj);
 
     std::get<2>(propertys).set(&obj, &obj);
     std::cout << std::get<2>(propertys).get(&obj) << std::endl;
+
+    ntr::nclass<MyClass>::get_field<ntr::function_id<MyClass>("print")>()(&obj);
 
     return 0;
 }
