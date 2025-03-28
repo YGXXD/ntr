@@ -1,6 +1,6 @@
 Language: Cpp
 Standard: c++17
-ColumnLimit: 120
+ColumnLimit: 90
 IndentWidth: 4
 TabWidth: 4
 ContinuationIndentWidth: 4
@@ -21,7 +21,7 @@ SpaceBeforeCtorInitializerColon: true
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: false
-SeparateDefinitionBlocks: Always
+SeparateDefinitionBlocks: Leave
 AlignEscapedNewlines: Left
 AlignAfterOpenBracket: Align
 AlignConsecutiveDeclarations: false
