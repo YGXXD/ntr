@@ -43,13 +43,13 @@ struct nfactory<etype::eenum, T> : singleton<nfactory<etype::eenum, T>>
 
     inline nfactory& add(std::string_view name, T value)
     {
-        _type->add_item(name, value);
+        _type->add_eitem(name, value);
         return *this;
     }
 
     inline nfactory& remove(std::string_view name)
     {
-        _type->remove_item(name);
+        _type->remove_eitem(name);
         return *this;
     }
 

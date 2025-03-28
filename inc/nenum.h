@@ -1,8 +1,10 @@
 #pragma once
 
 #include "ntype.h"
+#include "neitem.h"
 #include <list>
 #include <unordered_map>
+#include <iostream>
 
 namespace ntr
 {
@@ -26,35 +28,43 @@ struct nenum : ntype
     //     return _enum_map.at(static_cast<long>(value)).first;
     // }
 
-private:
-    using EnumItem = std::pair<std::string, long>;
+    virtual std::vector<const nfield*> fields() const
+    {
+        std::vector<const nfield*> fields;
+        for (const auto& item : _items)
+        {
+            fields.push_back(&item);
+        }
+        return fields;
+    }
 
+private:
     template <typename T>
-    inline void add_item(std::string_view name, T value)
+    inline void add_eitem(std::string_view name, T value)
     {
         if (_str_map.find(name) == _str_map.end())
         {
-            _items.emplace_back(name, static_cast<long>(value));
-            const auto& item = _items.back();
-            _str_map.insert({ item.first, item });
-            _enum_map.insert({ item.second, item });
+            _items.emplace_back(this, name, static_cast<long>(value));
+            std::list<neitem>::const_iterator item = --_items.end();
+            _str_map.insert({ item->name(), item });
+            _enum_map.insert({ item->value(), item });
         }
     }
 
-    inline void remove_item(std::string_view name)
+    inline void remove_eitem(std::string_view name)
     {
         if (_str_map.find(name) != _str_map.end())
         {
-            const auto& item = _str_map.at(name);
-            _items.erase(std::find(_items.begin(), _items.end(), item));
-            _str_map.erase(item.first);
-            _enum_map.erase(item.second);
+            auto item = _str_map.at(name);
+            _items.erase(item);
+            _str_map.erase(item->name());
+            _enum_map.erase(item->value());
         }
     }
 
-    std::list<EnumItem> _items;
-    std::unordered_map<std::string_view, const EnumItem&> _str_map;
-    std::unordered_map<long, const EnumItem&> _enum_map;
+    std::list<neitem> _items;
+    std::unordered_map<std::string_view, std::list<neitem>::const_iterator> _str_map;
+    std::unordered_map<long, std::list<neitem>::const_iterator> _enum_map;
 };
 
 } // namespace ntr

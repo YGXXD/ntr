@@ -8,6 +8,14 @@ enum MyEnum
     MyEnum3 = 3
 };
 
+class MyClass
+{
+    int _value;
+
+    int value() const { return _value; }
+    void value(int value) { _value = value; }
+};
+
 int main(int argc, char* argv[])
 {
     ntr::nefuren::regist<bool>("bool");
@@ -33,6 +41,12 @@ int main(int argc, char* argv[])
     std::cout << ntr::nefuren::get_type("MyEnum")->name() << std::endl;
     std::cout << ntr::nefuren::get_type<bool>()->name() << std::endl;
     std::cout << ntr::nefuren::get_type("bool")->name() << std::endl;
-    
+
+    auto fields = ntr::nefuren::get_type<MyEnum>()->fields();
+    for (auto field : fields)
+    {
+        std::cout << field->name() << std::endl;
+    }
+
     return 0;
 }
