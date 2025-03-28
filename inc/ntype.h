@@ -13,9 +13,6 @@ enum class etype
     eenum,
 };
 
-struct nbasic;
-struct nenum;
-struct nclass;
 struct ntype
 {
     ntype(etype kind, std::string_view name) : _kind(kind), _name(name) {}
@@ -23,9 +20,9 @@ struct ntype
     inline etype kind() const { return _kind; }
     inline std::string_view name() const { return _name; }
 
-    const nbasic* as_basic() const;
-    const nenum* as_enum() const;
-    const nclass* as_class() const;
+    const struct nbasic* as_basic() const;
+    const struct nenum* as_enum() const;
+    const struct nclass* as_class() const;
 
 private:
     etype _kind;

@@ -9,17 +9,14 @@ template <etype E, typename T>
 struct nfactory;
 
 template <typename T>
-struct nfactory<etype::ebasic, T>
+struct nfactory<etype::ebasic, T> : singleton<nfactory<etype::ebasic, T>>
 {
     static_assert(std::is_fundamental_v<T>,
                   "basic type factory must be used with a fundamental type");
-    friend struct nefuren;
 
-    static inline nfactory& instance()
-    {
-        static nfactory _instance;
-        return _instance;
-    }
+    template <typename U>
+    friend struct singleton;
+    friend struct nefuren;
 
 private:
     nfactory() = default;
@@ -36,16 +33,13 @@ private:
 };
 
 template <typename T>
-struct nfactory<etype::eenum, T>
+struct nfactory<etype::eenum, T> : singleton<nfactory<etype::eenum, T>>
 {
     static_assert(std::is_enum_v<T>, "enum type factory must be used with an enum type");
-    friend struct nefuren;
 
-    static inline nfactory& instance()
-    {
-        static nfactory _instance;
-        return _instance;
-    }
+    template <typename U>
+    friend struct singleton;
+    friend struct nefuren;
 
     inline nfactory& add(std::string_view name, T value)
     {

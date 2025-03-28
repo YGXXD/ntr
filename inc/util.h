@@ -8,6 +8,16 @@ namespace ntr
 {
 
 template <typename T>
+struct singleton
+{
+    static inline T& instance()
+    {
+        static T _instance;
+        return _instance;
+    }
+};
+
+template <typename T>
 static inline constexpr etype cast_etype()
 {
     if constexpr (std::is_fundamental_v<T>)

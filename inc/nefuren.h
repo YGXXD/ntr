@@ -21,11 +21,7 @@ private:
     static std::unordered_map<std::string_view, ntype*> _type_map;
 
 public:
-    static inline const ntype* get_type(std::string_view name)
-    {
-        auto it = _type_map.find(name);
-        return it != _type_map.end() ? it->second : nullptr;
-    }
+    static const ntype* get_type(std::string_view name);
 
     template <typename T>
     static inline const ntype* get_type()
