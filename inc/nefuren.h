@@ -6,11 +6,11 @@
 namespace ntr
 {
 
-struct nregister
+struct nefuren
 {
 private:
-    nregister() = default;
-    ~nregister() = default;
+    nefuren() = default;
+    ~nefuren() = default;
 
     template <typename T>
     static inline auto& get_factory()

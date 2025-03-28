@@ -13,7 +13,7 @@ struct nfactory<etype::ebasic, T>
 {
     static_assert(std::is_fundamental_v<T>,
                   "basic type factory must be used with a fundamental type");
-    friend struct nregister;
+    friend struct nefuren;
 
     static inline nfactory& instance()
     {
@@ -39,7 +39,7 @@ template <typename T>
 struct nfactory<etype::eenum, T>
 {
     static_assert(std::is_enum_v<T>, "enum type factory must be used with an enum type");
-    friend struct nregister;
+    friend struct nefuren;
 
     static inline nfactory& instance()
     {
