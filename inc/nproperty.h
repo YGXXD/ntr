@@ -7,12 +7,8 @@ namespace ntr
 
 struct nproperty : nfield
 {
-    nproperty(ntype* owner_type, efield field_kind, const std::string& name)
+    nproperty(ntype* owner_type, efield field_kind, std::string_view name)
         : nfield(owner_type, field_kind, name)
-    {
-    }
-    nproperty(ntype* owner_type, efield field_kind, std::string&& name)
-        : nfield(owner_type, field_kind, std::move(name))
     {
     }
 

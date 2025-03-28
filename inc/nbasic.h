@@ -7,17 +7,17 @@ namespace ntr
 
 enum class ebasic
 {
-    ebool = 0,
+    ebool,
     echar,
     ewchar,
-    eint8_t,
-    eint16_t,
-    eint32_t,
-    eint64_t,
-    euint8_t,
-    euint16_t,
-    euint32_t,
-    euint64_t,
+    eint8,
+    eint16,
+    eint32,
+    eint64,
+    euint8,
+    euint16,
+    euint32,
+    euint64,
     efloat,
     edouble,
     elongdouble,
@@ -25,12 +25,8 @@ enum class ebasic
 
 struct nbasic : ntype
 {
-    nbasic(ebasic basic_kind, const std::string& name)
+    nbasic(ebasic basic_kind, std::string_view name)
         : ntype(etype::ebasic, name), _basic_kind(basic_kind)
-    {
-    }
-    nbasic(ebasic basic_kind, std::string&& name)
-        : ntype(etype::ebasic, std::move(name)), _basic_kind(basic_kind)
     {
     }
 

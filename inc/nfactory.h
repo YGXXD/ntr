@@ -1,14 +1,39 @@
 #pragma once
 
-#include "nbasic.h"
-#include "nenum.h"
-#include "nclass.h"
+#include "util.h"
 
 namespace ntr
 {
 
 template <etype E, typename T>
 struct nfactory;
+
+template <typename T>
+struct nfactory<etype::ebasic, T>
+{
+    static_assert(std::is_fundamental_v<T>,
+                  "basic type factory must be used with a fundamental type");
+    friend struct nregister;
+
+    static inline nfactory& instance()
+    {
+        static nfactory _instance;
+        return _instance;
+    }
+
+private:
+    nfactory() = default;
+    ~nfactory() = default;
+
+    inline nfactory& init(std::string_view name)
+    {
+        if (_type == nullptr)
+            _type = std::make_unique<nbasic>(cast_ebasic<T>(), name);
+        return *this;
+    }
+
+    std::unique_ptr<nbasic> _type = nullptr;
+};
 
 template <typename T>
 struct nfactory<etype::eenum, T>
@@ -22,13 +47,13 @@ struct nfactory<etype::eenum, T>
         return _instance;
     }
 
-    inline nfactory& add(const std::string& name, T value)
+    inline nfactory& add(std::string_view name, T value)
     {
         _type->add_item(name, value);
         return *this;
     }
 
-    inline nfactory& remove(const std::string& name)
+    inline nfactory& remove(std::string_view name)
     {
         _type->remove_item(name);
         return *this;
@@ -38,7 +63,7 @@ private:
     nfactory() = default;
     ~nfactory() = default;
 
-    inline nfactory& init(const std::string& name)
+    inline nfactory& init(std::string_view name)
     {
         if (_type == nullptr)
             _type = std::make_unique<nenum>(name);

@@ -7,8 +7,7 @@ namespace ntr
 
 struct nclass : ntype
 {
-    nclass(const std::string& name) : ntype(etype::eclass, name) {}
-    nclass(std::string&& name) : ntype(etype::eclass, std::move(name)) {}
+    nclass(std::string_view name) : ntype(etype::eclass, name) {}
 };
 
 } // namespace ntr

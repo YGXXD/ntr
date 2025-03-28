@@ -9,29 +9,28 @@ namespace ntr
 
 struct nenum : ntype
 {
-    nenum(const std::string& name) : ntype(etype::eenum, name) {}
-    nenum(std::string&& name) : ntype(etype::eenum, std::move(name)) {}
+    nenum(std::string_view name) : ntype(etype::eenum, name) {}
 
     template <etype E, typename T>
     friend struct nfactory;
 
-    template <typename T>
-    inline T get_value(const std::string& name) const
-    {
-        return static_cast<T>(_str_map.at(name).second);
-    }
+    // template <typename T>
+    // inline T get_value(std::string_view name) const
+    // {
+    //     return static_cast<T>(_str_map.at(name).second);
+    // }
 
-    template <typename T>
-    inline std::string_view get_name(T value) const
-    {
-        return _enum_map.at(static_cast<long>(value)).first;
-    }
+    // template <typename T>
+    // inline std::string_view get_name(T value) const
+    // {
+    //     return _enum_map.at(static_cast<long>(value)).first;
+    // }
 
 private:
     using EnumItem = std::pair<std::string, long>;
 
     template <typename T>
-    inline void add_item(const std::string& name, T value)
+    inline void add_item(std::string_view name, T value)
     {
         if (_str_map.find(name) == _str_map.end())
         {
@@ -42,7 +41,7 @@ private:
         }
     }
 
-    inline void remove_item(const std::string& name)
+    inline void remove_item(std::string_view name)
     {
         if (_str_map.find(name) != _str_map.end())
         {

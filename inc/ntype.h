@@ -18,8 +18,7 @@ struct nenum;
 struct nclass;
 struct ntype
 {
-    ntype(etype kind, const std::string& name) : _kind(kind), _name(name) {}
-    ntype(etype kind, std::string&& name) : _kind(kind), _name(std::move(name)) {}
+    ntype(etype kind, std::string_view name) : _kind(kind), _name(name) {}
 
     inline etype kind() const { return _kind; }
     inline std::string_view name() const { return _name; }

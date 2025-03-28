@@ -8,12 +8,8 @@ namespace ntr
 
 struct nfunction : nfield
 {
-    nfunction(ntype* owner_type, efield field_kind, const std::string& name)
+    nfunction(ntype* owner_type, efield field_kind, std::string_view name)
         : nfield(owner_type, field_kind, name)
-    {
-    }
-    nfunction(ntype* owner_type, efield field_kind, std::string&& name)
-        : nfield(owner_type, field_kind, std::move(name))
     {
     }
 

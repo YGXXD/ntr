@@ -13,12 +13,8 @@ enum class efield
 
 struct nfield
 {
-    nfield(ntype* owner_type, efield field_kind, const std::string& name)
+    nfield(ntype* owner_type, efield field_kind, std::string_view name)
         : _owner_type(owner_type), _field_kind(field_kind), _name(name)
-    {
-    }
-    nfield(ntype* owner_type, efield field_kind, std::string&& name)
-        : _owner_type(owner_type), _field_kind(field_kind), _name(std::move(name))
     {
     }
 
