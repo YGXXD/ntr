@@ -1,6 +1,7 @@
 #pragma once
 
-#include "nfunction.h"
+#include "nfield.h"
+#include <functional>
 
 namespace ntr
 {
@@ -13,8 +14,8 @@ struct nproperty : nfield
     }
 
     ntype* _property_type;
-    nfunction* _getter;
-    nfunction* _setter;
+    std::function<void*(void*)> _getter;
+    std::function<void(void*, void*)> _setter;
 };
 
 } // namespace ntr

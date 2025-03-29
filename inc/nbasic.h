@@ -30,7 +30,6 @@ struct nbasic : ntype
     {
     }
 
-    virtual std::vector<const nfield*> fields() const { return {}; }
     inline ebasic basic_kind() const { return _basic_kind; }
 
 private:

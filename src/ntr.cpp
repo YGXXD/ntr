@@ -37,16 +37,11 @@ int main(int argc, char* argv[])
         .add("MyEnum2", MyEnum2)
         .add("MyEnum3", MyEnum3);
 
-    std::cout << ntr::nefuren::get_type<MyEnum>()->name() << std::endl;
-    std::cout << ntr::nefuren::get_type("MyEnum")->name() << std::endl;
     std::cout << ntr::nefuren::get_type<bool>()->name() << std::endl;
-    std::cout << ntr::nefuren::get_type("bool")->name() << std::endl;
+    std::cout << ntr::nefuren::get_type("int8")->name() << std::endl;
 
-    auto fields = ntr::nefuren::get_type<MyEnum>()->fields();
-    for (auto field : fields)
-    {
-        std::cout << field->name() << std::endl;
-    }
+    const ntr::nenum* enum_type = ntr::nefuren::get_type<MyEnum>()->as_enum();
+    std::cout << enum_type->get_eitem(MyEnum::MyEnum1).value() << std::endl;
 
     return 0;
 }

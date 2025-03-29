@@ -4,7 +4,6 @@
 #include "neitem.h"
 #include <list>
 #include <unordered_map>
-#include <iostream>
 
 namespace ntr
 {
@@ -16,26 +15,15 @@ struct nenum : ntype
     template <etype E, typename T>
     friend struct nfactory;
 
-    // template <typename T>
-    // inline T get_value(std::string_view name) const
-    // {
-    //     return static_cast<T>(_str_map.at(name).second);
-    // }
-
-    // template <typename T>
-    // inline std::string_view get_name(T value) const
-    // {
-    //     return _enum_map.at(static_cast<long>(value)).first;
-    // }
-
-    virtual std::vector<const nfield*> fields() const
+    template <typename T>
+    inline std::enable_if_t<std::is_enum_v<T>, const neitem&> get_eitem(T value) const
     {
-        std::vector<const nfield*> fields;
-        for (const auto& item : _items)
-        {
-            fields.push_back(&item);
-        }
-        return fields;
+        return *_enum_map.at(static_cast<long>(value));
+    }
+
+    inline const neitem& get_eitem(std::string_view name) const
+    {
+        return *_str_map.at(static_cast<std::string_view>(name));
     }
 
 private:
