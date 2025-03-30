@@ -1,8 +1,6 @@
 #pragma once
 
-#include "nbasic.h"
-#include "nenum.h"
-#include "nclass.h"
+#include "ntype.h"
 #include "../singleton.h"
 #include <memory>
 
@@ -27,14 +25,9 @@ private:
     nfactory() = default;
     ~nfactory() = default;
 
-    inline nfactory& init(std::string_view name)
-    {
-        if (_type == nullptr)
-            _type = std::make_unique<nbasic>(nbasic::to_ebasic<T>(), name);
-        return *this;
-    }
+    nfactory& init(std::string_view name);
 
-    std::unique_ptr<nbasic> _type = nullptr;
+    std::unique_ptr<struct nbasic> _type = nullptr;
 };
 
 template <typename T>
@@ -47,30 +40,16 @@ struct nfactory<ntype::etype::eenum, T> : singleton<nfactory<ntype::etype::eenum
     friend struct singleton;
     friend struct nefuren;
 
-    inline nfactory& add(std::string_view name, T value)
-    {
-        _type->add_eitem(name, value);
-        return *this;
-    }
-
-    inline nfactory& remove(std::string_view name)
-    {
-        _type->remove_eitem(name);
-        return *this;
-    }
+    nfactory& add(std::string_view name, T value);
+    nfactory& remove(std::string_view name);
 
 private:
     nfactory() = default;
     ~nfactory() = default;
 
-    inline nfactory& init(std::string_view name)
-    {
-        if (_type == nullptr)
-            _type = std::make_unique<nenum>(name);
-        return *this;
-    }
+    nfactory& init(std::string_view name);
 
-    std::unique_ptr<nenum> _type = nullptr;
+    std::unique_ptr<struct nenum> _type = nullptr;
 };
 
 } // namespace ntr
