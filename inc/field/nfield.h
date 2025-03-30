@@ -15,14 +15,11 @@ enum class efield
 
 struct nfield
 {
-    nfield(struct ntype* parent_type, efield kind, std::string_view name)
-        : _parent_type(parent_type), _kind(kind), _name(name)
-    {
-    }
+    nfield(struct ntype* parent_type, efield kind, std::string_view name);
 
-    inline ntype* parent_type() const { return _parent_type; }
-    inline efield kind() const { return _kind; }
-    inline std::string_view name() const { return _name; }
+    inline const ntype* parent_type() const;
+    inline const efield kind() const;
+    inline const std::string_view name() const;
 
 private:
     ntype* _parent_type;

@@ -7,12 +7,10 @@ namespace ntr
 
 struct neitem : nfield
 {
-    neitem(ntype* parent_type, std::string_view name, long value)
-        : nfield(parent_type, efield::eeitem, name), _value(value)
-    {
-    }
+    template <typename E>
+    neitem(ntype* parent_type, std::string_view name, E value);
 
-    inline long value() const { return _value; }
+    inline long value() const;
 
 private:
     long _value;

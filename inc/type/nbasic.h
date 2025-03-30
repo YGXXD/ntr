@@ -57,7 +57,8 @@ struct nbasic : ntype
         else if constexpr (std::is_same_v<T, long double>)
             return ebasic::elongdouble;
         else
-            static_assert(always_false<T>::value, "unknown type");
+            static_assert(!std::is_same_v<T, T>, "unknown type, to_ebasic template param "
+                                                 "\"T\" is unknown fundamental type");
     }
 
     nbasic(ebasic basic_kind, std::string_view name)

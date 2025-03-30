@@ -32,7 +32,7 @@ private:
     {
         if (_str_map.find(name) == _str_map.end())
         {
-            _items.emplace_back(this, name, static_cast<long>(value));
+            _items.emplace_back(this, name, value);
             std::list<neitem>::const_iterator item = --_items.end();
             _str_map.insert({ item->name(), item });
             _enum_map.insert({ item->value(), item });

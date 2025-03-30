@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../util.h"
+#include <type_traits>
 #include <string>
 #include <string_view>
 
@@ -27,7 +27,9 @@ struct ntype
         else if constexpr (std::is_class_v<T>)
             return etype::eclass;
         else
-            static_assert(always_false<T>::value, "unknown type");
+            static_assert(!std::is_same_v<T, T>,
+                          "unknown type, to_etype template param \"T\" must be "
+                          "fundamental, enum and class");
     }
 
     ntype(etype kind, std::string_view name) : _kind(kind), _name(name) {}

@@ -1,4 +1,4 @@
-#include "../inc/nefuren.h"
+#include "../inc/ntr.h"
 #include <iostream>
 
 enum MyEnum

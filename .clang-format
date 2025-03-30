@@ -29,7 +29,7 @@ AlignConsecutiveMacros: None
 AlignConsecutiveAssignments: None
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: All 
+AllowShortFunctionsOnASingleLine: InlineOnly 
 AlwaysBreakTemplateDeclarations: Yes
 AllowShortLambdasOnASingleLine: Inline
 NamespaceIndentation: None

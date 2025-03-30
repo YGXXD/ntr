@@ -3,6 +3,8 @@
 #include "nbasic.h"
 #include "nenum.h"
 #include "nclass.h"
+#include "../singleton.h"
+#include <cassert>
 
 namespace ntr
 {
@@ -13,8 +15,9 @@ struct nfactory;
 template <typename T>
 struct nfactory<ntype::etype::ebasic, T> : singleton<nfactory<ntype::etype::ebasic, T>>
 {
-    static_assert(std::is_fundamental_v<T>,
-                  "basic type factory must be used with a fundamental type");
+    static_assert(
+        std::is_fundamental_v<T>,
+        "ntype::etype::ebasic factory template param \"T\" must be fundamental type");
 
     template <typename U>
     friend struct singleton;
@@ -37,7 +40,8 @@ private:
 template <typename T>
 struct nfactory<ntype::etype::eenum, T> : singleton<nfactory<ntype::etype::eenum, T>>
 {
-    static_assert(std::is_enum_v<T>, "enum type factory must be used with an enum type");
+    static_assert(std::is_enum_v<T>,
+                  "ntype::etype::eenum factory template param \"T\" must be enum type");
 
     template <typename U>
     friend struct singleton;
