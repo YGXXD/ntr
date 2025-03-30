@@ -19,7 +19,7 @@ struct nfactory<ntype::etype::ebasic, T> : singleton<nfactory<ntype::etype::ebas
 
     template <typename U>
     friend struct singleton;
-    friend struct nefuren;
+    friend struct nephren;
 
 private:
     nfactory() = default;
@@ -38,7 +38,7 @@ struct nfactory<ntype::etype::eenum, T> : singleton<nfactory<ntype::etype::eenum
 
     template <typename U>
     friend struct singleton;
-    friend struct nefuren;
+    friend struct nephren;
 
     nfactory& add(std::string_view name, T value);
     nfactory& remove(std::string_view name);

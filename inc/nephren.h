@@ -7,11 +7,11 @@
 namespace ntr
 {
 
-struct nefuren
+struct nephren
 {
 private:
-    nefuren() = default;
-    ~nefuren() = default;
+    nephren() = default;
+    ~nephren() = default;
 
     static std::unordered_map<std::string_view, ntype*> _type_map;
 

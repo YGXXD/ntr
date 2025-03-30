@@ -1,10 +1,10 @@
 # ntr
 
-> **n**efuren **t**ype **r**eflection，奈芙莲类型反射库
+> **n**ephren **t**ype **r**eflection，奈芙莲类型反射库
 
 ✨**如果你喜欢奈芙莲，给我点一点小星星**✨
 
-<img align='right' src='img/nefuren.png' width="192"></img>
+<img align='right' src='img/nephren.png' width="192"></img>
 
 ### 环境
 

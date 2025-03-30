@@ -2,7 +2,7 @@
 
 #include "nfunction.h"
 #include "../function_traits.h"
-#include "../nefuren.h"
+#include "../nephren.h"
 
 namespace ntr
 {
@@ -24,9 +24,9 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name, F fun)
     using Traits = member_function_traits<F>;
     if constexpr (std::is_member_function_pointer_v<F>)
     {
-        assert(parent_type != nefuren::get_type<Traits::return_type>());
+        assert(parent_type != nephren::get_type<Traits::return_type>());
     }
-    _return_type = nefuren::get_type<Traits::return_type>();
+    _return_type = nephren::get_type<Traits::return_type>();
     assert(_return_type != nullptr);
     init_argument_types(fun, std::make_index_sequence<Traits::param_count>());
 }
@@ -37,7 +37,7 @@ inline void nfunction::init_argument_types(F fun, std::index_sequence<Is...>)
 {
     using Traits = member_function_traits<F>;
     _argument_types.reserve(sizeof...(Is));
-    ((_argument_types.push_back(nefuren::get_type<Traits::template param_type<Is>>()),
+    ((_argument_types.push_back(nephren::get_type<Traits::template param_type<Is>>()),
       assert(_argument_types[Is] != nullptr)),
      ...);
 }
