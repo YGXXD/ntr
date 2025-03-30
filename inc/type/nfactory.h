@@ -4,7 +4,7 @@
 #include "nenum.h"
 #include "nclass.h"
 #include "../singleton.h"
-#include <cassert>
+#include <memory>
 
 namespace ntr
 {

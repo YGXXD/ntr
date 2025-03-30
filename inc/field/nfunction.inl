@@ -8,13 +8,13 @@ namespace ntr
 {
 
 // construct
-nfunction::nfunction(ntype* parent_type, std::string_view name)
+inline nfunction::nfunction(ntype* parent_type, std::string_view name)
     : nfield(parent_type, efield::eproperty, name)
 {
 }
 
 template <typename F>
-nfunction::nfunction(ntype* parent_type, std::string_view name, F fun)
+inline nfunction::nfunction(ntype* parent_type, std::string_view name, F fun)
     : nfunction(parent_type, name)
 {
     static_assert(std::is_function_v<std::remove_pointer_t<F>> ||

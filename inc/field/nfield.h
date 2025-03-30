@@ -17,9 +17,9 @@ struct nfield
 {
     nfield(struct ntype* parent_type, efield kind, std::string_view name);
 
-    inline const ntype* parent_type() const;
-    inline const efield kind() const;
-    inline const std::string_view name() const;
+    const ntype* parent_type() const;
+    const efield kind() const;
+    const std::string_view name() const;
 
 private:
     ntype* _parent_type;

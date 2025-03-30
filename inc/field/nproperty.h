@@ -13,7 +13,7 @@ struct nproperty : nfield
     template <typename GetF, typename SetF>
     nproperty(ntype* parent_type, std::string_view name, GetF getter, SetF setter);
 
-    inline const ntype* property_type() const;
+    const ntype* property_type() const;
 
 private:
     nproperty(ntype* parent_type, std::string_view name);

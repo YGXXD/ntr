@@ -10,7 +10,7 @@ struct neitem : nfield
     template <typename E>
     neitem(ntype* parent_type, std::string_view name, E value);
 
-    inline long value() const;
+    long value() const;
 
 private:
     long _value;

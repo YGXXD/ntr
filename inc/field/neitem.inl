@@ -7,7 +7,7 @@ namespace ntr
 
 // construct
 template <typename E>
-neitem::neitem(ntype* parent_type, std::string_view name, E value)
+inline neitem::neitem(ntype* parent_type, std::string_view name, E value)
     : nfield(parent_type, efield::eeitem, name), _value(static_cast<long>(value))
 {
 }
