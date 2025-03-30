@@ -9,6 +9,6 @@ project(ntr)
 
 add_executable(ntr 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ntr.cpp 
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/ntype.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/ntype.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/nefuren.cpp
 ) 

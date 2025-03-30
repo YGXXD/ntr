@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "nfactory.h"
+#include "type/nfactory.h"
 
 namespace ntr
 {
@@ -15,7 +15,7 @@ private:
     template <typename T>
     static inline auto& get_factory()
     {
-        return nfactory<cast_etype<T>(), T>::instance();
+        return nfactory<ntype::to_etype<T>(), T>::instance();
     }
 
     static std::unordered_map<std::string_view, ntype*> _type_map;

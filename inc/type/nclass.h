@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ntype.h"
-#include "nproperty.h"
-#include "nfunction.h"
+#include "../field/nproperty.h"
+#include "../field/nfunction.h"
 
 namespace ntr
 {

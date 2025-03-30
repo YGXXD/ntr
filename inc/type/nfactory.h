@@ -1,15 +1,17 @@
 #pragma once
 
-#include "util.h"
+#include "nbasic.h"
+#include "nenum.h"
+#include "nclass.h"
 
 namespace ntr
 {
 
-template <etype E, typename T>
+template <ntype::etype E, typename T>
 struct nfactory;
 
 template <typename T>
-struct nfactory<etype::ebasic, T> : singleton<nfactory<etype::ebasic, T>>
+struct nfactory<ntype::etype::ebasic, T> : singleton<nfactory<ntype::etype::ebasic, T>>
 {
     static_assert(std::is_fundamental_v<T>,
                   "basic type factory must be used with a fundamental type");
@@ -25,7 +27,7 @@ private:
     inline nfactory& init(std::string_view name)
     {
         if (_type == nullptr)
-            _type = std::make_unique<nbasic>(cast_ebasic<T>(), name);
+            _type = std::make_unique<nbasic>(nbasic::to_ebasic<T>(), name);
         return *this;
     }
 
@@ -33,7 +35,7 @@ private:
 };
 
 template <typename T>
-struct nfactory<etype::eenum, T> : singleton<nfactory<etype::eenum, T>>
+struct nfactory<ntype::etype::eenum, T> : singleton<nfactory<ntype::etype::eenum, T>>
 {
     static_assert(std::is_enum_v<T>, "enum type factory must be used with an enum type");
 

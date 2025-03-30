@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ntype.h"
-#include "neitem.h"
+#include "../field/neitem.h"
 #include <list>
 #include <unordered_map>
 
