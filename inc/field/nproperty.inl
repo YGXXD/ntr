@@ -17,7 +17,7 @@ inline nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT:
     : nproperty(parent_type, name)
 {
     assert(parent_type == nephren::get_type<ClassT>());
-    _property_type = nephren::get_type<std::decay_t<T>>();
+    _property_type = nephren::get_type<std::remove_pointer_t<std::decay_t<T>>>();
     assert(_property_type != nullptr);
 }
 
@@ -27,7 +27,7 @@ inline nproperty::nproperty(ntype* parent_type, std::string_view name,
     : nproperty(parent_type, name)
 {
     assert(parent_type == nephren::get_type<ClassT>());
-    _property_type = nephren::get_type<std::decay_t<T>>();
+    _property_type = nephren::get_type<std::remove_pointer_t<std::decay_t<T>>>();
     assert(_property_type != nullptr);
 }
 

@@ -108,4 +108,5 @@ nfactory<ntype::etype::eclass, T>::remove(std::string_view name)
     _type->remove(name);
     return *this;
 }
+
 } // namespace ntr
