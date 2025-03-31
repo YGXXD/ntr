@@ -6,7 +6,7 @@ namespace ntr
 {
 
 // construct
-inline nfield::nfield(struct ntype* parent_type, efield kind, std::string_view name)
+inline nfield::nfield(const struct ntype* parent_type, efield kind, std::string_view name)
     : _parent_type(parent_type), _kind(kind), _name(name)
 {
 }
