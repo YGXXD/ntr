@@ -10,10 +10,16 @@ enum MyEnum
 
 class MyClass
 {
-    int _value;
-
+public:
     int value() const { return _value; }
     void value(int value) { _value = value; }
+
+    void print() const { std::cout << "MyClass" << std::endl; }
+
+    double float_value;
+
+private:
+    int _value;
 };
 
 int main(int argc, char* argv[])
@@ -32,16 +38,27 @@ int main(int argc, char* argv[])
     ntr::nephren::regist<float>("float");
     ntr::nephren::regist<double>("double");
     ntr::nephren::regist<long double>("longdouble");
+
     ntr::nephren::regist<MyEnum>("MyEnum")
-        .add("MyEnum1", MyEnum1)
-        .add("MyEnum2", MyEnum2)
-        .add("MyEnum3", MyEnum3);
+        .item("MyEnum1", MyEnum1)
+        .item("MyEnum2", MyEnum2)
+        .item("MyEnum3", MyEnum3);
+
+    ntr::nephren::regist<MyClass>("MyClass")
+        .function("print", &MyClass::print)
+        .property("float_value", &MyClass::float_value)
+        .property("value", &MyClass::value, &MyClass::value);
 
     std::cout << ntr::nephren::get_type<bool>()->name() << std::endl;
     std::cout << ntr::nephren::get_type("int8")->name() << std::endl;
 
     const ntr::nenum* enum_type = ntr::nephren::get_type<MyEnum>()->as_enum();
-    std::cout << enum_type->get_eitem(MyEnum::MyEnum1).value() << std::endl;
+    std::cout << enum_type->get_eitem(MyEnum::MyEnum3).value() << std::endl;
+
+    const ntr::nclass* class_type = ntr::nephren::get_type<MyClass>()->as_class();
+    std::cout << class_type->get_property("float_value").property_type()->name()
+              << std::endl;
+    std::cout << class_type->get_function("print").name() << std::endl;
 
     return 0;
 }

@@ -11,7 +11,7 @@ inline nenum::nenum(std::string_view name) : ntype(etype::eenum, name)
 }
 
 // logic
-template <typename T, typename>
+template <typename T>
 inline void nenum::add_eitem(std::string_view name, T value)
 {
     if (_str_map.find(name) == _str_map.end())
@@ -34,7 +34,7 @@ inline void nenum::remove_eitem(std::string_view name)
     }
 }
 
-template <typename T, typename>
+template <typename T>
 inline const neitem& nenum::get_eitem(T value) const
 {
     return *_enum_map.at(static_cast<long>(value));

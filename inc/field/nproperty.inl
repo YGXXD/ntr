@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nproperty.h"
+#include "../nephren.h"
 
 namespace ntr
 {
@@ -11,16 +12,23 @@ inline nproperty::nproperty(ntype* parent_type, std::string_view name)
 {
 }
 
-template <typename P>
-inline nproperty::nproperty(ntype* parent_type, std::string_view name, P menmber_object_ptr)
-    : nfield(parent_type, efield::efunction, name)
+template <typename T, typename ClassT>
+inline nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::*member))
+    : nproperty(parent_type, name)
 {
+    assert(parent_type == nephren::get_type<ClassT>());
+    _property_type = nephren::get_type<std::decay_t<T>>();
+    assert(_property_type != nullptr);
 }
 
-template <typename GetF, typename SetF>
-inline nproperty::nproperty(ntype* parent_type, std::string_view name, GetF getter, SetF setter)
-    : nfield(parent_type, efield::efunction, name)
+template <typename T, typename ClassT>
+inline nproperty::nproperty(ntype* parent_type, std::string_view name,
+                            T (ClassT::*getter)() const, void (ClassT::*setter)(T))
+    : nproperty(parent_type, name)
 {
+    assert(parent_type == nephren::get_type<ClassT>());
+    _property_type = nephren::get_type<std::decay_t<T>>();
+    assert(_property_type != nullptr);
 }
 
 // get

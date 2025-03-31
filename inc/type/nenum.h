@@ -15,12 +15,12 @@ struct nenum : ntype
     template <etype E, typename T>
     friend struct nfactory;
 
-    template <typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
+    template <typename T>
     const neitem& get_eitem(T value) const;
     const neitem& get_eitem(std::string_view name) const;
 
 private:
-    template <typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
+    template <typename T>
     void add_eitem(std::string_view name, T value);
     void remove_eitem(std::string_view name);
 

@@ -8,17 +8,18 @@ namespace ntr
 
 struct nproperty : nfield
 {
-    template <typename P>
-    nproperty(ntype* parent_type, std::string_view name, P menmber_object_ptr);
-    template <typename GetF, typename SetF>
-    nproperty(ntype* parent_type, std::string_view name, GetF getter, SetF setter);
+    template <typename T, typename ClassT>
+    nproperty(ntype* parent_type, std::string_view name, T(ClassT::*member));
+    template <typename T, typename ClassT>
+    nproperty(ntype* parent_type, std::string_view name, T (ClassT::*getter)() const,
+              void (ClassT::*setter)(T));
 
     const ntype* property_type() const;
 
 private:
     nproperty(ntype* parent_type, std::string_view name);
 
-    ntype* _property_type;
+    const ntype* _property_type;
     // std::function<void*(void*)> _getter;
     // std::function<void(void*, void*)> _setter;
 };
