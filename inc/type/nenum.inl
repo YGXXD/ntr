@@ -42,7 +42,7 @@ inline const neitem& nenum::get_eitem(T value) const
 
 inline const neitem& nenum::get_eitem(std::string_view name) const
 {
-    return *_str_map.at(static_cast<std::string_view>(name));
+    return *_str_map.at(std::string_view(name));
 }
 
 } // namespace ntr
