@@ -21,7 +21,7 @@ struct nfield
     const efield kind() const;
     const std::string_view name() const;
 
-private:
+protected:
     const ntype* _parent_type;
     efield _kind;
     std::string _name;

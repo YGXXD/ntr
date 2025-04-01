@@ -28,7 +28,7 @@ struct ntype
     const struct nenum* as_enum() const;
     const struct nclass* as_class() const;
 
-private:
+protected:
     etype _kind;
     std::string _name;
 };

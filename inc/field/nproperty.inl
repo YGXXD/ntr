@@ -23,7 +23,7 @@ inline nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT:
 
 template <typename T, typename ClassT>
 inline nproperty::nproperty(ntype* parent_type, std::string_view name,
-                            T (ClassT::*getter)() const, void (ClassT::*setter)(T))
+                            T (ClassT::*getter)() const, void (ClassT::*setter)(const T&))
     : nproperty(parent_type, name)
 {
     assert(parent_type == nephren::get_type<ClassT>());

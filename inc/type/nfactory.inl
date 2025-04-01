@@ -95,7 +95,7 @@ template <typename T>
 template <typename U>
 inline nfactory<ntype::etype::eclass, T>&
 nfactory<ntype::etype::eclass, T>::property(std::string_view name, U (T::*getter)() const,
-                                            void (T::*setter)(U))
+                                            void (T::*setter)(const U&))
 {
     _type->add_property(name, getter, setter);
     return *this;

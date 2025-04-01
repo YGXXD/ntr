@@ -74,7 +74,7 @@ struct nfactory<ntype::etype::eclass, T> : singleton<nfactory<ntype::etype::ecla
     nfactory& property(std::string_view name, U(T::*member));
     template <typename U>
     nfactory& property(std::string_view name, U (T::*getter)() const,
-                       void (T::*setter)(U));
+                       void (T::*setter)(const U&));
 
     nfactory& remove(std::string_view name);
 
