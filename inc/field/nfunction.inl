@@ -44,11 +44,11 @@ inline void nfunction::init_function_types()
 {
     if constexpr (!std::is_same_v<Ret, void>)
     {
-        _return_type = nephren::get_type<std::remove_pointer_t<std::decay_t<Ret>>>();
+        _return_type = nephren::get_type<std::decay_t<Ret>>();
         assert(_return_type != nullptr);
     }
     _argument_types.reserve(sizeof...(Args));
-    ((_argument_types.push_back(nephren::get_type<std::remove_pointer_t<std::decay_t<Args>>>()),
+    ((_argument_types.push_back(nephren::get_type<std::decay_t<Args>>()),
       assert(_argument_types.back() != nullptr)),
      ...);
 }
