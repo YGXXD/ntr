@@ -12,7 +12,7 @@ class MyClass
 {
 public:
     int value() const { return _value; }
-    void value(int value) { _value = value; }
+    void value(const int& value) { _value = value; }
 
     void print() const { std::cout << "MyClass" << std::endl; }
 
