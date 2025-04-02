@@ -1,20 +1,20 @@
 #pragma once
 
 #include "nfactory.h"
-#include "nbasic.h"
+#include "nnumeric.h"
 #include "nenum.h"
 #include "nclass.h"
 
 namespace ntr
 {
 
-// ntype::etype::ebasic impl
+// ntype::etype::enumeric impl
 template <typename T>
-inline nfactory<ntype::etype::ebasic, T>&
-nfactory<ntype::etype::ebasic, T>::init(std::string_view name)
+inline nfactory<ntype::etype::enumeric, T>&
+nfactory<ntype::etype::enumeric, T>::init(std::string_view name)
 {
     if (_type == nullptr)
-        _type = std::make_unique<nbasic>(nbasic::to_ebasic<T>(), name);
+        _type = std::make_unique<nnumeric>(nnumeric::to_enumeric<T>(), name);
     return *this;
 }
 

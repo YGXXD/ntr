@@ -10,7 +10,7 @@
 
 // type impl
 #include "type/ntype.inl"
-#include "type/nbasic.inl"
+#include "type/nnumeric.inl"
 #include "type/nenum.inl"
 #include "type/nclass.inl"
 #include "type/nfactory.inl"

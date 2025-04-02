@@ -1,0 +1,38 @@
+#pragma once
+
+#include "ntype.h"
+
+namespace ntr
+{
+
+struct nnumeric : ntype
+{
+    enum class enumeric : uint8_t
+    {
+        eint8,
+        eint16,
+        eint32,
+        eint64,
+        euint8,
+        euint16,
+        euint32,
+        euint64,
+        efloat,
+        edouble,
+    };
+
+    template <typename T>
+    static constexpr enumeric to_enumeric();
+
+    nnumeric(enumeric numeric_kind, std::string_view name);
+
+    enumeric numeric_kind() const;
+
+private:
+    enumeric _numeric_kind;
+    bool _is_signed;
+    bool _is_floating_point;
+    bool _is_integral;
+};
+
+} // namespace ntr

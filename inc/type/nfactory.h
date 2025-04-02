@@ -11,11 +11,11 @@ template <ntype::etype E, typename T>
 struct nfactory;
 
 template <typename T>
-struct nfactory<ntype::etype::ebasic, T> : singleton<nfactory<ntype::etype::ebasic, T>>
+struct nfactory<ntype::etype::enumeric, T> : singleton<nfactory<ntype::etype::enumeric, T>>
 {
     static_assert(
         std::is_fundamental_v<T>,
-        "ntype::etype::ebasic factory template param \"T\" must be fundamental type");
+        "ntype::etype::enumeric factory template param \"T\" must be fundamental type");
 
     template <typename U>
     friend struct singleton;
@@ -27,7 +27,7 @@ private:
 
     nfactory& init(std::string_view name);
 
-    std::unique_ptr<struct nbasic> _type = nullptr;
+    std::unique_ptr<struct nnumeric> _type = nullptr;
 };
 
 template <typename T>

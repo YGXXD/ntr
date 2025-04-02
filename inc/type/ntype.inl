@@ -9,8 +9,9 @@ namespace ntr
 template <typename T>
 inline constexpr ntype::etype ntype::to_etype()
 {
+    static_assert(!std::is_const_v<T>, "to_etype template param \"T\" must be non-const");
     if constexpr (std::is_fundamental_v<T>)
-        return etype::ebasic;
+        return etype::enumeric;
     else if constexpr (std::is_enum_v<T>)
         return etype::eenum;
     else if constexpr (std::is_class_v<T>)

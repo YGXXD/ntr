@@ -8,10 +8,9 @@ namespace ntr
 
 struct ntype
 {
-
-    enum class etype
+    enum class etype : uint8_t
     {
-        ebasic,
+        enumeric,
         eclass,
         eenum,
     };
@@ -24,7 +23,11 @@ struct ntype
     etype kind() const;
     std::string_view name() const;
 
-    const struct nbasic* as_basic() const;
+    bool is_numeric() const;
+    bool is_enum() const;
+    bool is_class() const;
+
+    const struct nnumeric* as_numeric() const;
     const struct nenum* as_enum() const;
     const struct nclass* as_class() const;
 

@@ -24,9 +24,6 @@ private:
 
 int main(int argc, char* argv[])
 {
-    ntr::nephren::regist<bool>("bool");
-    ntr::nephren::regist<char>("char");
-    ntr::nephren::regist<wchar_t>("wchar");
     ntr::nephren::regist<int8_t>("int8");
     ntr::nephren::regist<int16_t>("int16");
     ntr::nephren::regist<int32_t>("int32");
@@ -37,7 +34,6 @@ int main(int argc, char* argv[])
     ntr::nephren::regist<uint64_t>("uint64");
     ntr::nephren::regist<float>("float");
     ntr::nephren::regist<double>("double");
-    ntr::nephren::regist<long double>("longdouble");
 
     ntr::nephren::regist<MyEnum>("MyEnum")
         .item("MyEnum1", MyEnum1)
@@ -49,7 +45,7 @@ int main(int argc, char* argv[])
         .property("float_value", &MyClass::float_value)
         .property("value", &MyClass::value, &MyClass::value);
 
-    std::cout << ntr::nephren::get_type<bool>()->name() << std::endl;
+    std::cout << ntr::nephren::get_type<uint64_t>()->name() << std::endl;
     std::cout << ntr::nephren::get_type("int8")->name() << std::endl;
 
     const ntr::nenum* enum_type = ntr::nephren::get_type<MyEnum>()->as_enum();

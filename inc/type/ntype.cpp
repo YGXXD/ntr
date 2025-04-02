@@ -1,30 +1,39 @@
 #include "ntype.h"
-#include "nbasic.h"
+#include "nnumeric.h"
 #include "nenum.h"
 #include "nclass.h"
 
 namespace ntr
 {
 
-const nbasic* ntype::as_basic() const
+bool ntype::is_numeric() const
 {
-    if (_kind == etype::ebasic)
-        return static_cast<const nbasic*>(this);
-    return nullptr;
+    return _kind == etype::enumeric;
+}
+
+bool ntype::is_enum() const
+{
+    return _kind == etype::eenum;
+}
+
+bool ntype::is_class() const
+{
+    return _kind == etype::eclass;
+}
+
+const nnumeric* ntype::as_numeric() const
+{
+    return is_numeric() ? static_cast<const nnumeric*>(this) : nullptr;
 }
 
 const nenum* ntype::as_enum() const
 {
-    if (_kind == etype::eenum)
-        return static_cast<const nenum*>(this);
-    return nullptr;
+    return is_enum() ? static_cast<const nenum*>(this) : nullptr;
 }
 
 const nclass* ntype::as_class() const
 {
-    if (_kind == etype::eclass)
-        return static_cast<const nclass*>(this);
-    return nullptr;
+    return is_class() ? static_cast<const nclass*>(this) : nullptr;
 }
 
 } // namespace ntr

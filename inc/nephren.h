@@ -27,7 +27,8 @@ public:
     template <typename T>
     static inline auto& factory()
     {
-        return nfactory<ntype::to_etype<T>(), T>::instance();
+        using U = std::remove_const_t<T>;
+        return nfactory<ntype::to_etype<U>(), U>::instance();
     }
 
     template <typename T>
