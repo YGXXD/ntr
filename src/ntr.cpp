@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     std::cout << ntr::nephren::get_type<uint64_t>()->name() << std::endl;
     std::cout << ntr::nephren::get_type("int8")->name() << std::endl;
 
-    const ntr::nenum* enum_type = ntr::nephren::get_type<MyEnum>()->as_enum();
+    const ntr::nenum* enum_type = ntr::nephren::get_type("MyEnum")->as_enum();
     std::cout << enum_type->get_eitem(MyEnum::MyEnum3)->value() << std::endl;
 
     const ntr::nclass* class_type = ntr::nephren::get_type<MyClass>()->as_class();

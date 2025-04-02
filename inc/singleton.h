@@ -8,7 +8,7 @@ struct singleton
 {
     static inline T& instance()
     {
-        static T _instance;
+        static T _instance {};
         return _instance;
     }
 };

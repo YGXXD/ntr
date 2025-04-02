@@ -1,7 +1,6 @@
 #pragma once
 
 #include "type/nfactory.h"
-#include <cassert>
 #include <unordered_map>
 
 namespace ntr
@@ -13,7 +12,7 @@ private:
     nephren() = default;
     ~nephren() = default;
 
-    static std::unordered_map<std::string_view, ntype*> _type_map;
+    static std::unordered_map<std::string_view, const ntype*> _type_map;
 
 public:
     static const ntype* get_type(std::string_view name);
@@ -27,30 +26,18 @@ public:
     template <typename T>
     static inline auto& factory()
     {
-        using U = std::remove_const_t<T>;
-        return nfactory<ntype::to_etype<U>(), U>::instance();
+        return nfactory<ntype::to_etype<T>(), T>::instance();
     }
 
     template <typename T>
     static inline auto& regist(std::string_view name)
     {
         auto& fact = factory<T>();
-        assert(_type_map.find(name) == _type_map.end());
-        assert(fact._type == nullptr);
-        fact.init(name);
+        if (_type_map.find(name) != _type_map.end())
+            std::__throw_logic_error("type already registered");
+        fact._type->_name = name;
         _type_map.insert({ fact._type->name(), fact._type.get() });
         return fact;
-    }
-
-    template <typename T>
-    static inline void unregist()
-    {
-        auto& fact = factory<T>();
-        if (fact._type != nullptr)
-        {
-            _type_map.erase(fact._type->name());
-            fact._type.reset();
-        }
     }
 };
 

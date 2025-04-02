@@ -8,24 +8,25 @@
 namespace ntr
 {
 
+// ntype::etype::eunknown impl
+template <typename T>
+inline nfactory<ntype::etype::eunknown, T>::nfactory()
+{
+    _type = std::make_unique<ntype>(ntype::etype::eunknown, typeid(T).name());
+}
+
 // ntype::etype::enumeric impl
 template <typename T>
-inline nfactory<ntype::etype::enumeric, T>&
-nfactory<ntype::etype::enumeric, T>::init(std::string_view name)
+inline nfactory<ntype::etype::enumeric, T>::nfactory()
 {
-    if (_type == nullptr)
-        _type = std::make_unique<nnumeric>(nnumeric::to_enumeric<T>(), name);
-    return *this;
+    _type = std::make_unique<nnumeric>(nnumeric::to_enumeric<T>(), typeid(T).name());
 }
 
 // ntype::etype::eenum impl
 template <typename T>
-inline nfactory<ntype::etype::eenum, T>&
-nfactory<ntype::etype::eenum, T>::init(std::string_view name)
+inline nfactory<ntype::etype::eenum, T>::nfactory()
 {
-    if (_type == nullptr)
-        _type = std::make_unique<nenum>(name);
-    return *this;
+    _type = std::make_unique<nenum>(typeid(T).name());
 }
 
 template <typename T>
@@ -46,12 +47,9 @@ nfactory<ntype::etype::eenum, T>::remove(std::string_view name)
 
 // ntype::etype::eclass impl
 template <typename T>
-inline nfactory<ntype::etype::eclass, T>&
-nfactory<ntype::etype::eclass, T>::init(std::string_view name)
+inline nfactory<ntype::etype::eclass, T>::nfactory()
 {
-    if (_type == nullptr)
-        _type = std::make_unique<nclass>(name);
-    return *this;
+    _type = std::make_unique<nclass>(typeid(T).name());
 }
 
 template <typename T>

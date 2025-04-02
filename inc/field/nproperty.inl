@@ -16,9 +16,9 @@ template <typename T, typename ClassT>
 inline nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::*member))
     : nproperty(parent_type, name)
 {
-    assert(parent_type == nephren::get_type<ClassT>());
-    _property_type = nephren::get_type<std::decay_t<T>>();
-    assert(_property_type != nullptr);
+    if (parent_type != nephren::get_type<ClassT>())
+        std::__throw_invalid_argument("parent type is not property's class type");
+    _property_type = nephren::get_type<T>();
 }
 
 template <typename T, typename ClassT>
@@ -26,9 +26,9 @@ inline nproperty::nproperty(ntype* parent_type, std::string_view name,
                             T (ClassT::*getter)() const, void (ClassT::*setter)(const T&))
     : nproperty(parent_type, name)
 {
-    assert(parent_type == nephren::get_type<ClassT>());
-    _property_type = nephren::get_type<std::decay_t<T>>();
-    assert(_property_type != nullptr);
+    if (parent_type != nephren::get_type<ClassT>())
+        std::__throw_invalid_argument("parent type is not property's class type");
+    _property_type = nephren::get_type<T>();
 }
 
 // get

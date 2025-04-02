@@ -10,19 +10,16 @@ namespace ntr
 
 struct nenum : ntype
 {
-    template <etype E, typename T>
-    friend struct nfactory;
-
     nenum(std::string_view name);
 
-    template <typename T>
-    const struct neitem* get_eitem(T value) const;
-    const struct neitem* get_eitem(std::string_view name) const;
-
-private:
-    void add_eitem(std::unique_ptr<neitem>&& item);
+    void add_eitem(std::unique_ptr<struct neitem>&& item);
     void remove_eitem(std::string_view name);
 
+    template <typename T>
+    const neitem* get_eitem(T value) const;
+    const neitem* get_eitem(std::string_view name) const;
+
+private:
     std::list<std::unique_ptr<neitem>> _items;
     std::unordered_map<std::string_view,
                        std::list<std::unique_ptr<neitem>>::const_iterator>

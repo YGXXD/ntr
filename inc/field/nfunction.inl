@@ -25,7 +25,8 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
                             Ret (ClassT::*fun)(Args...))
     : nfunction(parent_type, name)
 {
-    assert(parent_type == nephren::get_type<ClassT>());
+    if (parent_type != nephren::get_type<ClassT>())
+        std::__throw_invalid_argument("parent type is not function'sclass type");
     init_function_types<Ret, Args...>();
 }
 
@@ -34,7 +35,8 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
                             Ret (ClassT::*fun)(Args...) const)
     : nfunction(parent_type, name)
 {
-    assert(parent_type == nephren::get_type<ClassT>());
+    if (parent_type != nephren::get_type<ClassT>())
+        std::__throw_invalid_argument("parent type is not function's class type");
     init_function_types<Ret, Args...>();
 }
 
@@ -42,15 +44,9 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
 template <typename Ret, typename... Args>
 inline void nfunction::init_function_types()
 {
-    if constexpr (!std::is_same_v<Ret, void>)
-    {
-        _return_type = nephren::get_type<std::decay_t<Ret>>();
-        assert(_return_type != nullptr);
-    }
+    _return_type = nephren::get_type<Ret>();
     _argument_types.reserve(sizeof...(Args));
-    ((_argument_types.push_back(nephren::get_type<std::decay_t<Args>>()),
-      assert(_argument_types.back() != nullptr)),
-     ...);
+    ((_argument_types.push_back(nephren::get_type<Args>())), ...);
 }
 
 // get

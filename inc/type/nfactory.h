@@ -11,29 +11,43 @@ template <ntype::etype E, typename T>
 struct nfactory;
 
 template <typename T>
-struct nfactory<ntype::etype::enumeric, T> : singleton<nfactory<ntype::etype::enumeric, T>>
+struct nfactory<ntype::etype::eunknown, T>
+    : singleton<nfactory<ntype::etype::eunknown, T>>
+{
+    template <typename U>
+    friend struct singleton;
+    friend struct nephren;
+
+private:
+    nfactory();
+    ~nfactory() = default;
+
+    std::unique_ptr<ntype> _type;
+};
+
+template <typename T>
+struct nfactory<ntype::etype::enumeric, T>
+    : singleton<nfactory<ntype::etype::enumeric, T>>
 {
     static_assert(
-        std::is_fundamental_v<T>,
-        "ntype::etype::enumeric factory template param \"T\" must be fundamental type");
+        ntype::is_numeric<T>(),
+        "ntype::etype::enumeric factory template param \"T\" must be numeric type");
 
     template <typename U>
     friend struct singleton;
     friend struct nephren;
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    nfactory& init(std::string_view name);
-
-    std::unique_ptr<struct nnumeric> _type = nullptr;
+    std::unique_ptr<struct nnumeric> _type;
 };
 
 template <typename T>
 struct nfactory<ntype::etype::eenum, T> : singleton<nfactory<ntype::etype::eenum, T>>
 {
-    static_assert(std::is_enum_v<T>,
+    static_assert(ntype::is_enum<T>(),
                   "ntype::etype::eenum factory template param \"T\" must be enum type");
 
     template <typename U>
@@ -44,19 +58,17 @@ struct nfactory<ntype::etype::eenum, T> : singleton<nfactory<ntype::etype::eenum
     nfactory& remove(std::string_view name);
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    nfactory& init(std::string_view name);
-
-    std::unique_ptr<struct nenum> _type = nullptr;
+    std::unique_ptr<struct nenum> _type;
 };
 
 template <typename T>
 struct nfactory<ntype::etype::eclass, T> : singleton<nfactory<ntype::etype::eclass, T>>
 {
     static_assert(
-        std::is_class_v<T>,
+        ntype::is_class<T>(),
         "ntype::etype::eclass factory template param \"T\" must be class or struct type");
 
     template <typename U>
@@ -79,12 +91,10 @@ struct nfactory<ntype::etype::eclass, T> : singleton<nfactory<ntype::etype::ecla
     nfactory& remove(std::string_view name);
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    nfactory& init(std::string_view name);
-
-    std::unique_ptr<struct nclass> _type = nullptr;
+    std::unique_ptr<struct nclass> _type;
 };
 
 } // namespace ntr

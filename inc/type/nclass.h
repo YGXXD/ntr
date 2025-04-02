@@ -12,18 +12,15 @@ struct nclass : ntype
 {
     nclass(std::string_view name);
 
-    template <etype E, typename T>
-    friend struct nfactory;
-
-    const struct nfunction* get_function(std::string_view name) const;
-    const struct nproperty* get_property(std::string_view name) const;
-
-private:
-    void add_function(std::unique_ptr<nfunction>&& function);
-    void add_property(std::unique_ptr<nproperty>&& property);
+    void add_function(std::unique_ptr<struct nfunction>&& function);
+    void add_property(std::unique_ptr<struct nproperty>&& property);
 
     void remove(std::string_view name);
 
+    const nfunction* get_function(std::string_view name) const;
+    const nproperty* get_property(std::string_view name) const;
+
+private:
     std::list<std::unique_ptr<nfunction>> _functions;
     std::list<std::unique_ptr<nproperty>> _properties;
 

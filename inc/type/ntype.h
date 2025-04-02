@@ -12,15 +12,23 @@ struct ntype
     {
         eunknown,
         enumeric,
-        eclass,
         eenum,
+        eclass,
     };
+
+    template <typename T>
+    static constexpr bool is_numeric();
+
+    template <typename T>
+    static constexpr bool is_enum();
+
+    template <typename T>
+    static constexpr bool is_class();
 
     template <typename T>
     static constexpr etype to_etype();
 
-    template <etype E, typename T>
-    friend struct nfactory;
+    friend struct nephren;
 
     ntype(etype kind, std::string_view name);
 
