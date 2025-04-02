@@ -42,7 +42,7 @@ void nclass::remove(std::string_view name)
     }
 }
 
-const struct nfunction* nclass::get_function(std::string_view name) const
+const nfunction* nclass::get_function(std::string_view name) const
 {
     auto function = _field_map.at(name).first;
     if (function == _functions.end())
@@ -50,7 +50,7 @@ const struct nfunction* nclass::get_function(std::string_view name) const
     return function->get();
 }
 
-const struct nproperty* nclass::get_property(std::string_view name) const
+const nproperty* nclass::get_property(std::string_view name) const
 {
     auto property = _field_map.at(name).second;
     if (property == _properties.end())

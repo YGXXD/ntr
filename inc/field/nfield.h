@@ -5,16 +5,17 @@
 namespace ntr
 {
 
-enum class efield
+class nfield
 {
-    eeitem,
-    eproperty,
-    efunction
-};
+public:
+    enum class efield
+    {
+        eeitem,
+        eproperty,
+        efunction
+    };
 
-struct nfield
-{
-    nfield(const struct ntype* parent_type, efield kind, std::string_view name);
+    nfield(const class ntype* parent_type, efield kind, std::string_view name);
 
     inline const ntype* parent_type() const { return _parent_type; }
     inline efield kind() const { return _kind; }

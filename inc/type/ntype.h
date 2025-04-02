@@ -5,8 +5,9 @@
 namespace ntr
 {
 
-struct ntype
+class ntype
 {
+public:
     enum class etype : uint8_t
     {
         eunknown,
@@ -37,9 +38,9 @@ struct ntype
     inline bool is_enum() const { return _kind == etype::eenum; }
     inline bool is_class() const { return _kind == etype::eclass; }
 
-    const struct nnumeric* as_numeric() const;
-    const struct nenum* as_enum() const;
-    const struct nclass* as_class() const;
+    const class nnumeric* as_numeric() const;
+    const class nenum* as_enum() const;
+    const class nclass* as_class() const;
 
 private:
     etype _kind;

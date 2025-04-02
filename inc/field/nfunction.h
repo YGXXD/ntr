@@ -5,8 +5,10 @@
 namespace ntr
 {
 
-struct nfunction : nfield
+class nfunction : public nfield
 {
+public:
+    nfunction(ntype* parent_type, std::string_view name);
     template <typename Ret, typename... Args>
     nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args...));
     template <typename Ret, typename ClassT, typename... Args>
@@ -19,8 +21,6 @@ struct nfunction : nfield
     inline const auto& argument_types() const { return _argument_types; }
 
 private:
-    nfunction(ntype* parent_type, std::string_view name);
-
     template <typename Ret, typename... Args>
     void init_function_types();
 

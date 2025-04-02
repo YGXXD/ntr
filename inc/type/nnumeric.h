@@ -5,8 +5,9 @@
 namespace ntr
 {
 
-struct nnumeric : ntype
+class nnumeric : public ntype
 {
+public:
     enum class enumeric : uint8_t
     {
         eint8,

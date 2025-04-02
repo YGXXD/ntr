@@ -1,37 +1,12 @@
 #pragma once
 
-#include "type/nfactory.h"
+#include "core/nfactory.h"
 
 namespace ntr
 {
 
-struct nephren
+class nephren
 {
-private:
-    nephren() = default;
-    ~nephren() = default;
-
-    static std::unordered_map<std::string_view, const ntype*> _type_map;
-
-    template <typename T>
-    static inline auto& factory()
-    {
-        return nfactory<ntype::to_etype<T>(), T>::instance();
-    }
-
-    template <typename T>
-    static inline auto& regist(std::string_view name)
-    {
-        auto& fact = factory<T>();
-        if (_type_map.find(name) != _type_map.end())
-            throw std::logic_error((std::string("type \"") + std::string(name) +
-                                    std::string("\" already registered"))
-                                       .c_str());
-        fact._type->set_name(name);
-        _type_map.insert({ fact._type->name(), fact._type.get() });
-        return fact;
-    }
-
 public:
     static const ntype* get_type(std::string_view name);
 
@@ -75,6 +50,31 @@ public:
     static inline auto& numeric_(std::string_view name)
     {
         return regist<T>(name);
+    }
+
+private:
+    nephren() = default;
+    ~nephren() = default;
+
+    static std::unordered_map<std::string_view, const ntype*> _type_map;
+
+    template <typename T>
+    static inline auto& factory()
+    {
+        return nfactory<ntype::to_etype<T>(), T>::instance();
+    }
+
+    template <typename T>
+    static inline auto& regist(std::string_view name)
+    {
+        auto& fact = factory<T>();
+        if (_type_map.find(name) != _type_map.end())
+            throw std::logic_error((std::string("type \"") + std::string(name) +
+                                    std::string("\" already registered"))
+                                       .c_str());
+        fact._type->set_name(name);
+        _type_map.insert({ fact._type->name(), fact._type.get() });
+        return fact;
     }
 };
 

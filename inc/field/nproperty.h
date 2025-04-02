@@ -5,8 +5,10 @@
 namespace ntr
 {
 
-struct nproperty : nfield
+class nproperty : public nfield
 {
+public:
+    nproperty(ntype* parent_type, std::string_view name);
     template <typename T, typename ClassT>
     nproperty(ntype* parent_type, std::string_view name, T(ClassT::*member));
     template <typename T, typename ClassT>
@@ -16,8 +18,6 @@ struct nproperty : nfield
     inline const ntype* property_type() const { return _property_type; }
 
 private:
-    nproperty(ntype* parent_type, std::string_view name);
-
     const ntype* _property_type;
     // std::function<nobject(nobject)> _getter;
     // std::function<void(nobject, nobject)> _setter;

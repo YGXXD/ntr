@@ -10,4 +10,6 @@
 #include "type/ntype.inl"
 #include "type/nnumeric.inl"
 #include "type/nenum.inl"
-#include "type/nfactory.inl"
+
+// core impl
+#include "core/nfactory.inl"

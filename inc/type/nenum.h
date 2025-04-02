@@ -5,11 +5,12 @@
 namespace ntr
 {
 
-struct nenum : ntype
+class nenum : public ntype
 {
+public:
     nenum(std::string_view name);
 
-    void add_eitem(std::unique_ptr<struct neitem>&& item);
+    void add_eitem(std::unique_ptr<class neitem>&& item);
     void remove_eitem(std::string_view name);
 
     template <typename T>

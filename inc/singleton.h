@@ -4,8 +4,9 @@ namespace ntr
 {
 
 template <typename T>
-struct singleton
+class singleton
 {
+public:
     static inline T& instance()
     {
         static T _instance {};

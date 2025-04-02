@@ -1,9 +1,9 @@
 #pragma once
 
 #include "nfactory.h"
-#include "nnumeric.h"
-#include "nenum.h"
-#include "nclass.h"
+#include "../type/nnumeric.h"
+#include "../type/nenum.h"
+#include "../type/nclass.h"
 #include "../field/neitem.h"
 #include "../field/nfunction.h"
 #include "../field/nproperty.h"

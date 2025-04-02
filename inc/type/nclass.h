@@ -5,12 +5,13 @@
 namespace ntr
 {
 
-struct nclass : ntype
+class nclass : public ntype
 {
+public:
     nclass(std::string_view name);
 
-    void add_function(std::unique_ptr<struct nfunction>&& function);
-    void add_property(std::unique_ptr<struct nproperty>&& property);
+    void add_function(std::unique_ptr<class nfunction>&& function);
+    void add_property(std::unique_ptr<class nproperty>&& property);
 
     void remove(std::string_view name);
 

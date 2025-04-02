@@ -5,8 +5,9 @@
 namespace ntr
 {
 
-struct neitem : nfield
+class neitem : public nfield
 {
+public:
     neitem(ntype* parent_type, std::string_view name, long value);
 
     inline long value() const { return _value; }
