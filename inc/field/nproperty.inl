@@ -11,7 +11,7 @@ inline nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT:
     : nproperty(parent_type, name)
 {
     if (parent_type != nephren::get_type<ClassT>())
-        std::__throw_invalid_argument("parent type is not property's class type");
+        throw std::invalid_argument("parent type is not property's class type");
     _property_type = nephren::get_type<T>();
 }
 
@@ -21,7 +21,7 @@ inline nproperty::nproperty(ntype* parent_type, std::string_view name,
     : nproperty(parent_type, name)
 {
     if (parent_type != nephren::get_type<ClassT>())
-        std::__throw_invalid_argument("parent type is not property's class type");
+        throw std::invalid_argument("parent type is not property's class type");
     _property_type = nephren::get_type<T>();
 }
 

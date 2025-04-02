@@ -1,9 +1,6 @@
 #pragma once
 
 #include "ntype.h"
-#include <memory>
-#include <list>
-#include <unordered_map>
 
 namespace ntr
 {

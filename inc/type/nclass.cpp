@@ -46,7 +46,7 @@ const struct nfunction* nclass::get_function(std::string_view name) const
 {
     auto function = _field_map.at(name).first;
     if (function == _functions.end())
-        std::__throw_out_of_range("unordered_map::at: key not found");
+        throw std::out_of_range("unordered_map::at: key not found");
     return function->get();
 }
 
@@ -54,7 +54,7 @@ const struct nproperty* nclass::get_property(std::string_view name) const
 {
     auto property = _field_map.at(name).second;
     if (property == _properties.end())
-        std::__throw_out_of_range("unordered_map::at: key not found");
+        throw std::out_of_range("unordered_map::at: key not found");
     return property->get();
 }
 

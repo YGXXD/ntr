@@ -2,7 +2,6 @@
 
 #include "ntype.h"
 #include "../singleton.h"
-#include <memory>
 
 namespace ntr
 {

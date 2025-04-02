@@ -1,7 +1,6 @@
 #pragma once
 
 #include "nfield.h"
-#include <functional>
 
 namespace ntr
 {
