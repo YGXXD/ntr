@@ -32,7 +32,7 @@ template <typename T>
 inline nfactory<ntype::etype::eenum, T>&
 nfactory<ntype::etype::eenum, T>::item(std::string_view name, T value)
 {
-    _type->add_eitem(name, value);
+    _type->add_eitem(std::make_unique<neitem>(_type.get(), name, value));
     return *this;
 }
 
@@ -59,7 +59,7 @@ template <typename Ret, typename... Args>
 inline nfactory<ntype::etype::eclass, T>&
 nfactory<ntype::etype::eclass, T>::function(std::string_view name, Ret (*fun)(Args...))
 {
-    _type->add_function(name, fun);
+    _type->add_function(std::make_unique<nfunction>(_type.get(), name, fun));
     return *this;
 }
 
@@ -68,7 +68,7 @@ template <typename Ret, typename... Args>
 inline nfactory<ntype::etype::eclass, T>&
 nfactory<ntype::etype::eclass, T>::function(std::string_view name, Ret (T::*fun)(Args...))
 {
-    _type->add_function(name, fun);
+    _type->add_function(std::make_unique<nfunction>(_type.get(), name, fun));
     return *this;
 }
 
@@ -78,7 +78,7 @@ inline nfactory<ntype::etype::eclass, T>&
 nfactory<ntype::etype::eclass, T>::function(std::string_view name,
                                             Ret (T::*fun)(Args...) const)
 {
-    _type->add_function(name, fun);
+    _type->add_function(std::make_unique<nfunction>(_type.get(), name, fun));
     return *this;
 }
 
@@ -87,7 +87,7 @@ template <typename U>
 inline nfactory<ntype::etype::eclass, T>&
 nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::*member))
 {
-    _type->add_property(name, member);
+    _type->add_property(std::make_unique<nproperty>(_type.get(), name, member));
     return *this;
 }
 
@@ -97,7 +97,7 @@ inline nfactory<ntype::etype::eclass, T>&
 nfactory<ntype::etype::eclass, T>::property(std::string_view name, U (T::*getter)() const,
                                             void (T::*setter)(const U&))
 {
-    _type->add_property(name, getter, setter);
+    _type->add_property(std::make_unique<nproperty>(_type.get(), name, getter, setter));
     return *this;
 }
 

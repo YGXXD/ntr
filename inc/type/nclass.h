@@ -1,8 +1,9 @@
 #pragma once
 
 #include "ntype.h"
-#include "../field/nproperty.h"
-#include "../field/nfunction.h"
+#include <memory>
+#include <list>
+#include <unordered_map>
 
 namespace ntr
 {
@@ -14,22 +15,22 @@ struct nclass : ntype
     template <etype E, typename T>
     friend struct nfactory;
 
-    const nfunction& get_function(std::string_view name) const;
-    const nproperty& get_property(std::string_view name) const;
+    const struct nfunction* get_function(std::string_view name) const;
+    const struct nproperty* get_property(std::string_view name) const;
 
 private:
-    template <typename F>
-    void add_function(std::string_view name, F fun);
-
-    template <typename M>
-    void add_property(std::string_view name, M member);
-    template <typename Get, typename Set>
-    void add_property(std::string_view name, Get getter, Set setter);
+    void add_function(std::unique_ptr<nfunction>&& function);
+    void add_property(std::unique_ptr<nproperty>&& property);
 
     void remove(std::string_view name);
 
-    std::vector<nfunction> _functions;
-    std::vector<nproperty> _properties;
+    std::list<std::unique_ptr<nfunction>> _functions;
+    std::list<std::unique_ptr<nproperty>> _properties;
+
+    std::unordered_map<std::string_view,
+                       std::pair<std::list<std::unique_ptr<nfunction>>::const_iterator,
+                                 std::list<std::unique_ptr<nproperty>>::const_iterator>>
+        _field_map;
 };
 
 } // namespace ntr

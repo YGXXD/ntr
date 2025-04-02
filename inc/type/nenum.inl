@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nenum.h"
+#include "../field/neitem.h"
 
 namespace ntr
 {
@@ -10,39 +11,37 @@ inline nenum::nenum(std::string_view name) : ntype(etype::eenum, name)
 {
 }
 
-// logic
-template <typename T>
-inline void nenum::add_eitem(std::string_view name, T value)
+inline void nenum::add_eitem(std::unique_ptr<neitem>&& item)
 {
-    if (_str_map.find(name) == _str_map.end())
+    if (_str_field_map.find(item.get()->name()) == _str_field_map.end())
     {
-        _items.emplace_back(this, name, value);
-        std::list<neitem>::const_iterator item = --_items.end();
-        _str_map.insert({ item->name(), item });
-        _enum_map.insert({ item->value(), item });
+        _items.push_back(std::move(item));
+        auto item = --_items.end();
+        _str_field_map.insert({ item->get()->name(), item });
+        _enum_field_map.insert({ item->get()->value(), item });
     }
 }
 
 inline void nenum::remove_eitem(std::string_view name)
 {
-    if (_str_map.find(name) != _str_map.end())
+    if (_str_field_map.find(name) != _str_field_map.end())
     {
-        auto item = _str_map.at(name);
+        auto item = _str_field_map.at(name);
+        _str_field_map.erase(item->get()->name());
+        _enum_field_map.erase(item->get()->value());
         _items.erase(item);
-        _str_map.erase(item->name());
-        _enum_map.erase(item->value());
     }
 }
 
 template <typename T>
-inline const neitem& nenum::get_eitem(T value) const
+inline const neitem* nenum::get_eitem(T value) const
 {
-    return *_enum_map.at(static_cast<long>(value));
+    return _enum_field_map.at(static_cast<long>(value))->get();
 }
 
-inline const neitem& nenum::get_eitem(std::string_view name) const
+inline const neitem* nenum::get_eitem(std::string_view name) const
 {
-    return *_str_map.at(std::string_view(name));
+    return _str_field_map.at(std::string_view(name))->get();
 }
 
 } // namespace ntr
