@@ -6,12 +6,6 @@
 namespace ntr
 {
 
-// construct
-inline nfunction::nfunction(ntype* parent_type, std::string_view name)
-    : nfield(parent_type, efield::eproperty, name)
-{
-}
-
 template <typename Ret, typename... Args>
 inline nfunction::nfunction(ntype* parent_type, std::string_view name,
                             Ret (*fun)(Args...))
@@ -40,24 +34,12 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
     init_function_types<Ret, Args...>();
 }
 
-// logic
 template <typename Ret, typename... Args>
 inline void nfunction::init_function_types()
 {
     _return_type = nephren::get_type<Ret>();
     _argument_types.reserve(sizeof...(Args));
     ((_argument_types.push_back(nephren::get_type<Args>())), ...);
-}
-
-// get
-inline const ntype* nfunction::return_type() const
-{
-    return _return_type;
-}
-
-inline const std::vector<const ntype*>& nfunction::argument_types() const
-{
-    return _argument_types;
 }
 
 } // namespace ntr

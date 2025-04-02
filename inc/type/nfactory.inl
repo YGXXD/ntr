@@ -4,6 +4,9 @@
 #include "nnumeric.h"
 #include "nenum.h"
 #include "nclass.h"
+#include "../field/neitem.h"
+#include "../field/nfunction.h"
+#include "../field/nproperty.h"
 
 namespace ntr
 {
@@ -33,7 +36,8 @@ template <typename T>
 inline nfactory<ntype::etype::eenum, T>&
 nfactory<ntype::etype::eenum, T>::item(std::string_view name, T value)
 {
-    _type->add_eitem(std::make_unique<neitem>(_type.get(), name, value));
+    _type->add_eitem(
+        std::make_unique<neitem>(_type.get(), name, static_cast<long>(value)));
     return *this;
 }
 

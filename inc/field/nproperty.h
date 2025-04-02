@@ -14,7 +14,7 @@ struct nproperty : nfield
     nproperty(ntype* parent_type, std::string_view name, T (ClassT::*getter)() const,
               void (ClassT::*setter)(const T&));
 
-    const ntype* property_type() const;
+    inline const ntype* property_type() const { return _property_type; }
 
 private:
     nproperty(ntype* parent_type, std::string_view name);

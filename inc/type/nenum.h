@@ -16,7 +16,8 @@ struct nenum : ntype
     void remove_eitem(std::string_view name);
 
     template <typename T>
-    const neitem* get_eitem(T value) const;
+    const neitem* get_eitem(std::enable_if_t<!std::is_same_v<T, long>, T> value) const;
+    const neitem* get_eitem(long value) const;
     const neitem* get_eitem(std::string_view name) const;
 
 private:

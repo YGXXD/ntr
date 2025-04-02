@@ -30,14 +30,13 @@ struct ntype
 
     ntype(etype kind, std::string_view name);
 
-    etype kind() const;
-    std::string_view name() const;
-    void set_name(std::string_view name);
-
-    bool is_unknown() const;
-    bool is_numeric() const;
-    bool is_enum() const;
-    bool is_class() const;
+    inline etype kind() const { return _kind; }
+    inline std::string_view name() const { return _name; }
+    inline void set_name(std::string_view name) { _name = name; }
+    inline bool is_unknown() const { return _kind == etype::eunknown; }
+    inline bool is_numeric() const { return _kind == etype::enumeric; }
+    inline bool is_enum() const { return _kind == etype::eenum; }
+    inline bool is_class() const { return _kind == etype::eclass; }
 
     const struct nnumeric* as_numeric() const;
     const struct nenum* as_enum() const;

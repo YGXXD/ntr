@@ -16,8 +16,8 @@ struct nfunction : nfield
     nfunction(ntype* parent_type, std::string_view name,
               Ret (ClassT::*fun)(Args...) const);
 
-    const ntype* return_type() const;
-    const std::vector<const ntype*>& argument_types() const;
+    inline const ntype* return_type() const { return _return_type; }
+    inline const auto& argument_types() const { return _argument_types; }
 
 private:
     nfunction(ntype* parent_type, std::string_view name);

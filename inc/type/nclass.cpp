@@ -1,5 +1,3 @@
-#pragma once
-
 #include "nclass.h"
 #include "../field/nfunction.h"
 #include "../field/nproperty.h"
@@ -7,13 +5,11 @@
 namespace ntr
 {
 
-// construct
-inline nclass::nclass(std::string_view name) : ntype(etype::eclass, name)
+nclass::nclass(std::string_view name) : ntype(etype::eclass, name)
 {
 }
 
-// logic
-inline void nclass::add_function(std::unique_ptr<nfunction>&& function)
+void nclass::add_function(std::unique_ptr<nfunction>&& function)
 {
     if (_field_map.find(function.get()->name()) == _field_map.end())
     {
@@ -23,7 +19,7 @@ inline void nclass::add_function(std::unique_ptr<nfunction>&& function)
     }
 }
 
-inline void nclass::add_property(std::unique_ptr<nproperty>&& property)
+void nclass::add_property(std::unique_ptr<nproperty>&& property)
 {
     if (_field_map.find(property.get()->name()) == _field_map.end())
     {
@@ -33,7 +29,7 @@ inline void nclass::add_property(std::unique_ptr<nproperty>&& property)
     }
 }
 
-inline void nclass::remove(std::string_view name)
+void nclass::remove(std::string_view name)
 {
     if (_field_map.find(name) != _field_map.end())
     {
@@ -46,7 +42,7 @@ inline void nclass::remove(std::string_view name)
     }
 }
 
-inline const struct nfunction* nclass::get_function(std::string_view name) const
+const struct nfunction* nclass::get_function(std::string_view name) const
 {
     auto function = _field_map.at(name).first;
     if (function == _functions.end())
@@ -54,7 +50,7 @@ inline const struct nfunction* nclass::get_function(std::string_view name) const
     return function->get();
 }
 
-inline const struct nproperty* nclass::get_property(std::string_view name) const
+const struct nproperty* nclass::get_property(std::string_view name) const
 {
     auto property = _field_map.at(name).second;
     if (property == _properties.end())

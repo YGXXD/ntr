@@ -3,8 +3,6 @@
 #include "nephren.h"
 
 // field impl
-#include "field/nfield.inl"
-#include "field/neitem.inl"
 #include "field/nproperty.inl"
 #include "field/nfunction.inl"
 
@@ -12,5 +10,4 @@
 #include "type/ntype.inl"
 #include "type/nnumeric.inl"
 #include "type/nenum.inl"
-#include "type/nclass.inl"
 #include "type/nfactory.inl"

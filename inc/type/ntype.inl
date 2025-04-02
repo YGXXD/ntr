@@ -5,7 +5,6 @@
 namespace ntr
 {
 
-// static
 template <typename T>
 inline constexpr bool ntype::is_numeric()
 {
@@ -39,27 +38,6 @@ inline constexpr ntype::etype ntype::to_etype()
         return etype::eclass;
     else
         return etype::eunknown;
-}
-
-// construct
-inline ntype::ntype(etype kind, std::string_view name) : _kind(kind), _name(name)
-{
-}
-
-// get
-inline ntype::etype ntype::kind() const
-{
-    return _kind;
-}
-
-inline std::string_view ntype::name() const
-{
-    return _name;
-}
-
-inline void ntype::set_name(std::string_view name)
-{
-    _name = name;
 }
 
 } // namespace ntr

@@ -26,10 +26,10 @@ struct nnumeric : ntype
 
     nnumeric(enumeric numeric_kind, std::string_view name);
 
-    enumeric numeric_kind() const;
-    bool is_signed() const;
-    bool is_floating_point() const;
-    bool is_integral() const;
+    inline enumeric numeric_kind() const { return _numeric_kind; }
+    inline bool is_signed() const { return _is_signed; }
+    inline bool is_floating_point() const { return !_is_integral; }
+    inline bool is_integral() const { return _is_integral; }
 
 private:
     enumeric _numeric_kind;

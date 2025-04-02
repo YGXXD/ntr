@@ -6,24 +6,8 @@
 namespace ntr
 {
 
-bool ntype::is_unknown() const
+ntype::ntype(etype kind, std::string_view name) : _kind(kind), _name(name)
 {
-    return _kind == etype::eunknown;
-}
-
-bool ntype::is_numeric() const
-{
-    return _kind == etype::enumeric;
-}
-
-bool ntype::is_enum() const
-{
-    return _kind == etype::eenum;
-}
-
-bool ntype::is_class() const
-{
-    return _kind == etype::eclass;
 }
 
 const nnumeric* ntype::as_numeric() const
