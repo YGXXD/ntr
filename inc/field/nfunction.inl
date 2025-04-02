@@ -26,7 +26,7 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
     : nfunction(parent_type, name)
 {
     if (parent_type != nephren::get_type<ClassT>())
-        std::__throw_invalid_argument("parent type is not function'sclass type");
+        std::__throw_invalid_argument("parent type is not function's class type");
     init_function_types<Ret, Args...>();
 }
 

@@ -9,7 +9,9 @@ const ntype* nephren::get_type(std::string_view name)
 {
     auto it = _type_map.find(name);
     if (it == _type_map.end())
-        std::__throw_logic_error("type not registered");
+        std::__throw_logic_error((std::string("type \"") + std::string(name) +
+                                  std::string("\" not registered"))
+                                     .c_str());
     return it->second;
 }
 

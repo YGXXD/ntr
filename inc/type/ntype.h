@@ -28,12 +28,11 @@ struct ntype
     template <typename T>
     static constexpr etype to_etype();
 
-    friend struct nephren;
-
     ntype(etype kind, std::string_view name);
 
     etype kind() const;
     std::string_view name() const;
+    void set_name(std::string_view name);
 
     bool is_unknown() const;
     bool is_numeric() const;

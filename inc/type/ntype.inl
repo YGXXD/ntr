@@ -57,4 +57,9 @@ inline std::string_view ntype::name() const
     return _name;
 }
 
+inline void ntype::set_name(std::string_view name)
+{
+    _name = name;
+}
+
 } // namespace ntr

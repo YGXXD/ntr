@@ -24,23 +24,23 @@ private:
 
 int main(int argc, char* argv[])
 {
-    ntr::nephren::regist<int8_t>("int8");
-    ntr::nephren::regist<int16_t>("int16");
-    ntr::nephren::regist<int32_t>("int32");
-    ntr::nephren::regist<int64_t>("int64");
-    ntr::nephren::regist<uint8_t>("uint8");
-    ntr::nephren::regist<uint16_t>("uint16");
-    ntr::nephren::regist<uint32_t>("uint32");
-    ntr::nephren::regist<uint64_t>("uint64");
-    ntr::nephren::regist<float>("float");
-    ntr::nephren::regist<double>("double");
+    ntr::nephren::numeric_<int8_t>("int8");
+    ntr::nephren::numeric_<int16_t>("int16");
+    ntr::nephren::numeric_<int32_t>("int32");
+    ntr::nephren::numeric_<int64_t>("int64");
+    ntr::nephren::numeric_<uint8_t>("uint8");
+    ntr::nephren::numeric_<uint16_t>("uint16");
+    ntr::nephren::numeric_<uint32_t>("uint32");
+    ntr::nephren::numeric_<uint64_t>("uint64");
+    ntr::nephren::numeric_<float>("float");
+    ntr::nephren::numeric_<double>("double");
 
-    ntr::nephren::regist<MyEnum>("MyEnum")
+    ntr::nephren::enum_<MyEnum>("MyEnum")
         .item("MyEnum1", MyEnum1)
         .item("MyEnum2", MyEnum2)
         .item("MyEnum3", MyEnum3);
 
-    ntr::nephren::regist<MyClass>("MyClass")
+    ntr::nephren::class_<MyClass>("MyClass")
         .function("print", &MyClass::print)
         .property("float_value", &MyClass::float_value)
         .property("value", &MyClass::value, &MyClass::value);
