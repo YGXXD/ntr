@@ -24,9 +24,15 @@ struct nnumeric : ntype
     template <typename T>
     static constexpr enumeric to_enumeric();
 
+    template <etype E, typename T>
+    friend struct nfactory;
+
     nnumeric(enumeric numeric_kind, std::string_view name);
 
     enumeric numeric_kind() const;
+    bool is_signed() const;
+    bool is_floating_point() const;
+    bool is_integral() const;
 
 private:
     enumeric _numeric_kind;

@@ -9,17 +9,32 @@ namespace ntr
 template <typename T>
 inline constexpr ntype::etype ntype::to_etype()
 {
-    static_assert(!std::is_const_v<T>, "to_etype template param \"T\" must be non-const");
-    if constexpr (std::is_fundamental_v<T>)
+    if constexpr (std::is_same_v<T, int8_t>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, int16_t>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, int32_t>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, int64_t>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, uint8_t>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, uint16_t>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, uint32_t>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, uint64_t>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, float>)
+        return etype::enumeric;
+    else if constexpr (std::is_same_v<T, double>)
         return etype::enumeric;
     else if constexpr (std::is_enum_v<T>)
         return etype::eenum;
     else if constexpr (std::is_class_v<T>)
         return etype::eclass;
     else
-        static_assert(!std::is_same_v<T, T>,
-                      "unknown type, to_etype template param \"T\" must be "
-                      "fundamental, enum and class");
+        return etype::eunknown;
 }
 
 // construct

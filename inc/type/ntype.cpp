@@ -6,6 +6,11 @@
 namespace ntr
 {
 
+bool ntype::is_unknown() const
+{
+    return _kind == etype::eunknown;
+}
+
 bool ntype::is_numeric() const
 {
     return _kind == etype::enumeric;

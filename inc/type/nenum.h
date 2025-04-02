@@ -10,10 +10,10 @@ namespace ntr
 
 struct nenum : ntype
 {
-    nenum(std::string_view name);
-
     template <etype E, typename T>
     friend struct nfactory;
+    
+    nenum(std::string_view name);
 
     template <typename T>
     const neitem& get_eitem(T value) const;
