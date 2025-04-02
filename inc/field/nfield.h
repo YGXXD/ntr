@@ -22,9 +22,9 @@ public:
     inline std::string_view name() const { return _name; }
 
 private:
-    const ntype* _parent_type;
     efield _kind;
     std::string _name;
+    const ntype* _parent_type;
 };
 
 } // namespace ntr

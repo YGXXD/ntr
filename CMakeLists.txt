@@ -17,5 +17,5 @@ add_executable(ntr
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/nnumeric.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/nenum.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/nclass.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/nephren.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/inc/core/nregistrar.cpp
 ) 

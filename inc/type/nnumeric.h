@@ -22,9 +22,6 @@ public:
         edouble,
     };
 
-    template <typename T>
-    static constexpr enumeric to_enumeric();
-
     nnumeric(enumeric numeric_kind, std::string_view name);
 
     inline enumeric numeric_kind() const { return _numeric_kind; }

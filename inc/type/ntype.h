@@ -16,18 +16,6 @@ public:
         eclass,
     };
 
-    template <typename T>
-    static constexpr bool is_numeric();
-
-    template <typename T>
-    static constexpr bool is_enum();
-
-    template <typename T>
-    static constexpr bool is_class();
-
-    template <typename T>
-    static constexpr etype to_etype();
-
     ntype(etype kind, std::string_view name);
 
     inline etype kind() const { return _kind; }

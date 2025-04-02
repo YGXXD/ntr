@@ -22,7 +22,7 @@ inline nfactory<ntype::etype::eunknown, T>::nfactory()
 template <typename T>
 inline nfactory<ntype::etype::enumeric, T>::nfactory()
 {
-    _type = std::make_unique<nnumeric>(nnumeric::to_enumeric<T>(), typeid(T).name());
+    _type = std::make_unique<nnumeric>(make_enumeric<T>(), typeid(T).name());
 }
 
 // ntype::etype::eenum impl

@@ -1,7 +1,7 @@
-#include "../inc/ntr.h"
+#include "../inc/nephren.h"
 #include <iostream>
 
-enum MyEnum
+enum class MyEnum
 {
     MyEnum1 = 1,
     MyEnum2 = 2,
@@ -36,9 +36,9 @@ int main(int argc, char* argv[])
     ntr::nephren::numeric_<double>("double");
 
     ntr::nephren::enum_<MyEnum>("MyEnum")
-        .item("MyEnum1", MyEnum1)
-        .item("MyEnum2", MyEnum2)
-        .item("MyEnum3", MyEnum3);
+        .item("MyEnum1", MyEnum::MyEnum1)
+        .item("MyEnum2", MyEnum::MyEnum2)
+        .item("MyEnum3", MyEnum::MyEnum3);
 
     ntr::nephren::class_<MyClass>("MyClass")
         .function("print", &MyClass::print)
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     std::cout << ntr::nephren::get_type("int8")->name() << std::endl;
 
     const ntr::nenum* enum_type = ntr::nephren::get_type("MyEnum")->as_enum();
-    std::cout << enum_type->get_eitem(MyEnum::MyEnum3)->value() << std::endl;
+    std::cout << enum_type->get_eitem(static_cast<long>(MyEnum::MyEnum3))->value() << std::endl;
 
     const ntr::nclass* class_type = ntr::nephren::get_type<MyClass>()->as_class();
     std::cout << class_type->get_property("float_value")->property_type()->name()
