@@ -9,7 +9,8 @@ namespace ntr
 class nobject
 {
 public:
-    template <typename T>
+    template <typename T,
+              typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, nobject>>>
     nobject(T&& other);
     nobject(const nobject& other);
     nobject(nobject&& other);
@@ -23,13 +24,16 @@ public:
     const T& as() const;
 
     inline const class ntype* type() const { return _type; }
+    inline void* data() const { return _large_data; }
 
 private:
+    constexpr static size_t small_data_size = 8;
+
     struct nobject_data_operations
     {
-        std::function<void*(const void*)> copy;
-        std::function<void*(void*)> move;
-        std::function<void(void*)> release;
+        std::function<void(void*&, void* const&)> copy;
+        std::function<void(void*&, void*&)> move;
+        std::function<void(void*&)> release;
     };
 
     template <typename T>
@@ -45,23 +49,32 @@ private:
         {
             if constexpr (std::is_copy_constructible_v<T>)
             {
-                ops.copy = [](void* other_data) -> void*
+                ops.copy = [](void*& self_data, void* const& other_data) -> void
                 {
-                    return new T(*static_cast<const T*>(other_data));
+                    if constexpr (sizeof(T) <= small_data_size)
+                        new (&self_data) T(*reinterpret_cast<const T*>(&other_data));
+                    else
+                        self_data = new T(*reinterpret_cast<const T*>(other_data));
                 };
             }
             if constexpr (std::is_move_constructible_v<T>)
             {
-                ops.move = [](void* other_data) -> void*
+                ops.move = [](void*& self_data, void*& other_data) -> void
                 {
-                    return new T(std::move(*static_cast<T*>(other_data)));
+                    if constexpr (sizeof(T) <= small_data_size)
+                        new (&self_data) T(std::move(*reinterpret_cast<T*>(&other_data)));
+                    else
+                        self_data = new T(std::move(*reinterpret_cast<T*>(other_data)));
                 };
             }
             if constexpr (std::is_destructible_v<T>)
             {
-                ops.release = [](void* self_data) -> void
+                ops.release = [](void*& self_data) -> void
                 {
-                    delete static_cast<T*>(self_data);
+                    if constexpr (sizeof(T) <= small_data_size)
+                        reinterpret_cast<T*>(&self_data)->~T();
+                    else
+                        delete reinterpret_cast<T*>(self_data);
                 };
             }
         }
@@ -71,7 +84,7 @@ private:
     const nobject_data_operations* _data_ops;
     union
     {
-        char _small_data[8];
+        char _small_data[small_data_size];
         void* _large_data;
     };
 };
