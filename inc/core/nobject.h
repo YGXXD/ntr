@@ -8,6 +8,7 @@ namespace ntr
 
 class nobject
 {
+public:
     template <typename T>
     nobject(T&& other);
     nobject(const nobject& other);
@@ -24,58 +25,54 @@ class nobject
     inline const class ntype* type() const { return _type; }
 
 private:
-    struct nobject_operations
+    struct nobject_data_operations
     {
-        std::function<nobject(nobject&, const nobject&)> copy;
-        std::function<nobject(nobject&, nobject&&)> move;
-        std::function<void(nobject&)> release;
+        std::function<void*(const void*)> copy;
+        std::function<void*(void*)> move;
+        std::function<void(void*)> release;
     };
 
     template <typename T>
-    struct nobject_ops_traits : singleton<nobject_ops_traits<T>>
+    struct nobject_data_ops_traits : singleton<nobject_data_ops_traits<T>>
     {
         template <typename U>
-        friend class nobject_ops_traits;
+        friend class singleton;
 
-        nobject_operations ops;
+        nobject_data_operations ops;
 
     private:
-        nobject_ops_traits()
+        nobject_data_ops_traits()
         {
             if constexpr (std::is_copy_constructible_v<T>)
             {
-                ops.copy = [](nobject& self, const nobject& other) -> nobject
+                ops.copy = [](void* other_data) -> void*
                 {
-                    self._type = other._type;
-                    self._pdata = new T(*static_cast<const T*>(other._pdata));
-                    self._ops = other._ops;
+                    return new T(*static_cast<const T*>(other_data));
                 };
             }
             if constexpr (std::is_move_constructible_v<T>)
             {
-                ops.move = [](nobject& self, nobject&& other) -> nobject
+                ops.move = [](void* other_data) -> void*
                 {
-                    self._type = other._type;
-                    self._pdata = new T(std::move(*static_cast<T*>(other._pdata)));
-                    self._ops = other._ops;
+                    return new T(std::move(*static_cast<T*>(other_data)));
                 };
             }
             if constexpr (std::is_destructible_v<T>)
             {
-                ops.release = [](nobject& other)
+                ops.release = [](void* self_data) -> void
                 {
-                    delete static_cast<T*>(other._pdata);
+                    delete static_cast<T*>(self_data);
                 };
             }
         }
     };
 
     const ntype* _type;
-    const nobject_operations* _ops;
+    const nobject_data_operations* _data_ops;
     union
     {
-        char _data[8];
-        void* _pdata;
+        char _small_data[8];
+        void* _large_data;
     };
 };
 

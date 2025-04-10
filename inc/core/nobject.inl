@@ -8,86 +8,107 @@ namespace ntr
 {
 
 template <typename T>
-inline nobject::nobject(T&& other)
+inline nobject::nobject(T&& other) : _type(nullptr), _data_ops(nullptr), _large_data(nullptr)
 {
     using U = std::decay_t<T>;
     _type = ntr::nregistrar::get_type<U>();
-    _ops = nobject_ops_traits<U>::instance().ops;
-    if constexpr (sizeof(U) <= sizeof(_data))
+    if constexpr (sizeof(U) <= sizeof(_small_data))
     {
-        *static_cast<U*>(_data) = other;
+        *reinterpret_cast<U*>(_small_data) = other;
     }
     else if constexpr (std::is_lvalue_reference_v<T>)
     {
-        _pdata = new U(other);
+        _large_data = new U(other);
+        _data_ops = &nobject_data_ops_traits<U>::instance().ops;
     }
     else if constexpr (std::is_rvalue_reference_v<T>)
     {
-        _pdata = new U(std::move(other));
+        _large_data = new U(std::move(other));
+        _data_ops = &nobject_data_ops_traits<U>::instance().ops;
     }
 }
 
-inline nobject::nobject(const nobject& other)
+inline nobject::nobject(const nobject& other) : _type(other._type), _data_ops(other._data_ops)
 {
-    if (_ops->copy)
-        _ops->copy(*this, other);
+    if (_data_ops && _data_ops->copy)
+        _large_data = _data_ops->copy(other._large_data);
+    else
+        _large_data = other._large_data;
 }
 
-inline nobject::nobject(nobject&& other)
+inline nobject::nobject(nobject&& other) : _type(other._type), _data_ops(other._data_ops)
 {
-    if (_ops->move)
-        _ops->move(*this, std::move(other));
+    if (_data_ops && _data_ops->move)
+        _large_data = _data_ops->move(other._large_data);
+    else
+        _large_data = other._large_data;
 }
 
 inline nobject& nobject::operator=(const nobject& other)
 {
-    if (this != &other && _ops->copy)
+    if (this != &other)
     {
-        _ops->copy(*this, other);
+        _type = other._type;
+        _data_ops = other._data_ops;
+        if (_data_ops && _data_ops->copy)
+            _large_data = _data_ops->copy(other._large_data);
+        else
+            _large_data = other._large_data;
     }
     return *this;
 }
 
 inline nobject& nobject::operator=(nobject&& other)
 {
-    if (this != &other && _ops->move)
+    if (this != &other)
     {
-        _ops->move(*this, std::move(other));
+        _type = other._type;
+        _data_ops = other._data_ops;
+        if (_data_ops && _data_ops->move)
+            _large_data = _data_ops->move(other._large_data);
+        else
+            _large_data = other._large_data;
     }
     return *this;
 }
 
 inline nobject::~nobject()
 {
-    if (_ops->release)
-        _ops->release(*this);
+    if (_data_ops && _data_ops->release)
+        _data_ops->release(_large_data);
 }
 
 template <typename T>
 inline T& nobject::as()
 {
-    assert(_type == ntr::nregistrar::get_type<T>());
-    if constexpr (sizeof(T) <= sizeof(_data))
+    if (_type != ntr::nregistrar::get_type<T>())
     {
-        return *reinterpret_cast<T*>(_data);
+        throw std::runtime_error("nobject as type mismatch");
+    }
+    if constexpr (sizeof(T) <= sizeof(_small_data))
+    {
+        return *reinterpret_cast<T*>(_small_data);
     }
     else
     {
-        return *reinterpret_cast<T*>(_pdata);
+        return *reinterpret_cast<T*>(_large_data);
     }
 }
 
 template <typename T>
 inline const T& nobject::as() const
 {
-    assert(_type == ntr::nregistrar::get_type<T>());
-    if constexpr (sizeof(T) <= sizeof(_data))
+    if (_type != ntr::nregistrar::get_type<T>())
     {
-        return *reinterpret_cast<const T*>(_data);
+        throw std::runtime_error("nobject as type mismatch");
+    }
+    if constexpr (sizeof(T) <= sizeof(_small_data))
+    {
+        return *reinterpret_cast<const T*>(_small_data);
     }
     else
     {
-        return *reinterpret_cast<const T*>(_pdata);
+        return *reinterpret_cast<const T*>(_large_data);
     }
 }
 } // namespace ntr
