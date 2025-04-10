@@ -1,0 +1,54 @@
+#include "nobject.h"
+
+namespace ntr
+{
+
+nobject::nobject(const nobject& other)
+    : _type(other._type), _data_ops(other._data_ops), _large_data(nullptr)
+{
+    if (_data_ops && _data_ops->copy)
+        _data_ops->copy(_large_data, other._large_data);
+}
+
+nobject::nobject(nobject&& other)
+    : _type(other._type), _data_ops(other._data_ops), _large_data(nullptr)
+{
+    if (_data_ops && _data_ops->move)
+        _data_ops->move(_large_data, other._large_data);
+}
+
+nobject& nobject::operator=(const nobject& other)
+{
+    if (this != &other)
+    {
+        _type = other._type;
+        _data_ops = other._data_ops;
+        if (_data_ops && _data_ops->copy)
+            _data_ops->copy(_large_data, other._large_data);
+        else
+            _large_data = nullptr;
+    }
+    return *this;
+}
+
+nobject& nobject::operator=(nobject&& other)
+{
+    if (this != &other)
+    {
+        _type = other._type;
+        _data_ops = other._data_ops;
+        if (_data_ops && _data_ops->move)
+            _data_ops->move(_large_data, other._large_data);
+        else
+            _large_data = nullptr;
+    }
+    return *this;
+}
+
+nobject::~nobject()
+{
+    if (_data_ops && _data_ops->release)
+        _data_ops->release(_large_data);
+}
+
+} // namespace ntr

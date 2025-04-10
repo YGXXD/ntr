@@ -18,4 +18,5 @@ add_executable(ntr
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/nenum.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/nclass.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/core/nregistrar.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/inc/core/nobject.cpp
 ) 

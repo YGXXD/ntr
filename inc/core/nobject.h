@@ -39,45 +39,14 @@ private:
     template <typename T>
     struct nobject_data_ops_traits : singleton<nobject_data_ops_traits<T>>
     {
+    private:
+        nobject_data_ops_traits();
+
+    public:
         template <typename U>
         friend class singleton;
 
         nobject_data_operations ops;
-
-    private:
-        nobject_data_ops_traits()
-        {
-            if constexpr (std::is_copy_constructible_v<T>)
-            {
-                ops.copy = [](void*& self_data, void* const& other_data) -> void
-                {
-                    if constexpr (sizeof(T) <= small_data_size)
-                        new (&self_data) T(*reinterpret_cast<const T*>(&other_data));
-                    else
-                        self_data = new T(*reinterpret_cast<const T*>(other_data));
-                };
-            }
-            if constexpr (std::is_move_constructible_v<T>)
-            {
-                ops.move = [](void*& self_data, void*& other_data) -> void
-                {
-                    if constexpr (sizeof(T) <= small_data_size)
-                        new (&self_data) T(std::move(*reinterpret_cast<T*>(&other_data)));
-                    else
-                        self_data = new T(std::move(*reinterpret_cast<T*>(other_data)));
-                };
-            }
-            if constexpr (std::is_destructible_v<T>)
-            {
-                ops.release = [](void*& self_data) -> void
-                {
-                    if constexpr (sizeof(T) <= small_data_size)
-                        reinterpret_cast<T*>(&self_data)->~T();
-                    else
-                        delete reinterpret_cast<T*>(self_data);
-                };
-            }
-        }
     };
 
     const ntype* _type;
