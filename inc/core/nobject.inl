@@ -25,9 +25,9 @@ inline T& nobject::as()
     if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nobject as type mismatch");
     if constexpr (sizeof(T) <= sizeof(_small_data))
-        return *reinterpret_cast<T*>(_small_data);
+        return *static_cast<T*>(reinterpret_cast<void*>(_small_data));
     else
-        return *reinterpret_cast<T*>(_large_data);
+        return *static_cast<T*>(_large_data);
 }
 
 template <typename T>
@@ -36,9 +36,9 @@ inline const T& nobject::as() const
     if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nobject as type mismatch");
     if constexpr (sizeof(T) <= sizeof(_small_data))
-        return *reinterpret_cast<const T*>(_small_data);
+        return *static_cast<const T*>(reinterpret_cast<const void*>(_small_data));
     else
-        return *reinterpret_cast<const T*>(_large_data);
+        return *static_cast<const T*>(_large_data);
 }
 
 template <typename T>
@@ -49,9 +49,9 @@ inline nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops()
         ops.copy = [](void*& self_data, void* const& other_data) -> void
         {
             if constexpr (sizeof(T) <= small_data_size)
-                new (&self_data) T(*reinterpret_cast<const T*>(&other_data));
+                new (&self_data) T(*static_cast<const T*>(reinterpret_cast<const void*>(&other_data)));
             else
-                self_data = new T(*reinterpret_cast<const T*>(other_data));
+                self_data = new T(*static_cast<const T*>(other_data));
         };
     }
     if constexpr (std::is_move_constructible_v<T>)
@@ -59,9 +59,9 @@ inline nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops()
         ops.move = [](void*& self_data, void*& other_data) -> void
         {
             if constexpr (sizeof(T) <= small_data_size)
-                new (&self_data) T(std::move(*reinterpret_cast<T*>(&other_data)));
+                new (&self_data) T(std::move(*static_cast<T*>(reinterpret_cast<void*>(&other_data))));
             else
-                self_data = new T(std::move(*reinterpret_cast<T*>(other_data)));
+                self_data = new T(std::move(*static_cast<T*>(other_data)));
         };
     }
     if constexpr (std::is_destructible_v<T>)
@@ -69,9 +69,9 @@ inline nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops()
         ops.release = [](void*& self_data) -> void
         {
             if constexpr (sizeof(T) <= small_data_size)
-                reinterpret_cast<T*>(&self_data)->~T();
+                static_cast<T*>(reinterpret_cast<void*>(&self_data))->~T();
             else
-                delete reinterpret_cast<T*>(self_data);
+                delete static_cast<T*>(self_data);
         };
     }
     else
