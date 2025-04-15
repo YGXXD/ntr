@@ -11,7 +11,7 @@ inline nobject::nobject(T&& other)
     : _type(nullptr), _data_ops(nullptr), _large_data(nullptr)
 {
     using U = std::decay_t<T>;
-    _type = ntr::nregistrar::get_type<U>();
+    _type = nregistrar::get_type<U>();
     _data_ops = &nobject_data_ops_traits<U>::instance().ops;
     if constexpr (sizeof(U) <= sizeof(_small_data))
         new (_small_data) U(std::forward<T>(other));
@@ -22,7 +22,7 @@ inline nobject::nobject(T&& other)
 template <typename T>
 inline T& nobject::as()
 {
-    if (_type != ntr::nregistrar::get_type<T>())
+    if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nobject as type mismatch");
     if constexpr (sizeof(T) <= sizeof(_small_data))
         return *reinterpret_cast<T*>(_small_data);
@@ -33,7 +33,7 @@ inline T& nobject::as()
 template <typename T>
 inline const T& nobject::as() const
 {
-    if (_type != ntr::nregistrar::get_type<T>())
+    if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nobject as type mismatch");
     if constexpr (sizeof(T) <= sizeof(_small_data))
         return *reinterpret_cast<const T*>(_small_data);
