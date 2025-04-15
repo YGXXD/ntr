@@ -90,9 +90,9 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
 template <typename Ret, typename... Args>
 inline void nfunction::init_function_types()
 {
-    _return_type = nregistrar::get_type<Ret>();
+    _return_type = nregistrar::get_type<std::decay_t<Ret>>();
     _argument_types.reserve(sizeof...(Args));
-    ((_argument_types.push_back(nregistrar::get_type<Args>())), ...);
+    ((_argument_types.push_back(nregistrar::get_type<std::decay_t<Args>>())), ...);
 }
 
 } // namespace ntr
