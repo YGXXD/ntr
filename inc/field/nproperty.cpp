@@ -8,4 +8,14 @@ nproperty::nproperty(ntype* parent_type, std::string_view name)
 {
 }
 
+nobject nproperty::get(const nreference& instance) const
+{
+    return _getter(instance);
+}
+
+void nproperty::set(const nreference& instance, const nreference& value) const
+{
+    _setter(instance, value);
+}
+
 } // namespace ntr

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "nfield.h"
+#include "../core/nobject.h"
+#include "../core/nreference.h"
 
 namespace ntr
 {
@@ -17,6 +19,8 @@ public:
     nfunction(ntype* parent_type, std::string_view name,
               Ret (ClassT::*fun)(Args...) const);
 
+    nobject invoke(const std::vector<nreference>& args) const;
+
     inline const ntype* return_type() const { return _return_type; }
     inline const auto& argument_types() const { return _argument_types; }
 
@@ -26,8 +30,7 @@ private:
 
     const ntype* _return_type;
     std::vector<const ntype*> _argument_types;
-    // std::vector<ntype*> _argument_types;
-    // std::function<void*(void*)> _function;
+    std::function<nobject(const std::vector<nreference>&)> _function;
 };
 
 } // namespace ntr
