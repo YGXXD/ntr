@@ -27,7 +27,7 @@ public:
     inline void* data() const { return _large_data; }
 
 private:
-    constexpr static size_t small_data_size = 8;
+    constexpr static size_t small_data_size = 16;
 
     struct nobject_data_operations
     {

@@ -1,4 +1,5 @@
 #include "nobject.h"
+#include "../type/ntype.h"
 
 namespace ntr
 {
@@ -26,7 +27,7 @@ nobject& nobject::operator=(const nobject& other)
         if (_data_ops && _data_ops->copy)
             _data_ops->copy(_large_data, other._large_data);
         else
-            _large_data = nullptr;
+            throw std::runtime_error(std::string(_type->name()) + " has no copy operation");
     }
     return *this;
 }
@@ -40,7 +41,7 @@ nobject& nobject::operator=(nobject&& other)
         if (_data_ops && _data_ops->move)
             _data_ops->move(_large_data, other._large_data);
         else
-            _large_data = nullptr;
+            throw std::runtime_error(std::string(_type->name()) + " has no move operation");
     }
     return *this;
 }
