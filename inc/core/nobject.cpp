@@ -9,6 +9,8 @@ nobject::nobject(const nobject& other)
 {
     if (_data_ops && _data_ops->copy)
         _data_ops->copy(_large_data, other._large_data);
+    else
+        throw std::runtime_error(std::string(_type->name()) + " has no copy operation");
 }
 
 nobject::nobject(nobject&& other)
@@ -16,6 +18,8 @@ nobject::nobject(nobject&& other)
 {
     if (_data_ops && _data_ops->move)
         _data_ops->move(_large_data, other._large_data);
+    else
+        throw std::runtime_error(std::string(_type->name()) + " has no move operation");
 }
 
 nobject& nobject::operator=(const nobject& other)
