@@ -36,7 +36,7 @@ inline T&& nreference::rref() const
 }
 
 template <typename T>
-inline T&& nreference::any() const
+inline auto&& nreference::any() const
 {
     if constexpr (std::is_rvalue_reference_v<T>)
         return rref<std::decay_t<T>>();

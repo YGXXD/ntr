@@ -24,7 +24,7 @@ public:
     template <typename T>
     T&& rref() const;
     template <typename T>
-    T&& any() const;
+    auto&& any() const;
 
     inline const class ntype* type() const { return _type; }
     inline void* data() const { return _pdata; }
