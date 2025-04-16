@@ -49,7 +49,7 @@
 #if defined(NTR_COMPILER_CLANG)
 #    define NTR_API __attribute__((visibility("default")))
 #elif defined(NTR_COMPILER_GCC)
-#    if defined(NTR_PLATFORM_WINDOWS)
+#    if defined(_WIN32)
 #        ifdef NTR_BUILD_LIB
 #            define NTR_API __attribute__((dllexport))
 #        else

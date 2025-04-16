@@ -1,4 +1,4 @@
-#include "nproperty.h"
+#include "../../inc/field/nproperty.h"
 
 namespace ntr
 {

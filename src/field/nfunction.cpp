@@ -1,4 +1,4 @@
-#include "nfunction.h"
+#include "../../inc/field/nfunction.h"
 
 namespace ntr
 {

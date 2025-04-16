@@ -1,15 +1,8 @@
 #pragma once
 
+#include "impl.h"
 #include "core/nfactory.h"
 #include "core/nregistrar.h"
-
-// impl
-#include "field/nproperty.inl"
-#include "field/nfunction.inl"
-#include "core/nfactory.inl"
-#include "core/nregistrar.inl"
-#include "core/nobject.inl"
-#include "core/nreference.inl"
 
 namespace ntr
 {

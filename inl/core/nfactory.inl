@@ -1,12 +1,12 @@
 #pragma once
 
-#include "nfactory.h"
-#include "../type/nnumeric.h"
-#include "../type/nenum.h"
-#include "../type/nclass.h"
-#include "../field/neitem.h"
-#include "../field/nfunction.h"
-#include "../field/nproperty.h"
+#include "../../inc/core/nfactory.h"
+#include "../../inc/type/nnumeric.h"
+#include "../../inc/type/nenum.h"
+#include "../../inc/type/nclass.h"
+#include "../../inc/field/neitem.h"
+#include "../../inc/field/nfunction.h"
+#include "../../inc/field/nproperty.h"
 
 namespace ntr
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nregistrar.h"
+#include "../../inc/core/nregistrar.h"
 
 namespace ntr
 {

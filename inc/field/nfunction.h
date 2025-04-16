@@ -26,7 +26,7 @@ public:
 
 private:
     template <typename Ret, typename... Args>
-    void init_function_types();
+    NTR_INLINE void init_function_types();
 
     const ntype* _return_type;
     std::vector<const ntype*> _argument_types;

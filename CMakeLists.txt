@@ -7,16 +7,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(ntr)
 
+file(GLOB_RECURSE NTR_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+
 add_executable(ntr 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ntr.cpp 
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/field/nfield.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/field/neitem.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/field/nproperty.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/field/nfunction.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/ntype.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/nnumeric.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/nenum.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/type/nclass.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/core/nregistrar.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/core/nobject.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/ntr.cpp 
+    ${NTR_SOURCE_FILES}
 ) 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "nobject.h"
-#include "nregistrar.h"
+#include "../../inc/core/nobject.h"
+#include "../../inc/core/nregistrar.h"
 
 namespace ntr
 {

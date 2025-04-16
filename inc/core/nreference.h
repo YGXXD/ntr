@@ -5,7 +5,7 @@
 namespace ntr
 {
 
-class nreference
+class NTR_API nreference
 {
 public:
     template <typename T,
@@ -18,13 +18,13 @@ public:
     ~nreference() = default;
 
     template <typename T>
-    T& ref() const;
+    NTR_INLINE T& ref() const;
     template <typename T>
-    const T& cref() const;
+    NTR_INLINE const T& cref() const;
     template <typename T>
-    T&& rref() const;
+    NTR_INLINE T&& rref() const;
     template <typename T>
-    auto&& any() const;
+    NTR_INLINE auto&& any() const;
 
     NTR_INLINE const class ntype* type() const { return _type; }
     NTR_INLINE void* data() const { return _pdata; }

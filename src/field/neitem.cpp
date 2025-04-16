@@ -1,4 +1,4 @@
-#include "neitem.h"
+#include "../../inc/field/neitem.h"
 
 namespace ntr
 {

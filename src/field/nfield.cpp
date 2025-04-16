@@ -1,4 +1,4 @@
-#include "nfield.h"
+#include "../../inc/field/nfield.h"
 
 namespace ntr
 {

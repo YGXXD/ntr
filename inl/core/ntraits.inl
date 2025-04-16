@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../type/ntype.h"
-#include "../type/nnumeric.h"
+#include "../../inc/core/ntraits.h"
 
 namespace ntr
 {

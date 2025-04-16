@@ -1,6 +1,6 @@
 #pragma once
 
-#include "factory_util.h"
+#include "ntraits.h"
 
 namespace ntr
 {
@@ -51,8 +51,8 @@ public:
     friend class nregistrar;
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::eenum, T>)
 
-    nfactory& item(std::string_view name, T value);
-    nfactory& remove(std::string_view name);
+    NTR_INLINE nfactory& item(std::string_view name, T value);
+    NTR_INLINE nfactory& remove(std::string_view name);
 
 private:
     nfactory();
@@ -73,19 +73,19 @@ public:
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::eclass, T>)
 
     template <typename Ret, typename... Args>
-    nfactory& function(std::string_view name, Ret (*fun)(Args...));
+    NTR_INLINE nfactory& function(std::string_view name, Ret (*fun)(Args...));
     template <typename Ret, typename... Args>
-    nfactory& function(std::string_view name, Ret (T::*fun)(Args...));
+    NTR_INLINE nfactory& function(std::string_view name, Ret (T::*fun)(Args...));
     template <typename Ret, typename... Args>
-    nfactory& function(std::string_view name, Ret (T::*fun)(Args...) const);
+    NTR_INLINE nfactory& function(std::string_view name, Ret (T::*fun)(Args...) const);
 
     template <typename U>
-    nfactory& property(std::string_view name, U(T::*member));
+    NTR_INLINE nfactory& property(std::string_view name, U(T::*member));
     template <typename U>
-    nfactory& property(std::string_view name, U (T::*getter)() const,
-                       void (T::*setter)(const U&));
+    NTR_INLINE nfactory& property(std::string_view name, U (T::*getter)() const,
+                                  void (T::*setter)(const U&));
 
-    nfactory& remove(std::string_view name);
+    NTR_INLINE nfactory& remove(std::string_view name);
 
 private:
     nfactory();

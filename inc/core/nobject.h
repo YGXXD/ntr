@@ -18,9 +18,9 @@ public:
     ~nobject();
 
     template <typename T>
-    T& as();
+    NTR_INLINE T& as();
     template <typename T>
-    const T& as() const;
+    NTR_INLINE const T& as() const;
 
     NTR_INLINE const class ntype* type() const { return _type; }
     NTR_INLINE void* data() const { return _large_data; }
