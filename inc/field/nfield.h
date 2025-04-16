@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../config.h"
+#include "../setup.h"
 
 namespace ntr
 {
 
-class nfield
+class NTR_API nfield
 {
 public:
     enum class efield
@@ -17,9 +17,9 @@ public:
 
     nfield(const class ntype* parent_type, efield kind, std::string_view name);
 
-    inline const ntype* parent_type() const { return _parent_type; }
-    inline efield kind() const { return _kind; }
-    inline std::string_view name() const { return _name; }
+    NTR_INLINE const ntype* parent_type() const { return _parent_type; }
+    NTR_INLINE efield kind() const { return _kind; }
+    NTR_INLINE std::string_view name() const { return _name; }
 
 private:
     efield _kind;

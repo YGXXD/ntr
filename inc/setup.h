@@ -1,0 +1,67 @@
+#pragma once
+
+#define NTR_SINGLETON_IMPL(...)               \
+    static NTR_INLINE __VA_ARGS__& instance() \
+    {                                         \
+        static __VA_ARGS__ _instance {};      \
+        return _instance;                     \
+    }
+
+#include <type_traits>
+#include <cstdint>
+#include <stdexcept>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <list>
+#include <unordered_map>
+#include <functional>
+#include <utility>
+
+#if defined(__clang__) && defined(__GNUC__)
+#    define NTR_COMPILER_CLANG
+#elif defined(__GNUC__) || defined(__MINGW32__)
+#    define NTR_COMPILER_GCC
+#elif defined(_MSC_VER)
+#    define NTR_COMPILER_MSVC
+#else
+#    error "ntr only support clang++, g++ and visual c++"
+#endif
+
+#if defined(NTR_COMPILER_CLANG) || defined(NTR_COMPILER_GCC)
+#    define NTR_CPP_STANDARD __cplusplus
+#elif defined(NTR_COMPILER_MSVC)
+#    define NTR_CPP_STANDARD _MSVC_LANG
+#endif
+
+#if NTR_CPP_STANDARD < 201703L
+#    error "ntr only support cpp's version > c++17"
+#endif
+
+#if defined(NTR_COMPILER_CLANG)
+#    define NTR_INLINE __inline__ __attribute__((always_inline))
+#elif defined(NTR_COMPILER_GCC)
+#    define NTR_INLINE __inline__ __attribute__((__always_inline__))
+#elif defined(NTR_COMPILER_MSVC)
+#    define NTR_INLINE __forceinline
+#endif
+
+#if defined(NTR_COMPILER_CLANG)
+#    define NTR_API __attribute__((visibility("default")))
+#elif defined(NTR_COMPILER_GCC)
+#    if defined(NTR_PLATFORM_WINDOWS)
+#        ifdef NTR_BUILD_DLL
+#            define NTR_API __attribute__((dllexport))
+#        else
+#            define NTR_API __attribute__((dllimport))
+#        endif
+#    else
+#        define NTR_API __attribute__((visibility("default")))
+#    endif
+#elif defined(NTR_COMPILER_MSVC)
+#    ifdef NTR_BUILD_DLL
+#        define NTR_API __declspec(dllexport)
+#    else
+#        define NTR_API __declspec(dllimport)
+#    endif
+#endif

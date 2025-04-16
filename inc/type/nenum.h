@@ -5,7 +5,7 @@
 namespace ntr
 {
 
-class nenum : public ntype
+class NTR_API nenum : public ntype
 {
 public:
     nenum(std::string_view name);

@@ -1,17 +1,15 @@
 #pragma once
 
 #include "nfactory.h"
-#include "singleton.h"
 
 namespace ntr
 {
 
-class nregistrar : public singleton<nregistrar>
+class NTR_API nregistrar
 {
 
 public:
-    template <typename T>
-    friend class singleton;
+    NTR_SINGLETON_IMPL(nregistrar)
 
     template <typename T>
     static auto& factory_wrapper();

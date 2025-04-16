@@ -5,7 +5,7 @@
 namespace ntr
 {
 
-class nclass : public ntype
+class NTR_API nclass : public ntype
 {
 public:
     nclass(std::string_view name);

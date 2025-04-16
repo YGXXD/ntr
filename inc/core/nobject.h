@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../config.h"
-#include "singleton.h"
+#include "../setup.h"
 
 namespace ntr
 {
 
-class nobject
+class NTR_API nobject
 {
 public:
     template <typename T,
@@ -23,8 +22,8 @@ public:
     template <typename T>
     const T& as() const;
 
-    inline const class ntype* type() const { return _type; }
-    inline void* data() const { return _large_data; }
+    NTR_INLINE const class ntype* type() const { return _type; }
+    NTR_INLINE void* data() const { return _large_data; }
 
 private:
     constexpr static size_t small_data_size = 16;
@@ -37,15 +36,13 @@ private:
     };
 
     template <typename T>
-    struct nobject_data_ops_traits : singleton<nobject_data_ops_traits<T>>
+    struct nobject_data_ops_traits
     {
     private:
         nobject_data_ops_traits();
 
     public:
-        template <typename U>
-        friend class singleton;
-
+        NTR_SINGLETON_IMPL(nobject_data_ops_traits<T>)
         nobject_data_operations ops;
     };
 

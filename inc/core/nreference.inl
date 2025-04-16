@@ -5,14 +5,14 @@ namespace ntr
 {
 
 template <typename T, typename>
-inline nreference::nreference(T&& value) : _type(nullptr), _pdata(nullptr)
+NTR_INLINE nreference::nreference(T&& value) : _type(nullptr), _pdata(nullptr)
 {
     _type = nregistrar::get_type<std::decay_t<T>>();
     _pdata = const_cast<void*>(static_cast<const void*>(&value));
 }
 
 template <typename T>
-inline T& nreference::ref() const
+NTR_INLINE T& nreference::ref() const
 {
     if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nreference ref type mismatch");
@@ -20,7 +20,7 @@ inline T& nreference::ref() const
 }
 
 template <typename T>
-inline const T& nreference::cref() const
+NTR_INLINE const T& nreference::cref() const
 {
     if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nreference cref type mismatch");
@@ -28,7 +28,7 @@ inline const T& nreference::cref() const
 }
 
 template <typename T>
-inline T&& nreference::rref() const
+NTR_INLINE T&& nreference::rref() const
 {
     if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nreference rref type mismatch");
@@ -36,7 +36,7 @@ inline T&& nreference::rref() const
 }
 
 template <typename T>
-inline auto&& nreference::any() const
+NTR_INLINE auto&& nreference::any() const
 {
     if constexpr (std::is_rvalue_reference_v<T>)
         return rref<std::decay_t<T>>();

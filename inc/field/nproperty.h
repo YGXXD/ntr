@@ -7,7 +7,7 @@
 namespace ntr
 {
 
-class nproperty : public nfield
+class NTR_API nproperty : public nfield
 {
 public:
     nproperty(ntype* parent_type, std::string_view name);
@@ -20,7 +20,7 @@ public:
     nobject get(const nreference& instance) const;
     void set(const nreference& instance, const nreference& value) const;
 
-    inline const ntype* property_type() const { return _property_type; }
+    NTR_INLINE const ntype* property_type() const { return _property_type; }
 
 private:
     const ntype* _property_type;

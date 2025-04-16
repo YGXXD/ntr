@@ -5,7 +5,7 @@
 namespace ntr
 {
 
-class nnumeric : public ntype
+class NTR_API nnumeric : public ntype
 {
 public:
     enum class enumeric : uint8_t
@@ -24,10 +24,10 @@ public:
 
     nnumeric(enumeric numeric_kind, std::string_view name);
 
-    inline enumeric numeric_kind() const { return _numeric_kind; }
-    inline bool is_signed() const { return _is_signed; }
-    inline bool is_floating_point() const { return !_is_integral; }
-    inline bool is_integral() const { return _is_integral; }
+    NTR_INLINE enumeric numeric_kind() const { return _numeric_kind; }
+    NTR_INLINE bool is_signed() const { return _is_signed; }
+    NTR_INLINE bool is_floating_point() const { return !_is_integral; }
+    NTR_INLINE bool is_integral() const { return _is_integral; }
 
 private:
     enumeric _numeric_kind;

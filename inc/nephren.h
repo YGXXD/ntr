@@ -17,49 +17,49 @@ namespace ntr
 class nephren
 {
 public:
-    static inline const ntype* get_type(std::string_view name)
+    static NTR_INLINE const ntype* get_type(std::string_view name)
     {
         return nregistrar::instance().get_type(name);
     }
 
     template <typename T>
-    static inline const ntype* get_type()
+    static NTR_INLINE const ntype* get_type()
     {
         return nregistrar::get_type<T>();
     }
 
     template <typename T, typename = std::enable_if_t<is_etype_class<T>()>>
-    static inline auto& class_()
+    static NTR_INLINE auto& class_()
     {
         return nregistrar::factory_wrapper<T>();
     }
 
     template <typename T, typename = std::enable_if_t<is_etype_enum<T>()>>
-    static inline auto& enum_()
+    static NTR_INLINE auto& enum_()
     {
         return nregistrar::factory_wrapper<T>();
     }
 
     template <typename T, typename = std::enable_if_t<is_etype_numeric<T>()>>
-    static inline auto& numeric_()
+    static NTR_INLINE auto& numeric_()
     {
         return nregistrar::factory_wrapper<T>();
     }
 
     template <typename T, typename = std::enable_if_t<is_etype_class<T>()>>
-    static inline auto& class_(std::string_view name)
+    static NTR_INLINE auto& class_(std::string_view name)
     {
         return nregistrar::instance().regist<T>(name);
     }
 
     template <typename T, typename = std::enable_if_t<is_etype_enum<T>()>>
-    static inline auto& enum_(std::string_view name)
+    static NTR_INLINE auto& enum_(std::string_view name)
     {
         return nregistrar::instance().regist<T>(name);
     }
 
     template <typename T, typename = std::enable_if_t<is_etype_numeric<T>()>>
-    static inline auto& numeric_(std::string_view name)
+    static NTR_INLINE auto& numeric_(std::string_view name)
     {
         return nregistrar::instance().regist<T>(name);
     }

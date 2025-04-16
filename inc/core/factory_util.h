@@ -7,7 +7,7 @@ namespace ntr
 {
 
 template <typename T>
-inline constexpr bool is_etype_numeric()
+NTR_INLINE constexpr bool is_etype_numeric()
 {
     return std::is_same_v<int8_t, T> || std::is_same_v<int16_t, T> ||
            std::is_same_v<int32_t, T> || std::is_same_v<int64_t, T> ||
@@ -17,19 +17,19 @@ inline constexpr bool is_etype_numeric()
 }
 
 template <typename T>
-inline constexpr bool is_etype_enum()
+NTR_INLINE constexpr bool is_etype_enum()
 {
     return std::is_enum_v<T> && !std::is_const_v<T>;
 }
 
 template <typename T>
-inline constexpr bool is_etype_class()
+NTR_INLINE constexpr bool is_etype_class()
 {
     return std::is_class_v<T> && !std::is_const_v<T>;
 }
 
 template <typename T>
-inline constexpr ntype::etype make_etype()
+NTR_INLINE constexpr ntype::etype make_etype()
 {
     if constexpr (is_etype_numeric<T>())
         return ntype::etype::enumeric;
@@ -42,7 +42,7 @@ inline constexpr ntype::etype make_etype()
 }
 
 template <typename T>
-inline constexpr nnumeric::enumeric make_enumeric()
+NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
 {
     if constexpr (std::is_same_v<T, int8_t>)
         return nnumeric::enumeric::eint8;

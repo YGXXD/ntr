@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../config.h"
+#include "../setup.h"
 
 namespace ntr
 {
@@ -26,8 +26,8 @@ public:
     template <typename T>
     auto&& any() const;
 
-    inline const class ntype* type() const { return _type; }
-    inline void* data() const { return _pdata; }
+    NTR_INLINE const class ntype* type() const { return _type; }
+    NTR_INLINE void* data() const { return _pdata; }
 
 private:
     const ntype* _type;

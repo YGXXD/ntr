@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../config.h"
+#include "../setup.h"
 
 namespace ntr
 {
 
-class ntype
+class NTR_API ntype
 {
 public:
     enum class etype : uint8_t
@@ -18,13 +18,13 @@ public:
 
     ntype(etype kind, std::string_view name);
 
-    inline etype kind() const { return _kind; }
-    inline std::string_view name() const { return _name; }
-    inline void set_name(std::string_view name) { _name = name; }
-    inline bool is_unknown() const { return _kind == etype::eunknown; }
-    inline bool is_numeric() const { return _kind == etype::enumeric; }
-    inline bool is_enum() const { return _kind == etype::eenum; }
-    inline bool is_class() const { return _kind == etype::eclass; }
+    NTR_INLINE etype kind() const { return _kind; }
+    NTR_INLINE std::string_view name() const { return _name; }
+    NTR_INLINE void set_name(std::string_view name) { _name = name; }
+    NTR_INLINE bool is_unknown() const { return _kind == etype::eunknown; }
+    NTR_INLINE bool is_numeric() const { return _kind == etype::enumeric; }
+    NTR_INLINE bool is_enum() const { return _kind == etype::eenum; }
+    NTR_INLINE bool is_class() const { return _kind == etype::eclass; }
 
     const class nnumeric* as_numeric() const;
     const class nenum* as_enum() const;

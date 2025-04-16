@@ -7,7 +7,7 @@ namespace ntr
 {
 
 template <typename T, typename>
-inline nobject::nobject(T&& other)
+NTR_INLINE nobject::nobject(T&& other)
     : _type(nullptr), _data_ops(nullptr), _large_data(nullptr)
 {
     using U = std::decay_t<T>;
@@ -20,7 +20,7 @@ inline nobject::nobject(T&& other)
 }
 
 template <typename T>
-inline T& nobject::as()
+NTR_INLINE T& nobject::as()
 {
     if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nobject as type mismatch");
@@ -31,7 +31,7 @@ inline T& nobject::as()
 }
 
 template <typename T>
-inline const T& nobject::as() const
+NTR_INLINE const T& nobject::as() const
 {
     if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nobject as type mismatch");
@@ -42,7 +42,7 @@ inline const T& nobject::as() const
 }
 
 template <typename T>
-inline nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops()
+NTR_INLINE nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops()
 {
     if constexpr (std::is_copy_constructible_v<T>)
     {

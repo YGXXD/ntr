@@ -7,7 +7,7 @@ namespace ntr
 {
 
 template <typename Ret, typename... Args>
-inline nfunction::nfunction(ntype* parent_type, std::string_view name,
+NTR_INLINE nfunction::nfunction(ntype* parent_type, std::string_view name,
                             Ret (*fun)(Args...))
     : nfunction(parent_type, name)
 {
@@ -32,7 +32,7 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
 }
 
 template <typename Ret, typename ClassT, typename... Args>
-inline nfunction::nfunction(ntype* parent_type, std::string_view name,
+NTR_INLINE nfunction::nfunction(ntype* parent_type, std::string_view name,
                             Ret (ClassT::*fun)(Args...))
     : nfunction(parent_type, name)
 {
@@ -60,7 +60,7 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
 }
 
 template <typename Ret, typename ClassT, typename... Args>
-inline nfunction::nfunction(ntype* parent_type, std::string_view name,
+NTR_INLINE nfunction::nfunction(ntype* parent_type, std::string_view name,
                             Ret (ClassT::*fun)(Args...) const)
     : nfunction(parent_type, name)
 {
@@ -88,7 +88,7 @@ inline nfunction::nfunction(ntype* parent_type, std::string_view name,
 }
 
 template <typename Ret, typename... Args>
-inline void nfunction::init_function_types()
+NTR_INLINE void nfunction::init_function_types()
 {
     _return_type = nregistrar::get_type<std::decay_t<Ret>>();
     _argument_types.reserve(sizeof...(Args));

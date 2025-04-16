@@ -7,7 +7,7 @@
 namespace ntr
 {
 
-class nfunction : public nfield
+class NTR_API nfunction : public nfield
 {
 public:
     nfunction(ntype* parent_type, std::string_view name);
@@ -21,8 +21,8 @@ public:
 
     nobject invoke(const std::vector<nreference>& args) const;
 
-    inline const ntype* return_type() const { return _return_type; }
-    inline const auto& argument_types() const { return _argument_types; }
+    NTR_INLINE const ntype* return_type() const { return _return_type; }
+    NTR_INLINE const auto& argument_types() const { return _argument_types; }
 
 private:
     template <typename Ret, typename... Args>

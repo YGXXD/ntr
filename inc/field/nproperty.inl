@@ -7,7 +7,7 @@ namespace ntr
 {
 
 template <typename T, typename ClassT>
-inline nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::*member))
+NTR_INLINE nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::*member))
     : nproperty(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
@@ -24,7 +24,7 @@ inline nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT:
 }
 
 template <typename T, typename ClassT>
-inline nproperty::nproperty(ntype* parent_type, std::string_view name,
+NTR_INLINE nproperty::nproperty(ntype* parent_type, std::string_view name,
                             T (ClassT::*getter)() const, void (ClassT::*setter)(const T&))
     : nproperty(parent_type, name)
 {
