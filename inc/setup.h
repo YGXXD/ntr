@@ -50,7 +50,7 @@
 #    define NTR_API __attribute__((visibility("default")))
 #elif defined(NTR_COMPILER_GCC)
 #    if defined(NTR_PLATFORM_WINDOWS)
-#        ifdef NTR_BUILD_DLL
+#        ifdef NTR_BUILD_LIB
 #            define NTR_API __attribute__((dllexport))
 #        else
 #            define NTR_API __attribute__((dllimport))
@@ -59,7 +59,7 @@
 #        define NTR_API __attribute__((visibility("default")))
 #    endif
 #elif defined(NTR_COMPILER_MSVC)
-#    ifdef NTR_BUILD_DLL
+#    ifdef NTR_BUILD_LIB
 #        define NTR_API __declspec(dllexport)
 #    else
 #        define NTR_API __declspec(dllimport)
