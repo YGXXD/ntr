@@ -7,8 +7,7 @@ namespace ntr
 {
 
 template <typename Ret, typename... Args>
-NTR_INLINE nfunction::nfunction(ntype* parent_type, std::string_view name,
-                            Ret (*fun)(Args...))
+nfunction::nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args...))
     : nfunction(parent_type, name)
 {
     init_function_types<Ret, Args...>();
@@ -32,8 +31,8 @@ NTR_INLINE nfunction::nfunction(ntype* parent_type, std::string_view name,
 }
 
 template <typename Ret, typename ClassT, typename... Args>
-NTR_INLINE nfunction::nfunction(ntype* parent_type, std::string_view name,
-                            Ret (ClassT::*fun)(Args...))
+nfunction::nfunction(ntype* parent_type, std::string_view name,
+                     Ret (ClassT::*fun)(Args...))
     : nfunction(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
@@ -60,8 +59,8 @@ NTR_INLINE nfunction::nfunction(ntype* parent_type, std::string_view name,
 }
 
 template <typename Ret, typename ClassT, typename... Args>
-NTR_INLINE nfunction::nfunction(ntype* parent_type, std::string_view name,
-                            Ret (ClassT::*fun)(Args...) const)
+nfunction::nfunction(ntype* parent_type, std::string_view name,
+                     Ret (ClassT::*fun)(Args...) const)
     : nfunction(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())

@@ -7,8 +7,7 @@ namespace ntr
 {
 
 template <typename T, typename>
-NTR_INLINE nobject::nobject(T&& other)
-    : _type(nullptr), _data_ops(nullptr), _large_data(nullptr)
+nobject::nobject(T&& other) : _type(nullptr), _data_ops(nullptr), _large_data(nullptr)
 {
     using U = std::decay_t<T>;
     _type = nregistrar::get_type<U>();
@@ -49,7 +48,8 @@ NTR_INLINE nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops(
         ops.copy = [](void*& self_data, void* const& other_data) -> void
         {
             if constexpr (sizeof(T) <= small_data_size)
-                new (&self_data) T(*static_cast<const T*>(reinterpret_cast<const void*>(&other_data)));
+                new (&self_data)
+                    T(*static_cast<const T*>(reinterpret_cast<const void*>(&other_data)));
             else
                 self_data = new T(*static_cast<const T*>(other_data));
         };
@@ -59,7 +59,8 @@ NTR_INLINE nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops(
         ops.move = [](void*& self_data, void*& other_data) -> void
         {
             if constexpr (sizeof(T) <= small_data_size)
-                new (&self_data) T(std::move(*static_cast<T*>(reinterpret_cast<void*>(&other_data))));
+                new (&self_data)
+                    T(std::move(*static_cast<T*>(reinterpret_cast<void*>(&other_data))));
             else
                 self_data = new T(std::move(*static_cast<T*>(other_data)));
         };

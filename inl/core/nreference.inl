@@ -5,7 +5,7 @@ namespace ntr
 {
 
 template <typename T, typename>
-NTR_INLINE nreference::nreference(T&& value) : _type(nullptr), _pdata(nullptr)
+nreference::nreference(T&& value) : _type(nullptr), _pdata(nullptr)
 {
     _type = nregistrar::get_type<std::decay_t<T>>();
     _pdata = const_cast<void*>(static_cast<const void*>(&value));

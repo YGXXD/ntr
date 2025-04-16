@@ -13,21 +13,21 @@ namespace ntr
 
 // ntype::etype::eunknown impl
 template <typename T>
-NTR_INLINE nfactory<ntype::etype::eunknown, T>::nfactory()
+nfactory<ntype::etype::eunknown, T>::nfactory()
 {
     _type = std::make_unique<ntype>(ntype::etype::eunknown, typeid(T).name());
 }
 
 // ntype::etype::enumeric impl
 template <typename T>
-NTR_INLINE nfactory<ntype::etype::enumeric, T>::nfactory()
+nfactory<ntype::etype::enumeric, T>::nfactory()
 {
     _type = std::make_unique<nnumeric>(make_enumeric<T>(), typeid(T).name());
 }
 
 // ntype::etype::eenum impl
 template <typename T>
-NTR_INLINE nfactory<ntype::etype::eenum, T>::nfactory()
+nfactory<ntype::etype::eenum, T>::nfactory()
 {
     _type = std::make_unique<nenum>(typeid(T).name());
 }
@@ -51,7 +51,7 @@ nfactory<ntype::etype::eenum, T>::remove(std::string_view name)
 
 // ntype::etype::eclass impl
 template <typename T>
-NTR_INLINE nfactory<ntype::etype::eclass, T>::nfactory()
+nfactory<ntype::etype::eclass, T>::nfactory()
 {
     _type = std::make_unique<nclass>(typeid(T).name());
 }
@@ -87,7 +87,7 @@ nfactory<ntype::etype::eclass, T>::function(std::string_view name,
 template <typename T>
 template <typename U>
 NTR_INLINE nfactory<ntype::etype::eclass, T>&
-nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::*member))
+nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::* member))
 {
     _type->add_property(std::make_unique<nproperty>(_type.get(), name, member));
     return *this;
