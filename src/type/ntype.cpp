@@ -6,7 +6,8 @@
 namespace ntr
 {
 
-ntype::ntype(etype kind, std::string_view name) : _kind(kind), _name(name)
+ntype::ntype(etype kind, std::string_view name, uint32_t size)
+    : _kind(kind), _name(name), _size(size)
 {
 }
 

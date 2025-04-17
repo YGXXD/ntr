@@ -5,7 +5,7 @@
 namespace ntr
 {
 
-nclass::nclass(std::string_view name) : ntype(etype::eclass, name)
+nclass::nclass(std::string_view name, uint32_t size) : ntype(etype::eclass, name, size)
 {
 }
 

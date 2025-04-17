@@ -8,7 +8,7 @@ namespace ntr
 class NTR_API nclass : public ntype
 {
 public:
-    nclass(std::string_view name);
+    nclass(std::string_view name, uint32_t size);
 
     void add_function(std::unique_ptr<class nfunction>&& function);
     void add_property(std::unique_ptr<class nproperty>&& property);

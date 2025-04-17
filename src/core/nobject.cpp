@@ -5,7 +5,7 @@ namespace ntr
 {
 
 nobject::nobject(const nobject& other)
-    : _type(other._type), _data_ops(other._data_ops), _large_data(nullptr)
+    : _type(other._type), _data_ops(other._data_ops), _small_data()
 {
     if (_data_ops && _data_ops->copy)
         _data_ops->copy(_large_data, other._large_data);
@@ -14,7 +14,7 @@ nobject::nobject(const nobject& other)
 }
 
 nobject::nobject(nobject&& other)
-    : _type(other._type), _data_ops(other._data_ops), _large_data(nullptr)
+    : _type(other._type), _data_ops(other._data_ops), _small_data()
 {
     if (_data_ops && _data_ops->move)
         _data_ops->move(_large_data, other._large_data);

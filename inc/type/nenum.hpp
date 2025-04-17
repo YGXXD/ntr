@@ -8,13 +8,16 @@ namespace ntr
 class NTR_API nenum : public ntype
 {
 public:
-    nenum(std::string_view name);
+    nenum(std::string_view name, uint32_t size);
 
     void add_eitem(std::unique_ptr<class neitem>&& item);
     void remove_eitem(std::string_view name);
 
     const neitem* get_eitem(long value) const;
     const neitem* get_eitem(std::string_view name) const;
+
+    // long get_value(class nobject& obj) const;
+    // void set_value(nobject& obj, long value) const;
 
 private:
     std::list<std::unique_ptr<neitem>> _items;

@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
     function = class_type->get_function("print_member");
     std::cout << function->name() << std::endl;
-    std::cout << function->return_type()->name() << std::endl;
+    std::cout << function->return_type() << std::endl;
     std::cout << function->argument_types().size() << std::endl;
     double x = 19.9;
     std::vector<ntr::nreference> args { my_class, x };
@@ -123,6 +123,10 @@ int main(int argc, char* argv[])
 
     ntr::nreference ref = ntr::nreference(100);
     std::cout << ref.cref<int>() << std::endl;
+
+    long lll = 100;
+    MyEnum eee = static_cast<MyEnum>(lll);
+    // std::cout << sizeof(void) << std::endl;
 
     // MyChild lll = MyChild();
     // std::any a = &lll;

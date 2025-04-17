@@ -7,7 +7,7 @@ namespace ntr
 {
 
 template <typename T, typename>
-nobject::nobject(T&& other) : _type(nullptr), _data_ops(nullptr), _large_data(nullptr)
+nobject::nobject(T&& other) : _type(nullptr), _data_ops(nullptr), _small_data()
 {
     using U = std::decay_t<T>;
     _type = nregistrar::get_type<U>();

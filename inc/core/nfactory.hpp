@@ -6,7 +6,7 @@ namespace ntr
 {
 
 template <ntype::etype E, typename T,
-          typename = std::enable_if_t<!std::is_reference_v<T>>>
+          typename = std::enable_if_t<!std::is_reference_v<T> && !std::is_const_v<T>>>
 class nfactory;
 
 template <typename T>
@@ -80,7 +80,7 @@ public:
     NTR_INLINE nfactory& function(std::string_view name, Ret (T::*fun)(Args...) const);
 
     template <typename U>
-    NTR_INLINE nfactory& property(std::string_view name, U(T::* member));
+    NTR_INLINE nfactory& property(std::string_view name, U(T::*member));
     template <typename U>
     NTR_INLINE nfactory& property(std::string_view name, U (T::*getter)() const,
                                   void (T::*setter)(const U&));
