@@ -16,7 +16,7 @@ public:
     }
 
     template <typename T>
-    static NTR_INLINE const ntype* get_type()
+    static NTR_INLINE const auto* get_type()
     {
         return nregistrar::get_type<T>();
     }

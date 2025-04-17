@@ -12,7 +12,7 @@ NTR_INLINE auto& nregistrar::factory_wrapper()
 }
 
 template <typename T>
-NTR_INLINE const ntype* nregistrar::get_type()
+NTR_INLINE const auto* nregistrar::get_type()
 {
     return factory_wrapper<T>()._type.get();
 }

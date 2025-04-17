@@ -15,7 +15,7 @@ public:
     NTR_INLINE static auto& factory_wrapper();
 
     template <typename T>
-    NTR_INLINE static const ntype* get_type();
+    NTR_INLINE static const auto* get_type();
 
     template <typename T>
     NTR_INLINE auto& regist(std::string_view name);
