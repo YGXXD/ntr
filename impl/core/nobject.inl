@@ -51,7 +51,7 @@ NTR_INLINE nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops(
                 new (&self_data)
                     T(*static_cast<const T*>(reinterpret_cast<const void*>(&other_data)));
             else
-                self_data = new T(*static_cast<const T*>(other_data));
+                new (self_data) T(*static_cast<const T*>(other_data));
         };
     }
     if constexpr (std::is_move_constructible_v<T>)
@@ -62,7 +62,7 @@ NTR_INLINE nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops(
                 new (&self_data)
                     T(std::move(*static_cast<T*>(reinterpret_cast<void*>(&other_data))));
             else
-                self_data = new T(std::move(*static_cast<T*>(other_data)));
+                new (self_data) T(std::move(*static_cast<T*>(other_data)));
         };
     }
     if constexpr (std::is_destructible_v<T>)
