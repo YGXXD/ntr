@@ -22,7 +22,7 @@ public:
         edouble,
     };
 
-    nnumeric(enumeric numeric_kind, std::string_view name, uint32_t size);
+    nnumeric(enumeric numeric_kind, uint32_t size, operations* ops, std::string_view name);
 
     // double get_value(class nobject& obj) const;
     // void set_value(nobject& obj, double value) const;

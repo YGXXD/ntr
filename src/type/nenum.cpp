@@ -4,7 +4,8 @@
 namespace ntr
 {
 
-nenum::nenum(std::string_view name, uint32_t size) : ntype(etype::eenum, name, size)
+nenum::nenum(std::string_view name, uint32_t size, operations* ops)
+    : ntype(etype::eenum, size, ops, name)
 {
 }
 

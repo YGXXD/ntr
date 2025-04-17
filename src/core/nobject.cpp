@@ -4,37 +4,24 @@
 namespace ntr
 {
 
-nobject::nobject(const nobject& other)
-    : _type(other._type), _data_ops(other._data_ops), _small_data()
+nobject nobject::void_ = nobject();
+
+nobject::nobject(const nobject& other) : nobject()
 {
-    if (_data_ops && _data_ops->copy)
-        _data_ops->copy(_large_data, other._large_data);
-    else
-        throw std::runtime_error(std::string(_type->name()) + " has no copy operation");
+    copy(other);
 }
 
-nobject::nobject(nobject&& other)
-    : _type(other._type), _data_ops(other._data_ops), _small_data()
+nobject::nobject(nobject&& other) : nobject()
 {
-    if (_data_ops && _data_ops->move)
-        _data_ops->move(_large_data, other._large_data);
-    else
-        throw std::runtime_error(std::string(_type->name()) + " has no move operation");
+    move(std::move(other));
 }
 
 nobject& nobject::operator=(const nobject& other)
 {
     if (this != &other)
     {
-        if (_data_ops && _data_ops->release)
-            _data_ops->release(_large_data);
-        _type = other._type;
-        _data_ops = other._data_ops;
-        if (_data_ops && _data_ops->copy)
-            _data_ops->copy(_large_data, other._large_data);
-        else
-            throw std::runtime_error(std::string(_type->name()) +
-                                     " has no copy operation");
+        destruct();
+        copy(other);
     }
     return *this;
 }
@@ -43,23 +30,68 @@ nobject& nobject::operator=(nobject&& other)
 {
     if (this != &other)
     {
-        if (_data_ops && _data_ops->release)
-            _data_ops->release(_large_data);
-        _type = other._type;
-        _data_ops = other._data_ops;
-        if (_data_ops && _data_ops->move)
-            _data_ops->move(_large_data, other._large_data);
-        else
-            throw std::runtime_error(std::string(_type->name()) +
-                                     " has no move operation");
+        move(std::move(other));
     }
     return *this;
 }
 
 nobject::~nobject()
 {
-    if (_data_ops && _data_ops->release)
-        _data_ops->release(_large_data);
+    destruct();
+}
+
+void nobject::copy(const nobject& other)
+{
+    if (other._type)
+    {
+        _type = other._type;
+        if (_type->ops()->copy)
+        {
+            if (_type->size() <= sizeof(_small_data))
+                _type->ops()->copy(_small_data, other._small_data);
+            else
+            {
+                _large_data = new std::byte[_type->size()];
+                _type->ops()->copy(_large_data, other._large_data);
+            }
+        }
+        else
+            throw std::runtime_error(std::string(_type->name()) +
+                                     " has no copy operation");
+    }
+}
+
+void nobject::move(nobject&& other)
+{
+    _type = other._type;
+    other._type = nullptr;
+    if constexpr (sizeof(_small_data) > sizeof(_large_data))
+    {
+        std::copy(other._small_data, other._small_data + sizeof(_small_data),
+                  _small_data);
+        std::fill(other._small_data, other._small_data + sizeof(_small_data),
+                  std::byte(0));
+    }
+    else
+    {
+        _large_data = other._large_data;
+        other._large_data = nullptr;
+    }
+}
+
+void nobject::destruct()
+{
+    if (_type)
+    {
+        if (_type->size() <= sizeof(_small_data) && _type->ops()->destruct)
+            _type->ops()->destruct(_small_data);
+        else if (_large_data)
+        {
+            if (_type->ops()->destruct)
+                _type->ops()->destruct(_large_data);
+            delete[] _large_data;
+        }
+    }
 }
 
 } // namespace ntr

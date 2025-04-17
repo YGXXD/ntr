@@ -68,4 +68,32 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
                                              "\"T\" is unknown numeric type");
 }
 
+template <typename T>
+ntype_ops_traits<T>::ntype_ops_traits()
+{
+    if constexpr (std::is_copy_constructible_v<T>)
+    {
+        ops.copy = [](void* self_data, const void* const other_data) -> void
+        {
+            new (self_data) T(*static_cast<const T*>(other_data));
+        };
+    }
+    if constexpr (std::is_move_constructible_v<T>)
+    {
+        ops.move = [](void* self_data, void* other_data) -> void
+        {
+            new (self_data) T(std::move(*static_cast<T*>(other_data)));
+        };
+    }
+    if constexpr (std::is_destructible_v<T>)
+    {
+        ops.destruct = [](void* self_data) -> void
+        {
+            static_cast<T*>(self_data)->~T();
+        };
+    }
+    else
+        static_assert(!std::is_same_v<T, T>, "\"T\" has no release operation");
+}
+
 } // namespace ntr

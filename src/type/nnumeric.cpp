@@ -3,8 +3,9 @@
 namespace ntr
 {
 
-nnumeric::nnumeric(enumeric numeric_kind, std::string_view name, uint32_t size)
-    : ntype(etype::enumeric, name, size), _numeric_kind(numeric_kind)
+nnumeric::nnumeric(enumeric numeric_kind, uint32_t size, operations* ops,
+                   std::string_view name)
+    : ntype(etype::enumeric, size, ops, name), _numeric_kind(numeric_kind)
 {
     switch (numeric_kind)
     {

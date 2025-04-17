@@ -16,10 +16,18 @@ public:
         eclass,
     };
 
-    ntype(etype kind, std::string_view name, uint32_t size);
+    struct operations
+    {
+        std::function<void(void*, const void* const)> copy;
+        std::function<void(void*, void*)> move;
+        std::function<void(void*)> destruct;
+    };
+
+    ntype(etype kind, uint32_t size, operations* ops, std::string_view name);
 
     NTR_INLINE etype kind() const { return _kind; }
     NTR_INLINE uint32_t size() const { return _size; }
+    NTR_INLINE const operations* ops() const { return _ops; }
     NTR_INLINE std::string_view name() const { return _name; }
     NTR_INLINE void set_name(std::string_view name) { _name = name; }
     NTR_INLINE bool is_unknown() const { return _kind == etype::eunknown; }
@@ -34,6 +42,7 @@ public:
 private:
     etype _kind;
     uint32_t _size;
+    operations* _ops;
     std::string _name;
 };
 

@@ -21,4 +21,15 @@ NTR_INLINE constexpr ntype::etype make_etype();
 template <typename T>
 NTR_INLINE constexpr nnumeric::enumeric make_enumeric();
 
+template <typename T>
+struct ntype_ops_traits
+{
+private:
+    ntype_ops_traits();
+
+public:
+    NTR_SINGLETON_IMPL(ntype_ops_traits<T>)
+    ntype::operations ops;
+};
+
 } // namespace ntr
