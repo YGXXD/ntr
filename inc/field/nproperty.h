@@ -20,6 +20,7 @@ public:
     nobject get(const nreference& instance) const;
     void set(const nreference& instance, const nreference& value) const;
 
+    const class nclass* class_type() const;
     NTR_INLINE const ntype* property_type() const { return _property_type; }
 
 private:

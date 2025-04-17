@@ -21,6 +21,7 @@ public:
 
     nobject invoke(const std::vector<nreference>& args) const;
 
+    const class nclass* class_type() const;
     NTR_INLINE const ntype* return_type() const { return _return_type; }
     NTR_INLINE const auto& argument_types() const { return _argument_types; }
 
