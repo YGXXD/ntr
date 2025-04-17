@@ -4,8 +4,6 @@
 namespace ntr
 {
 
-nobject nobject::void_ = nobject();
-
 nobject::nobject(const nobject& other) : nobject()
 {
     copy(other);
@@ -93,5 +91,17 @@ void nobject::destruct()
         }
     }
 }
+
+std::byte* nobject::data()
+{
+    return _type->size() <= sizeof(_small_data) ? _small_data : _large_data;
+}
+
+const std::byte* nobject::data() const
+{
+    return _type->size() <= sizeof(_small_data) ? _small_data : _large_data;
+}
+
+nobject nobject::void_ = nobject();
 
 } // namespace ntr

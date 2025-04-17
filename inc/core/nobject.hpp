@@ -25,7 +25,8 @@ public:
     NTR_INLINE const T& as() const;
 
     NTR_INLINE const class ntype* type() const { return _type; }
-    NTR_INLINE void* data() const { return _large_data; }
+    std::byte* data();
+    const std::byte* data() const;
 
     static nobject void_;
 
