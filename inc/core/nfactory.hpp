@@ -6,7 +6,8 @@ namespace ntr
 {
 
 template <ntype::etype E, typename T,
-          typename = std::enable_if_t<!std::is_reference_v<T> && !std::is_const_v<T>>>
+          typename = std::enable_if_t<!std::is_reference_v<T> && !std::is_const_v<T> &&
+                                      !std::is_same_v<T, void>>>
 class nfactory;
 
 template <typename T>

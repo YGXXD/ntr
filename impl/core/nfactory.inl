@@ -15,11 +15,7 @@ namespace ntr
 template <typename T>
 nfactory<ntype::etype::eunknown, T>::nfactory()
 {
-    if constexpr (std::is_same_v<T, void>)
-        _type = std::make_unique<ntype>(ntype::etype::eunknown, typeid(T).name(), 0);
-    else
-        _type =
-            std::make_unique<ntype>(ntype::etype::eunknown, typeid(T).name(), sizeof(T));
+    _type = std::make_unique<ntype>(ntype::etype::eunknown, typeid(T).name(), sizeof(T));
 }
 
 // ntype::etype::enumeric impl

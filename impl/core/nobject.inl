@@ -79,4 +79,12 @@ NTR_INLINE nobject::nobject_data_ops_traits<T>::nobject_data_ops_traits() : ops(
         static_assert(!std::is_same_v<T, T>, "\"T\" has no release operation");
 }
 
+nobject nobject::void_ = []() -> nobject
+{
+    nobject obj {};
+    obj._type = nullptr;
+    obj._data_ops = &nobject_data_ops_traits<std::byte>::instance().ops;
+    return obj;
+}();
+
 } // namespace ntr

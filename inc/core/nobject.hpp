@@ -25,7 +25,10 @@ public:
     NTR_INLINE const class ntype* type() const { return _type; }
     NTR_INLINE void* data() const { return _large_data; }
 
+    static nobject void_;
+
 private:
+    nobject() = default;
     constexpr static size_t small_data_size = 16;
 
     struct nobject_data_operations

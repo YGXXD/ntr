@@ -25,7 +25,7 @@ nfunction::nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args.
         else
         {
             (*fun)((it++)->any<Args>()...);
-            return nobject(nullptr);
+            return nobject::void_;
         }
     };
 }
@@ -53,7 +53,7 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
         else
         {
             (args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...);
-            return nobject(nullptr);
+            return nobject::void_;
         }
     };
 }
@@ -81,7 +81,7 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
         else
         {
             (args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...);
-            return nobject(nullptr);
+            return nobject::void_;
         }
     };
 }
@@ -89,7 +89,10 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
 template <typename Ret, typename... Args>
 NTR_INLINE void nfunction::init_function_types()
 {
-    _return_type = nregistrar::get_type<std::decay_t<Ret>>();
+    if constexpr (std::is_same_v<Ret, void>)
+        _return_type = nullptr;
+    else
+        _return_type = nregistrar::get_type<std::decay_t<Ret>>();
     _argument_types.reserve(sizeof...(Args));
     ((_argument_types.push_back(nregistrar::get_type<std::decay_t<Args>>())), ...);
 }

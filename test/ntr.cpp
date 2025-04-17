@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 
     const ntr::nfunction* function = class_type->get_function("print");
     std::cout << function->name() << std::endl;
-    std::cout << function->return_type()->name() << std::endl;
+    std::cout << function->return_type() << std::endl;
     std::cout << function->argument_types().size() << std::endl;
 
     function->invoke({ static_cast<MyFather&&>(MyChild()) });
