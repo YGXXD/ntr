@@ -26,6 +26,8 @@ nobject& nobject::operator=(const nobject& other)
 {
     if (this != &other)
     {
+        if (_data_ops && _data_ops->release)
+            _data_ops->release(_large_data);
         _type = other._type;
         _data_ops = other._data_ops;
         if (_data_ops && _data_ops->copy)
@@ -41,6 +43,8 @@ nobject& nobject::operator=(nobject&& other)
 {
     if (this != &other)
     {
+        if (_data_ops && _data_ops->release)
+            _data_ops->release(_large_data);
         _type = other._type;
         _data_ops = other._data_ops;
         if (_data_ops && _data_ops->move)
