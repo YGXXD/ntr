@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ntype.h"
+#include "ntype.hpp"
 
 namespace ntr
 {

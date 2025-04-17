@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../inc/core/ntraits.h"
+#include "../../inc/core/ntraits.hpp"
 
 namespace ntr
 {

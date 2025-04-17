@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../type/ntype.h"
-#include "../type/nnumeric.h"
+#include "../type/ntype.hpp"
+#include "../type/nnumeric.hpp"
 
 namespace ntr
 {

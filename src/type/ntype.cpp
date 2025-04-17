@@ -1,7 +1,7 @@
-#include "../../inc/type/ntype.h"
-#include "../../inc/type/nnumeric.h"
-#include "../../inc/type/nenum.h"
-#include "../../inc/type/nclass.h"
+#include "../../inc/type/ntype.hpp"
+#include "../../inc/type/nnumeric.hpp"
+#include "../../inc/type/nenum.hpp"
+#include "../../inc/type/nclass.hpp"
 
 namespace ntr
 {

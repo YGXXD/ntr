@@ -1,4 +1,4 @@
-#include "../../inc/type/nnumeric.h"
+#include "../../inc/type/nnumeric.hpp"
 
 namespace ntr
 {

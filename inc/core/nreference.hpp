@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../setup.h"
+#include "../setup.hpp"
 
 namespace ntr
 {

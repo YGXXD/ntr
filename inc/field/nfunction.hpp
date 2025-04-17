@@ -1,8 +1,8 @@
 #pragma once
 
-#include "nfield.h"
-#include "../core/nobject.h"
-#include "../core/nreference.h"
+#include "nfield.hpp"
+#include "../core/nobject.hpp"
+#include "../core/nreference.hpp"
 
 namespace ntr
 {

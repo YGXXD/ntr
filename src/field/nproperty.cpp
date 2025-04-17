@@ -1,5 +1,5 @@
-#include "../../inc/field/nproperty.h"
-#include "../../inc/type/nclass.h"
+#include "../../inc/field/nproperty.hpp"
+#include "../../inc/type/nclass.hpp"
 
 namespace ntr
 {

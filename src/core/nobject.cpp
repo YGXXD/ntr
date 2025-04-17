@@ -1,5 +1,5 @@
-#include "../../inc/core/nobject.h"
-#include "../../inc/type/ntype.h"
+#include "../../inc/core/nobject.hpp"
+#include "../../inc/type/ntype.hpp"
 
 namespace ntr
 {

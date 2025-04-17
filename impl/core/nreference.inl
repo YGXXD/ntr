@@ -1,5 +1,5 @@
-#include "../../inc/core/nreference.h"
-#include "../../inc/core/nregistrar.h"
+#include "../../inc/core/nreference.hpp"
+#include "../../inc/core/nregistrar.hpp"
 
 namespace ntr
 {

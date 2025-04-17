@@ -1,4 +1,4 @@
-#include "../inc/nephren.h"
+#include "../inc/nephren.hpp"
 #include <iostream>
 
 class MoveObj

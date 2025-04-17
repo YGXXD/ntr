@@ -1,6 +1,6 @@
-#include "../../inc/type/nclass.h"
-#include "../../inc/field/nfunction.h"
-#include "../../inc/field/nproperty.h"
+#include "../../inc/type/nclass.hpp"
+#include "../../inc/field/nfunction.hpp"
+#include "../../inc/field/nproperty.hpp"
 
 namespace ntr
 {
