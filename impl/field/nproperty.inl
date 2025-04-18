@@ -13,11 +13,11 @@ nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::* memb
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument("parent type is not property's class type");
     _property_type = nregistrar::get_type<T>();
-    _getter = [member](const nreference& instance) -> nobject
+    _getter = [member](const nwrapper& instance) -> nobject
     {
         return nobject::make(instance.cref<ClassT>().*member);
     };
-    _setter = [member](const nreference& instance, const nreference& value)
+    _setter = [member](const nwrapper& instance, const nwrapper& value)
     {
         instance.ref<ClassT>().*member = value.cref<T>();
     };
@@ -31,11 +31,11 @@ nproperty::nproperty(ntype* parent_type, std::string_view name,
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument("parent type is not property's class type");
     _property_type = nregistrar::get_type<T>();
-    _getter = [getter](const nreference& instance) -> nobject
+    _getter = [getter](const nwrapper& instance) -> nobject
     {
         return nobject::make((instance.cref<ClassT>().*getter)());
     };
-    _setter = [setter](const nreference& instance, const nreference& value)
+    _setter = [setter](const nwrapper& instance, const nwrapper& value)
     {
         (instance.ref<ClassT>().*setter)(value.cref<T>());
     };

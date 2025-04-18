@@ -6,4 +6,4 @@
 #include "../impl/core/nfactory.inl"
 #include "../impl/core/nregistrar.inl"
 #include "../impl/core/nobject.inl"
-#include "../impl/core/nreference.inl"
+#include "../impl/core/nwrapper.inl"

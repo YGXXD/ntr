@@ -114,19 +114,26 @@ int main(int argc, char* argv[])
     std::cout << function->return_type()->name() << std::endl;
     std::cout << function->argument_types().size() << std::endl;
     double x = 19.9;
-    std::vector<ntr::nreference> args { my_class, x };
+    std::vector<ntr::nwrapper> args { my_class, x };
     function->invoke(args);
     auto result = function->invoke(args);
-    result.as<ntr::nreference>().ref<double>() = 10;
-    std::cout << result.as<ntr::nreference>().cref<double>() << std::endl;
+    result.as<ntr::nwrapper>().ref<double>() = 10;
+    std::cout << result.as<ntr::nwrapper>().cref<double>() << std::endl;
     std::cout << x << std::endl;
 
-    ntr::nreference ref = ntr::nreference(100);
+    ntr::nwrapper ref = ntr::nwrapper(100);
     std::cout << ref.cref<int>() << std::endl;
+    std::unique_ptr<int> a = std::make_unique<int>(100);
+    a = std::make_unique<int>(200);
+    
+    ntr::nobject obj = ntr::nobject::make<int>(100);
 
-    long lll = 100;
-    MyEnum eee = static_cast<MyEnum>(lll);
-    std::cout << sizeof(ntr::nobject) << std::endl;
+    ntr::nnumeric::set_value(obj, 205.2);
+    std::cout << ntr::nnumeric::get_value(obj) << std::endl;
+
+    // long lll = 100;
+    // MyEnum eee = static_cast<MyEnum>(lll);
+    // std::cout << sizeof(ntr::nobject) << std::endl;
     // ntr::nobject obj = ntr::nobject(MyChild());
     // ntr::nobject obj2 = obj.clone();
     // ntr::nobject obj3 = obj.steal();

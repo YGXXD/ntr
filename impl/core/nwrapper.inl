@@ -1,42 +1,42 @@
-#include "../../inc/core/nreference.hpp"
+#include "../../inc/core/nwrapper.hpp"
 #include "../../inc/core/nregistrar.hpp"
 
 namespace ntr
 {
 
 template <typename T, typename>
-nreference::nreference(T&& value) : _type(nullptr), _pdata(nullptr)
+nwrapper::nwrapper(T&& value) : _type(nullptr), _pdata(nullptr)
 {
     _type = nregistrar::get_type<std::decay_t<T>>();
     _pdata = const_cast<void*>(static_cast<const void*>(&value));
 }
 
 template <typename T>
-NTR_INLINE T& nreference::ref() const
+NTR_INLINE T& nwrapper::ref() const
 {
     if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nreference ref type mismatch");
+        throw std::runtime_error("nwrapper ref type mismatch");
     return *static_cast<T*>(_pdata);
 }
 
 template <typename T>
-NTR_INLINE const T& nreference::cref() const
+NTR_INLINE const T& nwrapper::cref() const
 {
     if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nreference cref type mismatch");
+        throw std::runtime_error("nwrapper cref type mismatch");
     return *static_cast<const T*>(_pdata);
 }
 
 template <typename T>
-NTR_INLINE T&& nreference::rref() const
+NTR_INLINE T&& nwrapper::rref() const
 {
     if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nreference rref type mismatch");
+        throw std::runtime_error("nwrapper rref type mismatch");
     return std::move(*static_cast<T*>(_pdata));
 }
 
 template <typename T>
-NTR_INLINE auto&& nreference::any() const
+NTR_INLINE auto&& nwrapper::any() const
 {
     if constexpr (std::is_rvalue_reference_v<T>)
         return rref<std::decay_t<T>>();

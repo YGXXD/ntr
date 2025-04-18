@@ -22,7 +22,7 @@ public:
     int _value2;
 };
 
-void test_inref(const ntr::nreference& a)
+void test_inref(const ntr::nwrapper& a)
 {
     std::cout << a.ref<float>() << std::endl;
     std::cout << a.cref<float>() << std::endl;
@@ -32,19 +32,19 @@ void test_inref(const ntr::nreference& a)
 
 void test_ref()
 {
-    const ntr::nreference a = 1.f;
+    const ntr::nwrapper a = 1.f;
     std::cout << a.ref<float>() << std::endl;
     std::cout << a.cref<float>() << std::endl;
     std::cout << a.rref<float>() << std::endl;
     std::cout << a.data() << std::endl;
 
-    const ntr::nreference b = 2.f;
+    const ntr::nwrapper b = 2.f;
     std::cout << b.ref<float>() << std::endl;
     std::cout << b.cref<float>() << std::endl;
     std::cout << b.rref<float>() << std::endl;
     std::cout << b.data() << std::endl;
 
-    const ntr::nreference c = 3.f;
+    const ntr::nwrapper c = 3.f;
     std::cout << c.ref<float>() << std::endl;
     std::cout << c.cref<float>() << std::endl;
     std::cout << c.rref<float>() << std::endl;

@@ -2,7 +2,7 @@
 
 #include "nfield.hpp"
 #include "../core/nobject.hpp"
-#include "../core/nreference.hpp"
+#include "../core/nwrapper.hpp"
 
 namespace ntr
 {
@@ -19,7 +19,7 @@ public:
     nfunction(ntype* parent_type, std::string_view name,
               Ret (ClassT::*fun)(Args...) const);
 
-    nobject invoke(const std::vector<nreference>& args) const;
+    nobject invoke(const std::vector<nwrapper>& args) const;
 
     const class nclass* class_type() const;
     NTR_INLINE const ntype* return_type() const { return _return_type; }
@@ -31,7 +31,7 @@ private:
 
     const ntype* _return_type;
     std::vector<const ntype*> _argument_types;
-    std::function<nobject(const std::vector<nreference>&)> _function;
+    std::function<nobject(const std::vector<nwrapper>&)> _function;
 };
 
 } // namespace ntr

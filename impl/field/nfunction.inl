@@ -11,12 +11,12 @@ nfunction::nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args.
     : nfunction(parent_type, name)
 {
     init_function_types<Ret, Args...>();
-    _function = [fun](const std::vector<nreference>& args) -> nobject
+    _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
-        std::vector<nreference>::const_iterator it = args.begin();
+        std::vector<nwrapper>::const_iterator it = args.begin();
         if constexpr (std::is_lvalue_reference_v<Ret>)
         {
-            return nobject::make(nreference((*fun)(*(it++)->any<Args>()...)));
+            return nobject::make(nwrapper((*fun)(*(it++)->any<Args>()...)));
         }
         else if constexpr (!std::is_same_v<Ret, void>)
         {
@@ -38,13 +38,13 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument("parent type is not function's class type");
     init_function_types<Ret, ClassT&, Args...>();
-    _function = [fun](const std::vector<nreference>& args) -> nobject
+    _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
-        std::vector<nreference>::const_iterator it = args.begin() + 1;
+        std::vector<nwrapper>::const_iterator it = args.begin() + 1;
         if constexpr (std::is_lvalue_reference_v<Ret>)
         {
             return nobject::make(
-                nreference((args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...)));
+                nwrapper((args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...)));
         }
         if constexpr (!std::is_same_v<Ret, void>)
         {
@@ -67,13 +67,13 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument("parent type is not function's class type");
     init_function_types<Ret, const ClassT&, Args...>();
-    _function = [fun](const std::vector<nreference>& args) -> nobject
+    _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
-        std::vector<nreference>::const_iterator it = args.begin() + 1;
+        std::vector<nwrapper>::const_iterator it = args.begin() + 1;
         if constexpr (std::is_lvalue_reference_v<Ret>)
         {
             return nobject::make(
-                nreference((args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...)));
+                nwrapper((args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...)));
         }
         if constexpr (!std::is_same_v<Ret, void>)
         {

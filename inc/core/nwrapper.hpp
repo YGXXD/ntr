@@ -5,17 +5,17 @@
 namespace ntr
 {
 
-class NTR_API nreference
+class NTR_API nwrapper
 {
 public:
     template <typename T,
-              typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, nreference>>>
-    nreference(T&& value);
-    nreference(const nreference& other) = default;
-    nreference(nreference&& other) = default;
-    nreference& operator=(const nreference& other) = default;
-    nreference& operator=(nreference&& other) = default;
-    ~nreference() = default;
+              typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, nwrapper>>>
+    nwrapper(T&& value);
+    nwrapper(const nwrapper& other) = default;
+    nwrapper(nwrapper&& other) = default;
+    nwrapper& operator=(const nwrapper& other) = default;
+    nwrapper& operator=(nwrapper&& other) = default;
+    ~nwrapper() = default;
 
     template <typename T>
     NTR_INLINE T& ref() const;

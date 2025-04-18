@@ -11,12 +11,12 @@ nproperty::nproperty(ntype* parent_type, std::string_view name)
         throw std::invalid_argument("nproperty must be created from a class type");
 }
 
-nobject nproperty::get(const nreference& instance) const
+nobject nproperty::get(const nwrapper& instance) const
 {
     return _getter(instance);
 }
 
-void nproperty::set(const nreference& instance, const nreference& value) const
+void nproperty::set(const nwrapper& instance, const nwrapper& value) const
 {
     _setter(instance, value);
 }
