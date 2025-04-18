@@ -26,6 +26,10 @@ public:
     NTR_INLINE const auto& argument_types() const { return _argument_types; }
 
 private:
+    template <typename Ret, typename... Args, typename OP>
+    static NTR_INLINE nobject wrapper_call(OP op,
+                                           std::vector<nwrapper>::const_iterator it);
+
     template <typename Ret, typename... Args>
     NTR_INLINE void init_function_types();
 

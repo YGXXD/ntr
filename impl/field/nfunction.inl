@@ -6,6 +6,25 @@
 namespace ntr
 {
 
+template <typename Ret, typename... Args, typename OP>
+NTR_INLINE nobject nfunction::wrapper_call(OP op,
+                                           std::vector<nwrapper>::const_iterator it)
+{
+    if constexpr (std::is_lvalue_reference_v<Ret>)
+    {
+        return nobject::make(nwrapper(op((it++)->any<Args>()...)));
+    }
+    else if constexpr (!std::is_same_v<Ret, void>)
+    {
+        return nobject::make(op((it++)->any<Args>()...));
+    }
+    else
+    {
+        op((it++)->any<Args>()...);
+        return nobject::make<void>();
+    }
+}
+
 template <typename Ret, typename... Args>
 nfunction::nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args...))
     : nfunction(parent_type, name)
@@ -13,20 +32,7 @@ nfunction::nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args.
     init_function_types<Ret, Args...>();
     _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
-        std::vector<nwrapper>::const_iterator it = args.begin();
-        if constexpr (std::is_lvalue_reference_v<Ret>)
-        {
-            return nobject::make(nwrapper((*fun)(*(it++)->any<Args>()...)));
-        }
-        else if constexpr (!std::is_same_v<Ret, void>)
-        {
-            return nobject::make((*fun)(*(it++)->any<Args>()...));
-        }
-        else
-        {
-            (*fun)((it++)->any<Args>()...);
-            return nobject::make<void>();
-        }
+        return wrapper_call<Ret, Args...>(fun, args.begin());
     };
 }
 
@@ -40,22 +46,10 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
     init_function_types<Ret, ClassT&, Args...>();
     _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
-        std::vector<nwrapper>::const_iterator it = args.begin() + 1;
-        if constexpr (std::is_lvalue_reference_v<Ret>)
-        {
-            return nobject::make(
-                nwrapper((args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...)));
-        }
-        if constexpr (!std::is_same_v<Ret, void>)
-        {
-            return nobject::make(
-                (args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...));
-        }
-        else
-        {
-            (args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...);
-            return nobject::make<void>();
-        }
+        return wrapper_call<Ret, Args...>(
+            [instance = args.begin(), fun](Args... args) -> Ret
+        { return (instance->ref<ClassT>().*fun)(args...); },
+            args.begin() + 1);
     };
 }
 
@@ -69,22 +63,10 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
     init_function_types<Ret, const ClassT&, Args...>();
     _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
-        std::vector<nwrapper>::const_iterator it = args.begin() + 1;
-        if constexpr (std::is_lvalue_reference_v<Ret>)
-        {
-            return nobject::make(
-                nwrapper((args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...)));
-        }
-        if constexpr (!std::is_same_v<Ret, void>)
-        {
-            return nobject::make(
-                (args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...));
-        }
-        else
-        {
-            (args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...);
-            return nobject::make<void>();
-        }
+        return wrapper_call<Ret, Args...>(
+            [instance = args.begin(), fun](Args... args) -> Ret
+        { return (instance->cref<ClassT>().*fun)(args...); },
+            args.begin() + 1);
     };
 }
 

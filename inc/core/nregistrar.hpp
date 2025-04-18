@@ -12,10 +12,10 @@ public:
     NTR_SINGLETON_IMPL(nregistrar)
 
     template <typename T>
-    NTR_INLINE static auto& factory_wrapper();
+    static NTR_INLINE auto& factory_wrapper();
 
     template <typename T>
-    NTR_INLINE static const auto* get_type();
+    static NTR_INLINE const auto* get_type();
 
     template <typename T>
     NTR_INLINE auto& regist(std::string_view name);
