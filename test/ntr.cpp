@@ -1,6 +1,5 @@
 #include "../inc/nephren.hpp"
 #include <iostream>
-#include <any>
 
 enum class MyEnum
 {
@@ -104,14 +103,15 @@ int main(int argc, char* argv[])
 
     const ntr::nfunction* function = class_type->get_function("print");
     std::cout << function->name() << std::endl;
-    std::cout << function->return_type() << std::endl;
+    std::cout << function->return_type()->name() << std::endl;
     std::cout << function->argument_types().size() << std::endl;
 
-    function->invoke({ static_cast<MyFather&&>(MyChild()) });
+    std::cout << function->invoke({ static_cast<MyFather&&>(MyChild()) }).type()->name()
+              << std::endl;
 
     function = class_type->get_function("print_member");
     std::cout << function->name() << std::endl;
-    std::cout << function->return_type() << std::endl;
+    std::cout << function->return_type()->name() << std::endl;
     std::cout << function->argument_types().size() << std::endl;
     double x = 19.9;
     std::vector<ntr::nreference> args { my_class, x };
@@ -126,7 +126,10 @@ int main(int argc, char* argv[])
 
     long lll = 100;
     MyEnum eee = static_cast<MyEnum>(lll);
-    // std::cout << sizeof(void) << std::endl;
+    std::cout << sizeof(ntr::nobject) << std::endl;
+    // ntr::nobject obj = ntr::nobject(MyChild());
+    // ntr::nobject obj2 = obj.clone();
+    // ntr::nobject obj3 = obj.steal();
 
     // MyChild lll = MyChild();
     // std::any a = &lll;

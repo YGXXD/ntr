@@ -73,30 +73,39 @@ const std::byte* nobject::data() const
 nobject nobject::new_(const ntype* type)
 {
     nobject object(type);
-    if (object.type()->ops()->construct)
-        object.type()->ops()->construct(object.data());
-    else
-        throw std::runtime_error("nobject::new_ : construct operation not found");
+    if (object.is_valid())
+    {
+        if (object.type()->ops()->construct)
+            object.type()->ops()->construct(object.data());
+        else
+            throw std::runtime_error("nobject::new_ : construct operation not found");
+    }
     return object;
 }
 
 nobject nobject::new_copy_(const ntype* type, const void* const data)
 {
     nobject object(type);
-    if (object.type()->ops()->copy)
-        object.type()->ops()->copy(object.data(), data);
-    else
-        throw std::runtime_error("nobject::new_copy_ : copy operation not found");
+    if (object.is_valid())
+    {
+        if (object.type()->ops()->copy)
+            object.type()->ops()->copy(object.data(), data);
+        else
+            throw std::runtime_error("nobject::new_copy_ : copy operation not found");
+    }
     return object;
 }
 
 nobject nobject::new_move_(const ntype* type, void* data)
 {
     nobject object(type);
-    if (object.type()->ops()->move)
-        object.type()->ops()->move(object.data(), data);
-    else
-        throw std::runtime_error("nobject::new_move_ : move operation not found");
+    if (object.is_valid())
+    {
+        if (object.type()->ops()->move)
+            object.type()->ops()->move(object.data(), data);
+        else
+            throw std::runtime_error("nobject::new_move_ : move operation not found");
+    }
     return object;
 }
 

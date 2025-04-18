@@ -25,10 +25,7 @@ NTR_INLINE const T& nobject::as() const
 template <typename T>
 NTR_INLINE nobject nobject::make()
 {
-    if constexpr (std::is_same_v<T, void>)
-        return nobject(nregistrar::get_type<void>());
-    else
-        return new_(nregistrar::get_type<T>());
+    return new_(nregistrar::get_type<T>());
 }
 
 template <typename T>
