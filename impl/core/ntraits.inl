@@ -71,6 +71,13 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
 template <typename T>
 ntype_ops_traits<T>::ntype_ops_traits()
 {
+    if constexpr (std::is_default_constructible_v<T>)
+    {
+        ops.construct = [](void* self_data) -> void
+        {
+            new (self_data) T();
+        };
+    }
     if constexpr (std::is_copy_constructible_v<T>)
     {
         ops.copy = [](void* self_data, const void* const other_data) -> void
@@ -92,8 +99,6 @@ ntype_ops_traits<T>::ntype_ops_traits()
             static_cast<T*>(self_data)->~T();
         };
     }
-    else
-        static_assert(!std::is_same_v<T, T>, "\"T\" has no release operation");
 }
 
 } // namespace ntr

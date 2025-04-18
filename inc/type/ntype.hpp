@@ -18,6 +18,7 @@ public:
 
     struct operations
     {
+        std::function<void(void*)> construct;
         std::function<void(void*, const void* const)> copy;
         std::function<void(void*, void*)> move;
         std::function<void(void*)> destruct;

@@ -15,8 +15,15 @@ namespace ntr
 template <typename T>
 nfactory<ntype::etype::eunknown, T>::nfactory()
 {
+    constexpr size_t size = []()
+    {
+        if constexpr (std::is_same_v<T, void>)
+            return 0;
+        else
+            return sizeof(T);
+    }();
     _type =
-        std::make_unique<ntype>(ntype::etype::eunknown, sizeof(T),
+        std::make_unique<ntype>(ntype::etype::eunknown, size,
                                 &ntype_ops_traits<T>::instance().ops, typeid(T).name());
 }
 

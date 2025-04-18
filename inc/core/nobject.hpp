@@ -2,20 +2,22 @@
 
 #include "../setup.hpp"
 
-#define NTR_OBJECT_SMALL_SIZE 16
-
 namespace ntr
 {
 
 class NTR_API nobject
 {
 public:
-    template <typename T,
-              typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, nobject>>>
-    nobject(T&& other);
-    nobject(const nobject& other);
+    template <typename T>
+    static NTR_INLINE nobject make();
+    template <typename T>
+    static NTR_INLINE nobject make(T&& value);
+
+    static nobject new_(const class ntype* type);
+    static nobject new_copy_(const ntype* type, const void* const data);
+    static nobject new_move_(const ntype* type, void* data);
+
     nobject(nobject&& other);
-    nobject& operator=(const nobject& other);
     nobject& operator=(nobject&& other);
     ~nobject();
 
@@ -24,23 +26,23 @@ public:
     template <typename T>
     NTR_INLINE const T& as() const;
 
-    NTR_INLINE const class ntype* type() const { return _type; }
+    bool is_heap() const;
+    bool is_valid() const;
     std::byte* data();
     const std::byte* data() const;
 
-    static nobject void_;
+    NTR_INLINE const ntype* type() const { return _type; }
 
 private:
     nobject() = default;
-
-    void copy(const nobject& other);
-    void move(nobject&& other);
-    void destruct();
+    nobject(const ntype* type);
+    nobject(const nobject& other) = delete;
+    nobject& operator=(const nobject& other) = delete;
 
     const ntype* _type;
     union
     {
-        std::byte _small_data[NTR_OBJECT_SMALL_SIZE];
+        std::array<std::byte, 24> _small_data;
         std::byte* _large_data;
     };
 };

@@ -15,7 +15,7 @@ nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::* memb
     _property_type = nregistrar::get_type<T>();
     _getter = [member](const nreference& instance) -> nobject
     {
-        return nobject(instance.cref<ClassT>().*member);
+        return nobject::make(instance.cref<ClassT>().*member);
     };
     _setter = [member](const nreference& instance, const nreference& value)
     {
@@ -33,7 +33,7 @@ nproperty::nproperty(ntype* parent_type, std::string_view name,
     _property_type = nregistrar::get_type<T>();
     _getter = [getter](const nreference& instance) -> nobject
     {
-        return nobject((instance.cref<ClassT>().*getter)());
+        return nobject::make((instance.cref<ClassT>().*getter)());
     };
     _setter = [setter](const nreference& instance, const nreference& value)
     {

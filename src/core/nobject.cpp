@@ -4,104 +4,100 @@
 namespace ntr
 {
 
-nobject::nobject(const nobject& other) : nobject()
+nobject::nobject(const class ntype* type) : _type(type), _small_data()
 {
-    copy(other);
+    if (is_heap())
+        _large_data = new std::byte[_type->size()];
+    else if (_type->size() > 0)
+        _small_data[0] = static_cast<std::byte>(1);
 }
 
-nobject::nobject(nobject&& other) : nobject()
+nobject::nobject(nobject&& other) : _type(other._type)
 {
-    move(std::move(other));
-}
-
-nobject& nobject::operator=(const nobject& other)
-{
-    if (this != &other)
+    if (is_heap())
     {
-        destruct();
-        copy(other);
+        _large_data = other._large_data;
+        other._large_data = nullptr;
     }
-    return *this;
+    else
+    {
+        _small_data = other._small_data;
+        other._small_data[0] = static_cast<std::byte>(0);
+    }
 }
 
 nobject& nobject::operator=(nobject&& other)
 {
-    if (this != &other)
+    _type = other._type;
+    if (is_heap())
     {
-        move(std::move(other));
+        _large_data = other._large_data;
+        other._large_data = nullptr;
+    }
+    else
+    {
+        _small_data = other._small_data;
+        other._small_data[0] = static_cast<std::byte>(0);
     }
     return *this;
 }
 
 nobject::~nobject()
 {
-    destruct();
+    if (is_valid())
+        type()->ops()->destruct(data());
+    if (is_heap())
+        delete[] _large_data;
 }
 
-void nobject::copy(const nobject& other)
+bool nobject::is_heap() const
 {
-    if (other._type)
-    {
-        _type = other._type;
-        if (_type->ops()->copy)
-        {
-            if (_type->size() <= sizeof(_small_data))
-                _type->ops()->copy(_small_data, other._small_data);
-            else
-            {
-                _large_data = new std::byte[_type->size()];
-                _type->ops()->copy(_large_data, other._large_data);
-            }
-        }
-        else
-            throw std::runtime_error(std::string(_type->name()) +
-                                     " has no copy operation");
-    }
+    return _type->size() > _small_data.size() - 1;
 }
 
-void nobject::move(nobject&& other)
+bool nobject::is_valid() const
 {
-    _type = other._type;
-    other._type = nullptr;
-    if constexpr (sizeof(_small_data) > sizeof(_large_data))
-    {
-        std::copy(other._small_data, other._small_data + sizeof(_small_data),
-                  _small_data);
-        std::fill(other._small_data, other._small_data + sizeof(_small_data),
-                  std::byte(0));
-    }
-    else
-    {
-        _large_data = other._large_data;
-        other._large_data = nullptr;
-    }
-}
-
-void nobject::destruct()
-{
-    if (_type)
-    {
-        if (_type->size() <= sizeof(_small_data) && _type->ops()->destruct)
-            _type->ops()->destruct(_small_data);
-        else if (_large_data)
-        {
-            if (_type->ops()->destruct)
-                _type->ops()->destruct(_large_data);
-            delete[] _large_data;
-        }
-    }
+    return is_heap() ? static_cast<bool>(_large_data) : static_cast<bool>(_small_data[0]);
 }
 
 std::byte* nobject::data()
 {
-    return _type->size() <= sizeof(_small_data) ? _small_data : _large_data;
+    return is_heap() ? _large_data : _small_data.data() + 1;
 }
 
 const std::byte* nobject::data() const
 {
-    return _type->size() <= sizeof(_small_data) ? _small_data : _large_data;
+    return is_heap() ? _large_data : _small_data.data() + 1;
 }
 
-nobject nobject::void_ = nobject();
+nobject nobject::new_(const ntype* type)
+{
+    nobject object(type);
+    if (object.type()->ops()->construct)
+        object.type()->ops()->construct(object.data());
+    else
+        throw std::runtime_error("nobject::new_ : construct operation not found");
+    return object;
+}
+
+nobject nobject::new_copy_(const ntype* type, const void* const data)
+{
+    nobject object(type);
+    if (object.type()->ops()->copy)
+        object.type()->ops()->copy(object.data(), data);
+    else
+        throw std::runtime_error("nobject::new_copy_ : copy operation not found");
+    return object;
+}
+
+nobject nobject::new_move_(const ntype* type, void* data)
+{
+    nobject object(type);
+    if (object.type()->ops()->move)
+        object.type()->ops()->move(object.data(), data);
+    else
+        throw std::runtime_error("nobject::new_move_ : move operation not found");
+    return object;
+}
 
 } // namespace ntr

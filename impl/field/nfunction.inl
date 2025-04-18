@@ -16,16 +16,16 @@ nfunction::nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args.
         std::vector<nreference>::const_iterator it = args.begin();
         if constexpr (std::is_lvalue_reference_v<Ret>)
         {
-            return nobject(nreference((*fun)(*(it++)->any<Args>()...)));
+            return nobject::make(nreference((*fun)(*(it++)->any<Args>()...)));
         }
         else if constexpr (!std::is_same_v<Ret, void>)
         {
-            return nobject((*fun)(*(it++)->any<Args>()...));
+            return nobject::make((*fun)(*(it++)->any<Args>()...));
         }
         else
         {
             (*fun)((it++)->any<Args>()...);
-            return nobject::void_;
+            return nobject::make<void>();
         }
     };
 }
@@ -43,17 +43,18 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
         std::vector<nreference>::const_iterator it = args.begin() + 1;
         if constexpr (std::is_lvalue_reference_v<Ret>)
         {
-            return nobject(
+            return nobject::make(
                 nreference((args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...)));
         }
         if constexpr (!std::is_same_v<Ret, void>)
         {
-            return nobject((args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...));
+            return nobject::make(
+                (args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...));
         }
         else
         {
             (args.begin()->ref<ClassT>().*fun)((it++)->any<Args>()...);
-            return nobject::void_;
+            return nobject::make<void>();
         }
     };
 }
@@ -71,17 +72,18 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
         std::vector<nreference>::const_iterator it = args.begin() + 1;
         if constexpr (std::is_lvalue_reference_v<Ret>)
         {
-            return nobject(
+            return nobject::make(
                 nreference((args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...)));
         }
         if constexpr (!std::is_same_v<Ret, void>)
         {
-            return nobject((args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...));
+            return nobject::make(
+                (args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...));
         }
         else
         {
             (args.begin()->cref<ClassT>().*fun)((it++)->any<Args>()...);
-            return nobject::void_;
+            return nobject::make<void>();
         }
     };
 }
@@ -89,10 +91,7 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
 template <typename Ret, typename... Args>
 NTR_INLINE void nfunction::init_function_types()
 {
-    if constexpr (std::is_same_v<Ret, void>)
-        _return_type = nullptr;
-    else
-        _return_type = nregistrar::get_type<std::decay_t<Ret>>();
+    _return_type = nregistrar::get_type<std::decay_t<Ret>>();
     _argument_types.reserve(sizeof...(Args));
     ((_argument_types.push_back(nregistrar::get_type<std::decay_t<Args>>())), ...);
 }
