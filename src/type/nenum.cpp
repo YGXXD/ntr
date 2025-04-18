@@ -4,6 +4,45 @@
 namespace ntr
 {
 
+nenum::enum_integer_type nenum::get_value(class nobject& obj)
+{
+    if (!obj.type()->is_enum())
+        throw std::runtime_error("nenum::get_value : type mismatch");
+    switch (obj.type()->size())
+    {
+    case 1:
+        return static_cast<enum_integer_type>(*reinterpret_cast<int8_t*>(obj.data()));
+    case 2:
+        return static_cast<enum_integer_type>(*reinterpret_cast<int16_t*>(obj.data()));
+    case 4:
+        return static_cast<enum_integer_type>(*reinterpret_cast<int32_t*>(obj.data()));
+    case 8:
+        return static_cast<enum_integer_type>(*reinterpret_cast<int64_t*>(obj.data()));
+    default:
+        throw std::runtime_error("nenum::get_value : size mismatch");
+    }
+}
+
+void nenum::set_value(nobject& obj, enum_integer_type value)
+{
+    if (!obj.type()->is_enum())
+        throw std::runtime_error("nenum::set_value : type mismatch");
+    switch (obj.type()->size())
+    {
+    case 1:
+        *reinterpret_cast<int8_t*>(obj.data()) = static_cast<int8_t>(value);
+        break;
+    case 2:
+        *reinterpret_cast<int16_t*>(obj.data()) = static_cast<int16_t>(value);
+        break;
+    case 4:
+        *reinterpret_cast<int32_t*>(obj.data()) = static_cast<int32_t>(value);
+        break;
+    case 8:
+        *reinterpret_cast<int64_t*>(obj.data()) = static_cast<int64_t>(value);
+        break;
+    }
+}
 nenum::nenum(std::string_view name, uint32_t size, operations* ops)
     : ntype(etype::eenum, size, ops, name)
 {
@@ -31,7 +70,7 @@ void nenum::remove_eitem(std::string_view name)
     }
 }
 
-const neitem* nenum::get_eitem(long value) const
+const neitem* nenum::get_eitem(enum_integer_type value) const
 {
     return _enum_field_map.at(value)->get();
 }

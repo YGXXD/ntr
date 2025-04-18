@@ -22,10 +22,11 @@ public:
         edouble,
     };
 
-    nnumeric(enumeric numeric_kind, uint32_t size, operations* ops, std::string_view name);
+    static double get_value(class nobject& obj);
+    static void set_value(nobject& obj, double value);
 
-    // double get_value(class nobject& obj) const;
-    // void set_value(nobject& obj, double value) const;
+    nnumeric(enumeric numeric_kind, uint32_t size, operations* ops,
+             std::string_view name);
 
     NTR_INLINE enumeric numeric_kind() const { return _numeric_kind; }
     NTR_INLINE bool is_signed() const { return _is_signed; }

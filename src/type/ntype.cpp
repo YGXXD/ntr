@@ -26,4 +26,19 @@ const nclass* ntype::as_class() const
     return is_class() ? static_cast<const nclass*>(this) : nullptr;
 }
 
+nobject ntype::object_new() const
+{
+    return nobject::new_(this);
+}
+
+nobject ntype::object_copy(const void* const data) const
+{
+    return nobject::new_copy_(this, data);
+}
+
+nobject ntype::object_steal(void* data) const
+{
+    return nobject::new_steal_(this, data);
+}
+
 } // namespace ntr

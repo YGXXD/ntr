@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../setup.hpp"
+#include "../core/nobject.hpp"
 
 namespace ntr
 {
@@ -39,6 +40,10 @@ public:
     const class nnumeric* as_numeric() const;
     const class nenum* as_enum() const;
     const class nclass* as_class() const;
+
+    nobject object_new() const;
+    nobject object_copy(const void* const data) const;
+    nobject object_steal(void* data) const;
 
 private:
     etype _kind;

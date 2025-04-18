@@ -15,7 +15,7 @@ public:
 
     static nobject new_(const class ntype* type);
     static nobject new_copy_(const ntype* type, const void* const data);
-    static nobject new_move_(const ntype* type, void* data);
+    static nobject new_steal_(const ntype* type, void* data);
 
     nobject(nobject&& other);
     nobject& operator=(nobject&& other);
