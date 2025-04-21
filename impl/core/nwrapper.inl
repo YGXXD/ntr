@@ -40,7 +40,7 @@ NTR_INLINE auto&& nwrapper::any() const
 {
     if constexpr (std::is_rvalue_reference_v<T>)
         return rref<std::decay_t<T>>();
-    else if constexpr (std::is_lvalue_reference_v<T> && !std::is_const_v<T>)
+    else if constexpr (!std::is_const_v<T>)
         return ref<std::decay_t<T>>();
     else
         return cref<std::decay_t<T>>();
