@@ -4,42 +4,42 @@
 namespace ntr
 {
 
-nenum::enum_integer_type nenum::get_value(class nobject& obj)
+nenum::enum_integer_type nenum::get_value(class nobject& enum_)
 {
-    if (!obj.type()->is_enum())
+    if (!enum_.type()->is_enum())
         throw std::runtime_error("nenum::get_value : type mismatch");
-    switch (obj.type()->size())
+    switch (enum_.type()->size())
     {
     case 1:
-        return static_cast<enum_integer_type>(*reinterpret_cast<int8_t*>(obj.data()));
+        return static_cast<enum_integer_type>(*reinterpret_cast<int8_t*>(enum_.data()));
     case 2:
-        return static_cast<enum_integer_type>(*reinterpret_cast<int16_t*>(obj.data()));
+        return static_cast<enum_integer_type>(*reinterpret_cast<int16_t*>(enum_.data()));
     case 4:
-        return static_cast<enum_integer_type>(*reinterpret_cast<int32_t*>(obj.data()));
+        return static_cast<enum_integer_type>(*reinterpret_cast<int32_t*>(enum_.data()));
     case 8:
-        return static_cast<enum_integer_type>(*reinterpret_cast<int64_t*>(obj.data()));
+        return static_cast<enum_integer_type>(*reinterpret_cast<int64_t*>(enum_.data()));
     default:
         throw std::runtime_error("nenum::get_value : size mismatch");
     }
 }
 
-void nenum::set_value(nobject& obj, enum_integer_type value)
+void nenum::set_value(nobject& enum_, enum_integer_type value)
 {
-    if (!obj.type()->is_enum())
+    if (!enum_.type()->is_enum())
         throw std::runtime_error("nenum::set_value : type mismatch");
-    switch (obj.type()->size())
+    switch (enum_.type()->size())
     {
     case 1:
-        *reinterpret_cast<int8_t*>(obj.data()) = static_cast<int8_t>(value);
+        *reinterpret_cast<int8_t*>(enum_.data()) = static_cast<int8_t>(value);
         break;
     case 2:
-        *reinterpret_cast<int16_t*>(obj.data()) = static_cast<int16_t>(value);
+        *reinterpret_cast<int16_t*>(enum_.data()) = static_cast<int16_t>(value);
         break;
     case 4:
-        *reinterpret_cast<int32_t*>(obj.data()) = static_cast<int32_t>(value);
+        *reinterpret_cast<int32_t*>(enum_.data()) = static_cast<int32_t>(value);
         break;
     case 8:
-        *reinterpret_cast<int64_t*>(obj.data()) = static_cast<int64_t>(value);
+        *reinterpret_cast<int64_t*>(enum_.data()) = static_cast<int64_t>(value);
         break;
     }
 }

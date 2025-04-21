@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../inc/core/nfactory.hpp"
+#include "../../inc/core/nregistrar.hpp"
 #include "../../inc/type/nnumeric.hpp"
 #include "../../inc/type/nenum.hpp"
 #include "../../inc/type/nclass.hpp"
@@ -122,6 +123,15 @@ nfactory<ntype::etype::eclass, T>::remove(std::string_view name)
 {
     _type->remove(name);
     return *this;
+}
+
+// ntype::etype::epointer impl
+template <typename T>
+nfactory<ntype::etype::epointer, T>::nfactory()
+{
+    _type = std::make_unique<npointer>(
+        make_pointer_depth<T>(), nregistrar::get_type<std::remove_pointer_t<T>>(),
+        &ntype_ops_traits<T>::instance().ops, typeid(T).name());
 }
 
 } // namespace ntr

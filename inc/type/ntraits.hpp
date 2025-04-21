@@ -2,6 +2,7 @@
 
 #include "../type/ntype.hpp"
 #include "../type/nnumeric.hpp"
+#include "../type/npointer.hpp"
 
 namespace ntr
 {
@@ -29,6 +30,12 @@ NTR_INLINE constexpr bool is_etype_class()
 }
 
 template <typename T>
+NTR_INLINE constexpr bool is_etype_pointer()
+{
+    return std::is_pointer_v<T> && !std::is_const_v<T>;
+}
+
+template <typename T>
 NTR_INLINE constexpr ntype::etype make_etype()
 {
     if constexpr (is_etype_numeric<T>())
@@ -37,9 +44,54 @@ NTR_INLINE constexpr ntype::etype make_etype()
         return ntype::etype::eenum;
     else if constexpr (is_etype_class<T>())
         return ntype::etype::eclass;
+    else if constexpr (is_etype_pointer<T>())
+        return ntype::etype::epointer;
     else
         return ntype::etype::eunknown;
 }
+
+template <typename T>
+struct ntype_ops_traits
+{
+private:
+    ntype_ops_traits() : ops()
+    {
+        {
+            if constexpr (std::is_default_constructible_v<T>)
+            {
+                ops.construct = [](void* self_data) -> void
+                {
+                    new (self_data) T();
+                };
+            }
+            if constexpr (std::is_copy_constructible_v<T>)
+            {
+                ops.copy = [](void* self_data, const void* const other_data) -> void
+                {
+                    new (self_data) T(*static_cast<const T*>(other_data));
+                };
+            }
+            if constexpr (std::is_move_constructible_v<T>)
+            {
+                ops.move = [](void* self_data, void* other_data) -> void
+                {
+                    new (self_data) T(std::move(*static_cast<T*>(other_data)));
+                };
+            }
+            if constexpr (std::is_destructible_v<T>)
+            {
+                ops.destruct = [](void* self_data) -> void
+                {
+                    static_cast<T*>(self_data)->~T();
+                };
+            }
+        }
+    }
+
+public:
+    NTR_SINGLETON_IMPL(ntype_ops_traits<T>)
+    ntype::operations ops;
+};
 
 template <typename T>
 NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
@@ -94,46 +146,12 @@ NTR_INLINE constexpr auto make_numeric_type()
 }
 
 template <typename T>
-struct ntype_ops_traits
+NTR_INLINE constexpr uint8_t make_pointer_depth()
 {
-private:
-    ntype_ops_traits() : ops()
-    {
-        {
-            if constexpr (std::is_default_constructible_v<T>)
-            {
-                ops.construct = [](void* self_data) -> void
-                {
-                    new (self_data) T();
-                };
-            }
-            if constexpr (std::is_copy_constructible_v<T>)
-            {
-                ops.copy = [](void* self_data, const void* const other_data) -> void
-                {
-                    new (self_data) T(*static_cast<const T*>(other_data));
-                };
-            }
-            if constexpr (std::is_move_constructible_v<T>)
-            {
-                ops.move = [](void* self_data, void* other_data) -> void
-                {
-                    new (self_data) T(std::move(*static_cast<T*>(other_data)));
-                };
-            }
-            if constexpr (std::is_destructible_v<T>)
-            {
-                ops.destruct = [](void* self_data) -> void
-                {
-                    static_cast<T*>(self_data)->~T();
-                };
-            }
-        }
-    }
-
-public:
-    NTR_SINGLETON_IMPL(ntype_ops_traits<T>)
-    ntype::operations ops;
-};
+    if constexpr (std::is_pointer_v<T>)
+        return 1 + make_pointer_depth<std::remove_pointer_t<T>>();
+    else
+        return 0;
+}
 
 } // namespace ntr

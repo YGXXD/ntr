@@ -10,8 +10,8 @@ class NTR_API nenum : public ntype
 public:
     using enum_integer_type = long;
     
-    static enum_integer_type get_value(class nobject& obj);
-    static void set_value(nobject& obj, enum_integer_type value);
+    static enum_integer_type get_value(class nobject& enum_);
+    static void set_value(nobject& enum_, enum_integer_type value);
 
     nenum(std::string_view name, uint32_t size, operations* ops);
 

@@ -22,8 +22,8 @@ public:
         edouble,
     };
 
-    static double get_value(class nobject& obj);
-    static void set_value(nobject& obj, double value);
+    static double get_value(class nobject& numeric);
+    static void set_value(nobject& numeric, double value);
 
     nnumeric(enumeric numeric_kind, uint32_t size, operations* ops,
              std::string_view name);

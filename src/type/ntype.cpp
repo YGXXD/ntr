@@ -2,6 +2,7 @@
 #include "../../inc/type/nnumeric.hpp"
 #include "../../inc/type/nenum.hpp"
 #include "../../inc/type/nclass.hpp"
+#include "../../inc/type/npointer.hpp"
 
 namespace ntr
 {
@@ -26,19 +27,28 @@ const nclass* ntype::as_class() const
     return is_class() ? static_cast<const nclass*>(this) : nullptr;
 }
 
+const npointer* ntype::as_pointer() const
+{
+    return is_pointer() ? static_cast<const npointer*>(this) : nullptr;
+}
+
 nobject ntype::object_new() const
 {
     return nobject::new_init(this);
 }
 
-nobject ntype::object_clone(const void* const data) const
+nobject ntype::object_clone(const nwrapper& wrapper) const
 {
-    return nobject::new_clone(this, data);
+    if (wrapper.type() != this)
+        throw std::runtime_error("ntype::object_clone : type mismatch");
+    return nobject::new_clone(this, wrapper.data());
 }
 
-nobject ntype::object_steal(void* data) const
+nobject ntype::object_steal(const nwrapper& wrapper) const
 {
-    return nobject::new_steal(this, data);
+    if (wrapper.type() != this)
+        throw std::runtime_error("ntype::object_steal : type mismatch");
+    return nobject::new_steal(this, wrapper.data());
 }
 
 } // namespace ntr

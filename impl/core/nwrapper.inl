@@ -5,10 +5,10 @@ namespace ntr
 {
 
 template <typename T, typename>
-nwrapper::nwrapper(T&& value) : _type(nullptr), _pdata(nullptr)
+nwrapper::nwrapper(T&& value)
+    : nwrapper(nregistrar::get_type<std::decay_t<T>>(),
+               const_cast<void*>(static_cast<const void*>(&value)))
 {
-    _type = nregistrar::get_type<std::decay_t<T>>();
-    _pdata = const_cast<void*>(static_cast<const void*>(&value));
 }
 
 template <typename T>

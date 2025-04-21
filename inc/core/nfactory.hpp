@@ -66,7 +66,7 @@ class nfactory<ntype::etype::eclass, T>
 {
     static_assert(
         is_etype_class<T>(),
-        "ntype::etype::eclass factory template param \"T\" must be class or class type");
+        "ntype::etype::eclass factory template param \"T\" must be struct or class type");
 
 public:
     friend class nregistrar;
@@ -92,6 +92,24 @@ private:
     ~nfactory() = default;
 
     std::unique_ptr<class nclass> _type;
+};
+
+template <typename T>
+class nfactory<ntype::etype::epointer, T>
+{
+    static_assert(
+        is_etype_pointer<T>(),
+        "ntype::etype::epointer factory template param \"T\" must be pointer type");
+
+public:
+    friend class nregistrar;
+    NTR_SINGLETON_IMPL(nfactory<ntype::etype::epointer, T>)
+
+private:
+    nfactory();
+    ~nfactory() = default;
+
+    std::unique_ptr<class npointer> _type;
 };
 
 } // namespace ntr

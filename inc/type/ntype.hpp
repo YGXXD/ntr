@@ -2,6 +2,7 @@
 
 #include "../setup.hpp"
 #include "../core/nobject.hpp"
+#include "../core/nwrapper.hpp"
 
 namespace ntr
 {
@@ -15,6 +16,7 @@ public:
         enumeric,
         eenum,
         eclass,
+        epointer,
     };
 
     struct operations
@@ -36,14 +38,16 @@ public:
     NTR_INLINE bool is_numeric() const { return _kind == etype::enumeric; }
     NTR_INLINE bool is_enum() const { return _kind == etype::eenum; }
     NTR_INLINE bool is_class() const { return _kind == etype::eclass; }
+    NTR_INLINE bool is_pointer() const { return _kind == etype::epointer; }
 
     const class nnumeric* as_numeric() const;
     const class nenum* as_enum() const;
     const class nclass* as_class() const;
+    const class npointer* as_pointer() const;
 
     nobject object_new() const;
-    nobject object_clone(const void* const data) const;
-    nobject object_steal(void* data) const;
+    nobject object_clone(const nwrapper& wrapper) const;
+    nobject object_steal(const nwrapper& wrapper) const;
 
 private:
     etype _kind;

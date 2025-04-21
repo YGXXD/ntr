@@ -11,6 +11,7 @@ public:
     template <typename T,
               typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, nwrapper>>>
     nwrapper(T&& value);
+    nwrapper(const class ntype* type, void* data);
     nwrapper(const nwrapper& other) = default;
     nwrapper(nwrapper&& other) = default;
     nwrapper& operator=(const nwrapper& other) = default;
@@ -26,7 +27,7 @@ public:
     template <typename T>
     NTR_INLINE auto&& any() const;
 
-    NTR_INLINE const class ntype* type() const { return _type; }
+    NTR_INLINE const ntype* type() const { return _type; }
     NTR_INLINE void* data() const { return _pdata; }
 
 private:
