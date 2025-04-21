@@ -1,6 +1,32 @@
 #include "../inc/nephren.hpp"
 #include <iostream>
 
+static int nephren_register_numeric = []() -> int
+{
+    ntr::nephren::type<int8_t>("int8");
+    ntr::nephren::type<int16_t>("int16");
+    ntr::nephren::type<int32_t>("int32");
+    ntr::nephren::type<int64_t>("int64");
+    ntr::nephren::type<uint8_t>("uint8");
+    ntr::nephren::type<uint16_t>("uint16");
+    ntr::nephren::type<uint32_t>("uint32");
+    ntr::nephren::type<uint64_t>("uint64");
+    ntr::nephren::type<float>("float");
+    ntr::nephren::type<double>("double");
+
+    ntr::nephren::type<int8_t*>("int8*");
+    ntr::nephren::type<int16_t*>("int16*");
+    ntr::nephren::type<int32_t*>("int32*");
+    ntr::nephren::type<int64_t*>("int64*");
+    ntr::nephren::type<uint8_t*>("uint8*");
+    ntr::nephren::type<uint16_t*>("uint16*");
+    ntr::nephren::type<uint32_t*>("uint32*");
+    ntr::nephren::type<uint64_t*>("uint64*");
+    ntr::nephren::type<float*>("float*");
+    ntr::nephren::type<double*>("double*");
+    return 0;
+}();
+
 enum class MyEnum
 {
     MyEnum1 = 1,
@@ -51,36 +77,25 @@ static void xxxxx(MyChild& x)
 
 int main(int argc, char* argv[])
 {
-    ntr::nephren::numeric_<int8_t>("int8");
-    ntr::nephren::numeric_<int16_t>("int16");
-    ntr::nephren::numeric_<int32_t>("int32");
-    ntr::nephren::numeric_<int64_t>("int64");
-    ntr::nephren::numeric_<uint8_t>("uint8");
-    ntr::nephren::numeric_<uint16_t>("uint16");
-    ntr::nephren::numeric_<uint32_t>("uint32");
-    ntr::nephren::numeric_<uint64_t>("uint64");
-    ntr::nephren::numeric_<float>("float");
-    ntr::nephren::numeric_<double>("double");
-
-    ntr::nephren::enum_<MyEnum>("MyEnum")
+    ntr::nephren::type<MyEnum>("MyEnum")
         .item("MyEnum1", MyEnum::MyEnum1)
         .item("MyEnum2", MyEnum::MyEnum2)
         .item("MyEnum3", MyEnum::MyEnum3);
 
-    ntr::nephren::class_<MyClass>("MyClass")
+    ntr::nephren::type<MyClass>("MyClass")
         .function("print", &MyClass::print)
         .property("float_value", &MyClass::float_value)
         .property("value", &MyClass::value, &MyClass::value)
         .function("print_member", &MyClass::print_member);
 
-    std::cout << ntr::nephren::get_type<uint64_t>()->name() << std::endl;
-    std::cout << ntr::nephren::get_type("int8")->name() << std::endl;
+    std::cout << ntr::nephren::get<uint64_t>()->name() << std::endl;
+    std::cout << ntr::nephren::get("int8")->name() << std::endl;
 
-    const ntr::nenum* enum_type = ntr::nephren::get_type("MyEnum")->as_enum();
+    const ntr::nenum* enum_type = ntr::nephren::get("MyEnum")->as_enum();
     std::cout << enum_type->get_eitem(static_cast<long>(MyEnum::MyEnum3))->value()
               << std::endl;
 
-    const ntr::nclass* class_type = ntr::nephren::get_type<MyClass>()->as_class();
+    const ntr::nclass* class_type = ntr::nephren::get<MyClass>()->as_class();
     std::cout << class_type->get_property("float_value")->property_type()->name()
               << std::endl;
     std::cout << class_type->get_function("print")->name() << std::endl;
@@ -125,7 +140,7 @@ int main(int argc, char* argv[])
     std::cout << ref.cref<int>() << std::endl;
     std::unique_ptr<int> a = std::make_unique<int>(100);
     a = std::make_unique<int>(200);
-    
+
     ntr::nobject obj = ntr::nobject::make<int>(100);
 
     ntr::nnumeric::set_value(obj, 205.2);
@@ -138,12 +153,13 @@ int main(int argc, char* argv[])
     // ntr::nobject obj2 = obj.clone();
     // ntr::nobject obj3 = obj.steal();
 
-    // MyChild lll = MyChild();
-    // std::any a = &lll;
-    // std::cout << std::any_cast<MyChild*>(a) << std::endl;
-    // std::shared_ptr<MyChild> ppp = std::make_shared<MyChild>();
-    // MyChild* lllp = &lll;
-    // const MyChild& fffp = lll;
+    std::cout << ntr::nephren::get<int8_t*>()->name() << std::endl;
+    std::cout << ntr::nephren::get<int16_t*>()->name() << std::endl;
+
+    uint16_t u16 = 100;
+    ntr::nobject obj2 = ntr::nephren::get<uint16_t*>()->object_new();
+    ntr::npointer::set_value(obj2, &u16);
+    std::cout << ntr::npointer::get_target(obj2).cref<uint16_t>() << std::endl;
 
     return 0;
 }

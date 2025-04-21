@@ -5,6 +5,7 @@
 #include "../../inc/type/nnumeric.hpp"
 #include "../../inc/type/nenum.hpp"
 #include "../../inc/type/nclass.hpp"
+#include "../../inc/type/npointer.hpp"
 #include "../../inc/field/neitem.hpp"
 #include "../../inc/field/nfunction.hpp"
 #include "../../inc/field/nproperty.hpp"
@@ -131,7 +132,7 @@ nfactory<ntype::etype::epointer, T>::nfactory()
 {
     _type = std::make_unique<npointer>(
         make_pointer_depth<T>(), nregistrar::get_type<std::remove_pointer_t<T>>(),
-        &ntype_ops_traits<T>::instance().ops, typeid(T).name());
+        typeid(T).name(), &ntype_ops_traits<T>::instance().ops);
 }
 
 } // namespace ntr
