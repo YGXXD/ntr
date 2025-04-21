@@ -2,7 +2,6 @@
 
 #include "../type/ntype.hpp"
 #include "../type/nnumeric.hpp"
-#include "../type/npointer.hpp"
 
 namespace ntr
 {
@@ -10,11 +9,10 @@ namespace ntr
 template <typename T>
 NTR_INLINE constexpr bool is_etype_numeric()
 {
-    return std::is_same_v<int8_t, T> || std::is_same_v<int16_t, T> ||
-           std::is_same_v<int32_t, T> || std::is_same_v<int64_t, T> ||
-           std::is_same_v<uint8_t, T> || std::is_same_v<uint16_t, T> ||
-           std::is_same_v<uint32_t, T> || std::is_same_v<uint64_t, T> ||
-           std::is_same_v<float, T> || std::is_same_v<double, T>;
+    return std::apply(
+        [](auto&&... args) { return (std::is_same_v<std::decay_t<decltype(args)>, T> || ...); },
+        std::tuple<bool, char, wchar_t, char16_t, char32_t, int8_t, int16_t, int32_t,
+                   int64_t, uint8_t, uint16_t, uint32_t, uint64_t, float, double> {});
 }
 
 template <typename T>
@@ -98,7 +96,17 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
 {
     static_assert(is_etype_numeric<T>(), "unknown type, to_enumeric template param "
                                          "\"T\" is unknown numeric type");
-    if constexpr (std::is_same_v<T, int8_t>)
+    if constexpr (std::is_same_v<T, bool>)
+        return nnumeric::enumeric::ebool;
+    else if constexpr (std::is_same_v<T, char>)
+        return nnumeric::enumeric::echar;
+    else if constexpr (std::is_same_v<T, wchar_t>)
+        return nnumeric::enumeric::ewchar;
+    else if constexpr (std::is_same_v<T, char16_t>)
+        return nnumeric::enumeric::echar16;
+    else if constexpr (std::is_same_v<T, char32_t>)
+        return nnumeric::enumeric::echar32;
+    else if constexpr (std::is_same_v<T, int8_t>)
         return nnumeric::enumeric::eint8;
     else if constexpr (std::is_same_v<T, int16_t>)
         return nnumeric::enumeric::eint16;
@@ -123,7 +131,17 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
 template <nnumeric::enumeric numeric_kind>
 NTR_INLINE constexpr auto make_numeric_type()
 {
-    if constexpr (numeric_kind == nnumeric::enumeric::eint8)
+    if constexpr (numeric_kind == nnumeric::enumeric::ebool)
+        return bool();
+    else if constexpr (numeric_kind == nnumeric::enumeric::echar)
+        return char();
+    else if constexpr (numeric_kind == nnumeric::enumeric::ewchar)
+        return wchar_t();
+    else if constexpr (numeric_kind == nnumeric::enumeric::echar16)
+        return char16_t();
+    else if constexpr (numeric_kind == nnumeric::enumeric::echar32)
+        return char32_t();
+    else if constexpr (numeric_kind == nnumeric::enumeric::eint8)
         return int8_t();
     else if constexpr (numeric_kind == nnumeric::enumeric::eint16)
         return int16_t();
