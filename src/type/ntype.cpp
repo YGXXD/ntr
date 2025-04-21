@@ -28,17 +28,17 @@ const nclass* ntype::as_class() const
 
 nobject ntype::object_new() const
 {
-    return nobject::new_(this);
+    return nobject::new_init(this);
 }
 
-nobject ntype::object_copy(const void* const data) const
+nobject ntype::object_clone(const void* const data) const
 {
-    return nobject::new_copy_(this, data);
+    return nobject::new_clone(this, data);
 }
 
 nobject ntype::object_steal(void* data) const
 {
-    return nobject::new_steal_(this, data);
+    return nobject::new_steal(this, data);
 }
 
 } // namespace ntr

@@ -4,7 +4,7 @@
 namespace ntr
 {
 
-nobject nobject::new_(const ntype* type)
+nobject nobject::new_init(const ntype* type)
 {
     nobject obj(type);
     if (obj.is_valid())
@@ -12,12 +12,12 @@ nobject nobject::new_(const ntype* type)
         if (obj.type()->ops()->construct)
             obj.type()->ops()->construct(obj.data());
         else
-            throw std::runtime_error("nobject::new_ : construct operation not found");
+            throw std::runtime_error("nobject::new_init : construct operation not found");
     }
     return obj;
 }
 
-nobject nobject::new_copy_(const ntype* type, const void* const data)
+nobject nobject::new_clone(const ntype* type, const void* const data)
 {
     nobject obj(type);
     if (obj.is_valid())
@@ -25,12 +25,12 @@ nobject nobject::new_copy_(const ntype* type, const void* const data)
         if (obj.type()->ops()->copy)
             obj.type()->ops()->copy(obj.data(), data);
         else
-            throw std::runtime_error("nobject::new_copy_ : copy operation not found");
+            throw std::runtime_error("nobject::new_clone : copy operation not found");
     }
     return obj;
 }
 
-nobject nobject::new_steal_(const ntype* type, void* data)
+nobject nobject::new_steal(const ntype* type, void* data)
 {
     nobject obj(type);
     if (obj.is_valid())
@@ -38,7 +38,7 @@ nobject nobject::new_steal_(const ntype* type, void* data)
         if (obj.type()->ops()->move)
             obj.type()->ops()->move(obj.data(), data);
         else
-            throw std::runtime_error("nobject::new_move_ : move operation not found");
+            throw std::runtime_error("nobject::new_steal : move operation not found");
     }
     return obj;
 }

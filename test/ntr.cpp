@@ -117,8 +117,8 @@ int main(int argc, char* argv[])
     std::vector<ntr::nwrapper> args { my_class, x };
     function->invoke(args);
     auto result = function->invoke(args);
-    result.as<ntr::nwrapper>().ref<double>() = 10;
-    std::cout << result.as<ntr::nwrapper>().cref<double>() << std::endl;
+    result.as_wrapper_ref<double>() = 10;
+    std::cout << result.as_wrapper_cref<double>() << std::endl;
     std::cout << x << std::endl;
 
     ntr::nwrapper ref = ntr::nwrapper(100);

@@ -12,7 +12,7 @@ NTR_INLINE nobject nfunction::wrapper_call(OP op,
 {
     if constexpr (std::is_lvalue_reference_v<Ret>)
     {
-        return nobject::make(nwrapper(op((it++)->any<Args>()...)));
+        return nobject::make_wrapper(op((it++)->any<Args>()...));
     }
     else if constexpr (!std::is_same_v<Ret, void>)
     {

@@ -12,10 +12,12 @@ public:
     static NTR_INLINE nobject make();
     template <typename T>
     static NTR_INLINE nobject make(T&& value);
+    template <typename T>
+    static NTR_INLINE nobject make_wrapper(T&& value);
 
-    static nobject new_(const class ntype* type);
-    static nobject new_copy_(const ntype* type, const void* const data);
-    static nobject new_steal_(const ntype* type, void* data);
+    static nobject new_init(const class ntype* type);
+    static nobject new_clone(const class ntype* type, const void* const data);
+    static nobject new_steal(const class ntype* type, void* data);
 
     nobject(nobject&& other);
     nobject& operator=(nobject&& other);
@@ -25,6 +27,10 @@ public:
     NTR_INLINE T& as();
     template <typename T>
     NTR_INLINE const T& as() const;
+    template <typename T>
+    NTR_INLINE T& as_wrapper_ref() const;
+    template <typename T>
+    NTR_INLINE const T& as_wrapper_cref() const;
 
     bool is_heap() const;
     bool is_valid() const;

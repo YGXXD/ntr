@@ -42,7 +42,7 @@ public:
     const class nclass* as_class() const;
 
     nobject object_new() const;
-    nobject object_copy(const void* const data) const;
+    nobject object_clone(const void* const data) const;
     nobject object_steal(void* data) const;
 
 private:
