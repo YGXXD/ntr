@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ntraits.hpp"
+#include "../type/ntraits.hpp"
 
 namespace ntr
 {
@@ -20,7 +20,7 @@ private:
     nfactory();
     ~nfactory() = default;
 
-    std::unique_ptr<ntype> _type;
+    std::unique_ptr<class ntype> _type;
 };
 
 template <typename T>

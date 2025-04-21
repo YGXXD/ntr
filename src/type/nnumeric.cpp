@@ -1,6 +1,6 @@
 #include "../../inc/type/nnumeric.hpp"
+#include "../../inc/type/ntraits.hpp"
 #include "../../inc/core/nobject.hpp"
-#include "../../inc/core/ntraits.hpp"
 
 namespace ntr
 {
