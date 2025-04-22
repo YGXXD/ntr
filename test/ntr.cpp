@@ -163,9 +163,5 @@ int main(int argc, char* argv[])
 
     std::cout << std::is_copy_constructible_v<int[10]> << std::endl;
 
-    int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-    ntr::nobject obj3 = ntr::nobject::make(arr);
-    std::cout << obj3.as<int[10]>()[9] << std::endl;
-
     return 0;
 }

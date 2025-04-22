@@ -17,9 +17,9 @@ template <typename T>
 NTR_INLINE nobject nobject::make(T&& value)
 {
     if constexpr (std::is_lvalue_reference_v<T&&>)
-        return new_clone(nregistrar::get_type<std::decay_t<T>>(), &value);
+        return new_clone(nregistrar::get_type<T>(), &value);
     else if constexpr (std::is_rvalue_reference_v<T&&>)
-        return new_steal(nregistrar::get_type<std::decay_t<T>>(), &value);
+        return new_steal(nregistrar::get_type<T>(), &value);
     else
         static_assert(!std::is_same_v<T, T>, "nobject::make : unknown type");
 }

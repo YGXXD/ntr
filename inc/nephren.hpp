@@ -30,7 +30,7 @@ public:
     template <typename T>
     static NTR_INLINE auto& type(std::string_view name)
     {
-        return nregistrar::instance().regist<T>(name);
+        return nregistrar::instance().regist_type<T>(name);
     }
 };
 

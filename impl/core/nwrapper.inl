@@ -6,7 +6,7 @@ namespace ntr
 
 template <typename T, typename>
 nwrapper::nwrapper(T&& value)
-    : nwrapper(nregistrar::get_type<std::decay_t<T>>(),
+    : nwrapper(nregistrar::get_type<T>(),
                const_cast<void*>(static_cast<const void*>(&value)))
 {
 }

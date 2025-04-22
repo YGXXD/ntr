@@ -13,10 +13,10 @@ const ntype* nregistrar::get_type(std::string_view name)
     return it->second;
 }
 
-void nregistrar::regist(std::string_view name, ntype* type)
+void nregistrar::regist_type(std::string_view name, ntype* type)
 {
     if (_type_map.find(name) != _type_map.end())
-        throw std::logic_error((std::string("nregistrar::regist : type \"") +
+        throw std::logic_error((std::string("nregistrar::regist_type : type \"") +
                                 std::string(name) + std::string("\" already registered"))
                                    .c_str());
     type->set_name(name);

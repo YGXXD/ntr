@@ -9,33 +9,40 @@ namespace ntr
 template <typename T>
 NTR_INLINE constexpr bool is_etype_numeric()
 {
-    return std::apply(
-        [](auto&&... args) { return (std::is_same_v<std::decay_t<decltype(args)>, T> || ...); },
-        std::tuple<bool, char, wchar_t, char16_t, char32_t, int8_t, int16_t, int32_t,
-                   int64_t, uint8_t, uint16_t, uint32_t, uint64_t, float, double> {});
+    return std::apply([](auto&&... args)
+    { return (std::is_same_v<std::decay_t<decltype(args)>, T> || ...); },
+                      nnumeric::numeric_types {});
 }
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_enum()
 {
-    return std::is_enum_v<T> && !std::is_const_v<T>;
+    return std::is_enum_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T>;
 }
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_class()
 {
-    return std::is_class_v<T> && !std::is_const_v<T>;
+    return std::is_class_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T>;
 }
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_pointer()
 {
-    return std::is_pointer_v<T> && !std::is_const_v<T>;
+    return std::is_pointer_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T>;
 }
+
+template <typename T>
+NTR_INLINE constexpr auto make_type() -> std::remove_cv_t<std::remove_reference_t<T>>;
 
 template <typename T>
 NTR_INLINE constexpr ntype::etype make_etype()
 {
+    static_assert(
+        !std::is_const_v<T> && !std::is_volatile_v<T>,
+        "make_etype : const or volatile type cannot be used as template parameter");
+    static_assert(!std::is_reference_v<T>,
+                  "make_etype : reference type cannot be used as template parameter");
     if constexpr (is_etype_numeric<T>())
         return ntype::etype::enumeric;
     else if constexpr (is_etype_enum<T>())
@@ -46,6 +53,37 @@ NTR_INLINE constexpr ntype::etype make_etype()
         return ntype::etype::epointer;
     else
         return ntype::etype::eunknown;
+}
+
+template <nnumeric::enumeric numeric_kind>
+NTR_INLINE constexpr auto make_numeric_type()
+    -> std::tuple_element_t<static_cast<size_t>(numeric_kind), nnumeric::numeric_types>;
+
+template <typename T>
+NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
+{
+    static_assert(is_etype_numeric<T>(),
+                  "make_enumeric : template param \"T\" is unknown numeric type");
+    return std::apply(
+        [](auto&&... args)
+    {
+        size_t index = 0;
+        size_t result = static_cast<size_t>(-1);
+        ((std::is_same_v<std::decay_t<decltype(args)>, T> ? (result = index, 0)
+                                                          : (++index, 0)),
+         ...);
+        return static_cast<nnumeric::enumeric>(result);
+    },
+        nnumeric::numeric_types {});
+}
+
+template <typename T>
+NTR_INLINE constexpr uint8_t make_pointer_depth()
+{
+    if constexpr (std::is_pointer_v<T>)
+        return 1 + make_pointer_depth<std::remove_pointer_t<T>>();
+    else
+        return 0;
 }
 
 template <typename T>
@@ -90,86 +128,5 @@ public:
     NTR_SINGLETON_IMPL(ntype_ops_traits<T>)
     ntype::operations ops;
 };
-
-template <typename T>
-NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
-{
-    static_assert(is_etype_numeric<T>(), "unknown type, to_enumeric template param "
-                                         "\"T\" is unknown numeric type");
-    if constexpr (std::is_same_v<T, bool>)
-        return nnumeric::enumeric::ebool;
-    else if constexpr (std::is_same_v<T, char>)
-        return nnumeric::enumeric::echar;
-    else if constexpr (std::is_same_v<T, wchar_t>)
-        return nnumeric::enumeric::ewchar;
-    else if constexpr (std::is_same_v<T, char16_t>)
-        return nnumeric::enumeric::echar16;
-    else if constexpr (std::is_same_v<T, char32_t>)
-        return nnumeric::enumeric::echar32;
-    else if constexpr (std::is_same_v<T, int8_t>)
-        return nnumeric::enumeric::eint8;
-    else if constexpr (std::is_same_v<T, int16_t>)
-        return nnumeric::enumeric::eint16;
-    else if constexpr (std::is_same_v<T, int32_t>)
-        return nnumeric::enumeric::eint32;
-    else if constexpr (std::is_same_v<T, int64_t>)
-        return nnumeric::enumeric::eint64;
-    else if constexpr (std::is_same_v<T, uint8_t>)
-        return nnumeric::enumeric::euint8;
-    else if constexpr (std::is_same_v<T, uint16_t>)
-        return nnumeric::enumeric::euint16;
-    else if constexpr (std::is_same_v<T, uint32_t>)
-        return nnumeric::enumeric::euint32;
-    else if constexpr (std::is_same_v<T, uint64_t>)
-        return nnumeric::enumeric::euint64;
-    else if constexpr (std::is_same_v<T, float>)
-        return nnumeric::enumeric::efloat;
-    else if constexpr (std::is_same_v<T, double>)
-        return nnumeric::enumeric::edouble;
-}
-
-template <nnumeric::enumeric numeric_kind>
-NTR_INLINE constexpr auto make_numeric_type()
-{
-    if constexpr (numeric_kind == nnumeric::enumeric::ebool)
-        return bool();
-    else if constexpr (numeric_kind == nnumeric::enumeric::echar)
-        return char();
-    else if constexpr (numeric_kind == nnumeric::enumeric::ewchar)
-        return wchar_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::echar16)
-        return char16_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::echar32)
-        return char32_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::eint8)
-        return int8_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::eint16)
-        return int16_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::eint32)
-        return int32_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::eint64)
-        return int64_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::euint8)
-        return uint8_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::euint16)
-        return uint16_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::euint32)
-        return uint32_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::euint64)
-        return uint64_t();
-    else if constexpr (numeric_kind == nnumeric::enumeric::efloat)
-        return float();
-    else if constexpr (numeric_kind == nnumeric::enumeric::edouble)
-        return double();
-}
-
-template <typename T>
-NTR_INLINE constexpr uint8_t make_pointer_depth()
-{
-    if constexpr (std::is_pointer_v<T>)
-        return 1 + make_pointer_depth<std::remove_pointer_t<T>>();
-    else
-        return 0;
-}
 
 } // namespace ntr

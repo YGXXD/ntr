@@ -18,10 +18,10 @@ public:
     static NTR_INLINE const auto* get_type();
 
     template <typename T>
-    NTR_INLINE auto& regist(std::string_view name);
+    NTR_INLINE auto& regist_type(std::string_view name);
 
     const ntype* get_type(std::string_view name);
-    void regist(std::string_view name, ntype* type);
+    void regist_type(std::string_view name, ntype* type);
 
 private:
     nregistrar() = default;
