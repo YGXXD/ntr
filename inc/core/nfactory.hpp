@@ -82,7 +82,7 @@ public:
     template <typename U>
     NTR_INLINE nfactory& property(std::string_view name, U(T::*member));
     template <typename U>
-    NTR_INLINE nfactory& property(std::string_view name, U (T::*getter)() const,
+    NTR_INLINE nfactory& property(std::string_view name, const U& (T::*getter)() const,
                                   void (T::*setter)(const U&));
 
     NTR_INLINE nfactory& remove(std::string_view name);

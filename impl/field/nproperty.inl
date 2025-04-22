@@ -7,7 +7,7 @@ namespace ntr
 {
 
 template <typename T, typename ClassT>
-nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::* member))
+nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::*member))
     : nproperty(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
@@ -16,7 +16,7 @@ nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::* memb
     _property_type = nregistrar::get_type<T>();
     _getter = [member](const nwrapper& instance) -> nobject
     {
-        return nobject::make(instance.cref<ClassT>().*member);
+        return nobject::make_wrapper(instance.cref<ClassT>().*member);
     };
     _setter = [member](const nwrapper& instance, const nwrapper& value)
     {
@@ -26,7 +26,7 @@ nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::* memb
 
 template <typename T, typename ClassT>
 nproperty::nproperty(ntype* parent_type, std::string_view name,
-                     T (ClassT::*getter)() const, void (ClassT::*setter)(const T&))
+                     const T& (ClassT::*getter)() const, void (ClassT::*setter)(const T&))
     : nproperty(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
@@ -35,7 +35,7 @@ nproperty::nproperty(ntype* parent_type, std::string_view name,
     _property_type = nregistrar::get_type<T>();
     _getter = [getter](const nwrapper& instance) -> nobject
     {
-        return nobject::make((instance.cref<ClassT>().*getter)());
+        return nobject::make_wrapper((instance.cref<ClassT>().*getter)());
     };
     _setter = [setter](const nwrapper& instance, const nwrapper& value)
     {

@@ -49,7 +49,7 @@ public:
 class MyClass
 {
 public:
-    int value() const { return _value; }
+    const int& value() const { return _value; }
     void value(const int& value) { _value = value; }
 
     static void print(MyFather& x)
@@ -106,15 +106,15 @@ int main(int argc, char* argv[])
 
     const ntr::nproperty* property = class_type->get_property("value");
     std::cout << property->property_type()->name() << std::endl;
-    std::cout << property->get(my_class).as<int>() << std::endl;
+    std::cout << property->get(my_class).as_wrapper_cref<int>() << std::endl;
     property->set(my_class, 20);
-    std::cout << property->get(my_class).as<int>() << std::endl;
+    std::cout << property->get(my_class).as_wrapper_cref<int>() << std::endl;
 
     property = class_type->get_property("float_value");
     std::cout << property->property_type()->name() << std::endl;
-    std::cout << property->get(my_class).as<double>() << std::endl;
+    std::cout << property->get(my_class).as_wrapper_cref<double>() << std::endl;
     property->set(my_class, double(20));
-    std::cout << property->get(my_class).as<double>() << std::endl;
+    std::cout << property->get(my_class).as_wrapper_cref<double>() << std::endl;
 
     const ntr::nfunction* function = class_type->get_function("print");
     std::cout << function->name() << std::endl;
@@ -160,6 +160,12 @@ int main(int argc, char* argv[])
     ntr::nobject obj2 = ntr::nephren::get<uint16_t*>()->object_new();
     ntr::npointer::set_value(obj2, &u16);
     std::cout << ntr::npointer::get_target(obj2).cref<uint16_t>() << std::endl;
+
+    std::cout << std::is_copy_constructible_v<int[10]> << std::endl;
+
+    int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    ntr::nobject obj3 = ntr::nobject::make(arr);
+    std::cout << obj3.as<int[10]>()[9] << std::endl;
 
     return 0;
 }

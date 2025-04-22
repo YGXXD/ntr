@@ -102,7 +102,7 @@ nfactory<ntype::etype::eclass, T>::function(std::string_view name,
 template <typename T>
 template <typename U>
 NTR_INLINE nfactory<ntype::etype::eclass, T>&
-nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::* member))
+nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::*member))
 {
     _type->add_property(std::make_unique<nproperty>(_type.get(), name, member));
     return *this;
@@ -110,9 +110,8 @@ nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::* member
 
 template <typename T>
 template <typename U>
-NTR_INLINE nfactory<ntype::etype::eclass, T>&
-nfactory<ntype::etype::eclass, T>::property(std::string_view name, U (T::*getter)() const,
-                                            void (T::*setter)(const U&))
+NTR_INLINE nfactory<ntype::etype::eclass, T>& nfactory<ntype::etype::eclass, T>::property(
+    std::string_view name, const U& (T::*getter)() const, void (T::*setter)(const U&))
 {
     _type->add_property(std::make_unique<nproperty>(_type.get(), name, getter, setter));
     return *this;
