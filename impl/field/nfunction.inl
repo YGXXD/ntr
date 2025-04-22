@@ -26,7 +26,7 @@ NTR_INLINE nobject nfunction::wrapper_call(OP op,
 }
 
 template <typename Ret, typename... Args>
-nfunction::nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args...))
+nfunction::nfunction(const ntype* parent_type, std::string_view name, Ret (*fun)(Args...))
     : nfunction(parent_type, name)
 {
     init_function_types<Ret, Args...>();
@@ -37,7 +37,7 @@ nfunction::nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args.
 }
 
 template <typename Ret, typename ClassT, typename... Args>
-nfunction::nfunction(ntype* parent_type, std::string_view name,
+nfunction::nfunction(const ntype* parent_type, std::string_view name,
                      Ret (ClassT::*fun)(Args...))
     : nfunction(parent_type, name)
 {
@@ -49,12 +49,13 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->ref<ClassT>().*fun)(args...); }, args.begin() + 1);
+        { return (instance->ref<ClassT>().*fun)(args...); },
+            args.begin() + 1);
     };
 }
 
 template <typename Ret, typename ClassT, typename... Args>
-nfunction::nfunction(ntype* parent_type, std::string_view name,
+nfunction::nfunction(const ntype* parent_type, std::string_view name,
                      Ret (ClassT::*fun)(Args...) const)
     : nfunction(parent_type, name)
 {
@@ -66,7 +67,8 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->cref<ClassT>().*fun)(args...); }, args.begin() + 1);
+        { return (instance->cref<ClassT>().*fun)(args...); },
+            args.begin() + 1);
     };
 }
 

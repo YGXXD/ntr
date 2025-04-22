@@ -4,8 +4,9 @@
 namespace ntr
 {
 
-nproperty::nproperty(ntype* parent_type, std::string_view name)
-    : nfield(parent_type, efield::eproperty, name)
+nproperty::nproperty(const ntype* parent_type, std::string_view name,
+                     const ntype* property_type)
+    : nfield(parent_type, efield::eproperty, name), _property_type(property_type)
 {
     if (parent_type->kind() != ntype::etype::eclass)
         throw std::invalid_argument(

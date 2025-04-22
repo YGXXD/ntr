@@ -10,13 +10,13 @@ namespace ntr
 class NTR_API nfunction : public nfield
 {
 public:
-    nfunction(ntype* parent_type, std::string_view name);
+    nfunction(const ntype* parent_type, std::string_view name);
     template <typename Ret, typename... Args>
-    nfunction(ntype* parent_type, std::string_view name, Ret (*fun)(Args...));
+    nfunction(const ntype* parent_type, std::string_view name, Ret (*fun)(Args...));
     template <typename Ret, typename ClassT, typename... Args>
-    nfunction(ntype* parent_type, std::string_view name, Ret (ClassT::*fun)(Args...));
+    nfunction(const ntype* parent_type, std::string_view name, Ret (ClassT::*fun)(Args...));
     template <typename Ret, typename ClassT, typename... Args>
-    nfunction(ntype* parent_type, std::string_view name,
+    nfunction(const ntype* parent_type, std::string_view name,
               Ret (ClassT::*fun)(Args...) const);
 
     nobject invoke(const std::vector<nwrapper>& args) const;

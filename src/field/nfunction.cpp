@@ -4,7 +4,7 @@
 namespace ntr
 {
 
-nfunction::nfunction(ntype* parent_type, std::string_view name)
+nfunction::nfunction(const ntype* parent_type, std::string_view name)
     : nfield(parent_type, efield::eproperty, name)
 {
     if (parent_type->kind() != ntype::etype::eclass)

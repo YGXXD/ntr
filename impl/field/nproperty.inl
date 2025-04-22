@@ -7,13 +7,12 @@ namespace ntr
 {
 
 template <typename T, typename ClassT>
-nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::*member))
-    : nproperty(parent_type, name)
+nproperty::nproperty(const ntype* parent_type, std::string_view name, T(ClassT::*member))
+    : nproperty(parent_type, name, nregistrar::get_type<T>())
 {
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument(
             "nproperty::nproperty : parent type is not property's class type");
-    _property_type = nregistrar::get_type<T>();
     _getter = [member](const nwrapper& instance) -> nobject
     {
         return nobject::make_wrapper(instance.cref<ClassT>().*member);
@@ -25,14 +24,13 @@ nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::*membe
 }
 
 template <typename T, typename ClassT>
-nproperty::nproperty(ntype* parent_type, std::string_view name,
+nproperty::nproperty(const ntype* parent_type, std::string_view name,
                      const T& (ClassT::*getter)() const, void (ClassT::*setter)(const T&))
-    : nproperty(parent_type, name)
+    : nproperty(parent_type, name, nregistrar::get_type<T>())
 {
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument(
             "nproperty::nproperty : parent type is not property's class type");
-    _property_type = nregistrar::get_type<T>();
     _getter = [getter](const nwrapper& instance) -> nobject
     {
         return nobject::make_wrapper((instance.cref<ClassT>().*getter)());

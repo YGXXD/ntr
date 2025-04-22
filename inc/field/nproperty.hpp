@@ -10,11 +10,11 @@ namespace ntr
 class NTR_API nproperty : public nfield
 {
 public:
-    nproperty(ntype* parent_type, std::string_view name);
+    nproperty(const ntype* parent_type, std::string_view name, const ntype* property_type);
     template <typename T, typename ClassT>
-    nproperty(ntype* parent_type, std::string_view name, T(ClassT::* member));
+    nproperty(const ntype* parent_type, std::string_view name, T(ClassT::* member));
     template <typename T, typename ClassT>
-    nproperty(ntype* parent_type, std::string_view name, const T& (ClassT::*getter)() const,
+    nproperty(const ntype* parent_type, std::string_view name, const T& (ClassT::*getter)() const,
               void (ClassT::*setter)(const T&));
 
     nobject get(const nwrapper& instance) const;
