@@ -8,10 +8,7 @@ namespace ntr
 template <typename T>
 NTR_INLINE auto& nregistrar::factory_wrapper()
 {
-    using MakeType = decltype(make_type<T>());
-    static_assert(!std::is_array_v<MakeType>,
-                  "nregistrar::factory_wrapper : primitive type of template parameters "
-                  "\"T\" cannot be an array");
+    using MakeType = make_type_t<T>;
     return nfactory<make_etype<MakeType>(), MakeType>::instance();
 }
 
@@ -24,6 +21,8 @@ NTR_INLINE const auto* nregistrar::get_type()
 template <typename T>
 NTR_INLINE auto& nregistrar::regist_type(std::string_view name)
 {
+    static_assert(is_etype_type<T>(),
+                  "nregistrar::regist_type : template parameter \"T\" is not valid type");
     auto& fact = factory_wrapper<T>();
     regist_type(name, fact._type.get());
     return fact;

@@ -7,6 +7,13 @@ namespace ntr
 {
 
 template <typename T>
+NTR_INLINE constexpr bool is_etype_type()
+{
+    return !std::is_array_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T> &&
+           !std::is_reference_v<T>;
+}
+
+template <typename T>
 NTR_INLINE constexpr bool is_etype_numeric()
 {
     return std::apply([](auto&&... args)
@@ -33,16 +40,15 @@ NTR_INLINE constexpr bool is_etype_pointer()
 }
 
 template <typename T>
-NTR_INLINE constexpr auto make_type() -> std::remove_cv_t<std::remove_reference_t<T>>;
+using make_type_t =
+    std::enable_if_t<!std::is_array_v<std::remove_cv_t<std::remove_reference_t<T>>>,
+                     std::remove_cv_t<std::remove_reference_t<T>>>;
 
 template <typename T>
 NTR_INLINE constexpr ntype::etype make_etype()
 {
-    static_assert(
-        !std::is_const_v<T> && !std::is_volatile_v<T>,
-        "make_etype : const or volatile type cannot be used as template parameter");
-    static_assert(!std::is_reference_v<T>,
-                  "make_etype : reference type cannot be used as template parameter");
+    static_assert(is_etype_type<T>(),
+                  "make_etype : template parameter \"T\" is not valid type");
     if constexpr (is_etype_numeric<T>())
         return ntype::etype::enumeric;
     else if constexpr (is_etype_enum<T>())
@@ -56,14 +62,14 @@ NTR_INLINE constexpr ntype::etype make_etype()
 }
 
 template <nnumeric::enumeric numeric_kind>
-NTR_INLINE constexpr auto make_numeric_type()
-    -> std::tuple_element_t<static_cast<size_t>(numeric_kind), nnumeric::numeric_types>;
+using make_numeric_type_t =
+    std::tuple_element_t<static_cast<size_t>(numeric_kind), nnumeric::numeric_types>;
 
 template <typename T>
 NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
 {
     static_assert(is_etype_numeric<T>(),
-                  "make_enumeric : template param \"T\" is unknown numeric type");
+                  "make_enumeric : template parameter \"T\" is not valid numeric type");
     return std::apply(
         [](auto&&... args)
     {

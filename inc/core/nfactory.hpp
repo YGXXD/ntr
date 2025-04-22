@@ -27,7 +27,7 @@ class nfactory<ntype::etype::enumeric, T>
 {
     static_assert(
         is_etype_numeric<T>(),
-        "ntype::etype::enumeric factory template param \"T\" must be numeric type");
+        "ntype::etype::enumeric factory template parameter \"T\" must be numeric type");
 
 public:
     friend class nregistrar;
@@ -44,7 +44,7 @@ template <typename T>
 class nfactory<ntype::etype::eenum, T>
 {
     static_assert(is_etype_enum<T>(),
-                  "ntype::etype::eenum factory template param \"T\" must be enum type");
+                  "ntype::etype::eenum factory template parameter \"T\" must be enum type");
 
 public:
     friend class nregistrar;
@@ -65,7 +65,7 @@ class nfactory<ntype::etype::eclass, T>
 {
     static_assert(
         is_etype_class<T>(),
-        "ntype::etype::eclass factory template param \"T\" must be struct or class type");
+        "ntype::etype::eclass factory template parameter \"T\" must be struct or class type");
 
 public:
     friend class nregistrar;
@@ -98,7 +98,7 @@ class nfactory<ntype::etype::epointer, T>
 {
     static_assert(
         is_etype_pointer<T>(),
-        "ntype::etype::epointer factory template param \"T\" must be pointer type");
+        "ntype::etype::epointer factory template parameter \"T\" must be pointer type");
 
 public:
     friend class nregistrar;

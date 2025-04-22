@@ -49,8 +49,7 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->ref<ClassT>().*fun)(args...); },
-            args.begin() + 1);
+        { return (instance->ref<ClassT>().*fun)(args...); }, args.begin() + 1);
     };
 }
 
@@ -67,8 +66,7 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->cref<ClassT>().*fun)(args...); },
-            args.begin() + 1);
+        { return (instance->cref<ClassT>().*fun)(args...); }, args.begin() + 1);
     };
 }
 

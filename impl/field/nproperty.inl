@@ -7,7 +7,7 @@ namespace ntr
 {
 
 template <typename T, typename ClassT>
-nproperty::nproperty(const ntype* parent_type, std::string_view name, T(ClassT::*member))
+nproperty::nproperty(const ntype* parent_type, std::string_view name, T(ClassT::* member))
     : nproperty(parent_type, name, nregistrar::get_type<T>())
 {
     if (parent_type != nregistrar::get_type<ClassT>())

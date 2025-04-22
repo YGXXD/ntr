@@ -5,21 +5,21 @@
 namespace ntr
 {
 
-using B8 = decltype(make_numeric_type<nnumeric::enumeric::ebool>());
-using C8 = decltype(make_numeric_type<nnumeric::enumeric::echar>());
-using WC = decltype(make_numeric_type<nnumeric::enumeric::ewchar>());
-using C16 = decltype(make_numeric_type<nnumeric::enumeric::echar16>());
-using C32 = decltype(make_numeric_type<nnumeric::enumeric::echar32>());
-using I8 = decltype(make_numeric_type<nnumeric::enumeric::eint8>());
-using I16 = decltype(make_numeric_type<nnumeric::enumeric::eint16>());
-using I32 = decltype(make_numeric_type<nnumeric::enumeric::eint32>());
-using I64 = decltype(make_numeric_type<nnumeric::enumeric::eint64>());
-using U8 = decltype(make_numeric_type<nnumeric::enumeric::euint8>());
-using U16 = decltype(make_numeric_type<nnumeric::enumeric::euint16>());
-using U32 = decltype(make_numeric_type<nnumeric::enumeric::euint32>());
-using U64 = decltype(make_numeric_type<nnumeric::enumeric::euint64>());
-using F32 = decltype(make_numeric_type<nnumeric::enumeric::efloat>());
-using F64 = decltype(make_numeric_type<nnumeric::enumeric::edouble>());
+using B8 = make_numeric_type_t<nnumeric::enumeric::ebool>;
+using C8 = make_numeric_type_t<nnumeric::enumeric::echar>;
+using WC = make_numeric_type_t<nnumeric::enumeric::ewchar>;
+using C16 = make_numeric_type_t<nnumeric::enumeric::echar16>;
+using C32 = make_numeric_type_t<nnumeric::enumeric::echar32>;
+using I8 = make_numeric_type_t<nnumeric::enumeric::eint8>;
+using I16 = make_numeric_type_t<nnumeric::enumeric::eint16>;
+using I32 = make_numeric_type_t<nnumeric::enumeric::eint32>;
+using I64 = make_numeric_type_t<nnumeric::enumeric::eint64>;
+using U8 = make_numeric_type_t<nnumeric::enumeric::euint8>;
+using U16 = make_numeric_type_t<nnumeric::enumeric::euint16>;
+using U32 = make_numeric_type_t<nnumeric::enumeric::euint32>;
+using U64 = make_numeric_type_t<nnumeric::enumeric::euint64>;
+using F32 = make_numeric_type_t<nnumeric::enumeric::efloat>;
+using F64 = make_numeric_type_t<nnumeric::enumeric::edouble>;
 
 double nnumeric::get_value(nobject& numeric)
 {
