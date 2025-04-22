@@ -11,7 +11,8 @@ nproperty::nproperty(ntype* parent_type, std::string_view name, T(ClassT::* memb
     : nproperty(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
-        throw std::invalid_argument("parent type is not property's class type");
+        throw std::invalid_argument(
+            "nproperty::nproperty : parent type is not property's class type");
     _property_type = nregistrar::get_type<T>();
     _getter = [member](const nwrapper& instance) -> nobject
     {
@@ -29,7 +30,8 @@ nproperty::nproperty(ntype* parent_type, std::string_view name,
     : nproperty(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
-        throw std::invalid_argument("parent type is not property's class type");
+        throw std::invalid_argument(
+            "nproperty::nproperty : parent type is not property's class type");
     _property_type = nregistrar::get_type<T>();
     _getter = [getter](const nwrapper& instance) -> nobject
     {

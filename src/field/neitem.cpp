@@ -8,7 +8,7 @@ neitem::neitem(ntype* parent_type, std::string_view name, long value)
     : nfield(parent_type, efield::eeitem, name), _value(value)
 {
     if (parent_type->kind() != ntype::etype::eenum)
-        throw std::invalid_argument("neitem must be created from an enum type");
+        throw std::invalid_argument("neitem::neitem : parent type is not enum type");
 }
 
 const nenum* neitem::enum_type() const

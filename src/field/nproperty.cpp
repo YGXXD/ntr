@@ -8,7 +8,8 @@ nproperty::nproperty(ntype* parent_type, std::string_view name)
     : nfield(parent_type, efield::eproperty, name)
 {
     if (parent_type->kind() != ntype::etype::eclass)
-        throw std::invalid_argument("nproperty must be created from a class type");
+        throw std::invalid_argument(
+            "nproperty::nproperty : parent type is not class type");
 }
 
 nobject nproperty::get(const nwrapper& instance) const

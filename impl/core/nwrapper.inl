@@ -15,7 +15,7 @@ template <typename T>
 NTR_INLINE T& nwrapper::ref() const
 {
     if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nwrapper ref type mismatch");
+        throw std::runtime_error("nwrapper::ref : type mismatch");
     return *static_cast<T*>(_pdata);
 }
 
@@ -23,7 +23,7 @@ template <typename T>
 NTR_INLINE const T& nwrapper::cref() const
 {
     if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nwrapper cref type mismatch");
+        throw std::runtime_error("nwrapper::cref : type mismatch");
     return *static_cast<const T*>(_pdata);
 }
 
@@ -31,7 +31,7 @@ template <typename T>
 NTR_INLINE T&& nwrapper::rref() const
 {
     if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nwrapper rref type mismatch");
+        throw std::runtime_error("nwrapper::rref : type mismatch");
     return std::move(*static_cast<T*>(_pdata));
 }
 

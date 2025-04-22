@@ -42,14 +42,14 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
     : nfunction(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
-        throw std::invalid_argument("parent type is not function's class type");
+        throw std::invalid_argument(
+            "nfunction::nfunction : parent type is not function's class type");
     init_function_types<Ret, ClassT&, Args...>();
     _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->ref<ClassT>().*fun)(args...); },
-            args.begin() + 1);
+        { return (instance->ref<ClassT>().*fun)(args...); }, args.begin() + 1);
     };
 }
 
@@ -59,14 +59,14 @@ nfunction::nfunction(ntype* parent_type, std::string_view name,
     : nfunction(parent_type, name)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
-        throw std::invalid_argument("parent type is not function's class type");
+        throw std::invalid_argument(
+            "nfunction::nfunction : parent type is not function's class type");
     init_function_types<Ret, const ClassT&, Args...>();
     _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->cref<ClassT>().*fun)(args...); },
-            args.begin() + 1);
+        { return (instance->cref<ClassT>().*fun)(args...); }, args.begin() + 1);
     };
 }
 

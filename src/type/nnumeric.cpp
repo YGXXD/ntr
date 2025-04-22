@@ -24,7 +24,8 @@ using F64 = decltype(make_numeric_type<nnumeric::enumeric::edouble>());
 double nnumeric::get_value(nobject& numeric)
 {
     if (!numeric.type()->is_numeric())
-        throw std::runtime_error("nnumeric::get_value : type mismatch");
+        throw std::invalid_argument(
+            "nnumeric::get_value : numeric's type is not numeric type");
     double value = 0;
     switch (numeric.type()->as_numeric()->numeric_kind())
     {
@@ -110,7 +111,8 @@ double nnumeric::get_value(nobject& numeric)
 void nnumeric::set_value(nobject& numeric, double value)
 {
     if (!numeric.type()->is_numeric())
-        throw std::runtime_error("nnumeric::set_value : type mismatch");
+        throw std::invalid_argument(
+            "nnumeric::set_value : numeric's type is not numeric type");
     switch (numeric.type()->as_numeric()->numeric_kind())
     {
     case enumeric::ebool:

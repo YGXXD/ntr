@@ -7,7 +7,7 @@ namespace ntr
 nenum::enum_integer_type nenum::get_value(class nobject& enum_)
 {
     if (!enum_.type()->is_enum())
-        throw std::runtime_error("nenum::get_value : type mismatch");
+        throw std::invalid_argument("nenum::get_value : enum_'s type is not enum type");
     switch (enum_.type()->size())
     {
     case 1:
@@ -26,7 +26,7 @@ nenum::enum_integer_type nenum::get_value(class nobject& enum_)
 void nenum::set_value(nobject& enum_, enum_integer_type value)
 {
     if (!enum_.type()->is_enum())
-        throw std::runtime_error("nenum::set_value : type mismatch");
+        throw std::invalid_argument("nenum::set_value : enum_'s type is not enum type");
     switch (enum_.type()->size())
     {
     case 1:

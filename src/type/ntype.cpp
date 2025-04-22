@@ -14,6 +14,8 @@ ntype::ntype(etype kind, uint32_t size, operations* ops, std::string_view name)
 
 void ntype::set_name(std::string_view name)
 {
+    if (is_registered())
+        throw std::logic_error("ntype::set_name : type is already registered");
     _name = name;
     _is_registered = true;
 }
@@ -46,14 +48,16 @@ nobject ntype::object_new() const
 nobject ntype::object_clone(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
-        throw std::runtime_error("ntype::object_clone : type mismatch");
+        throw std::invalid_argument(
+            "ntype::object_clone : wrapper's type is different from this");
     return nobject::new_clone(this, wrapper.data());
 }
 
 nobject ntype::object_steal(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
-        throw std::runtime_error("ntype::object_steal : type mismatch");
+        throw std::invalid_argument(
+            "ntype::object_steal : wrapper's type is different from this");
     return nobject::new_steal(this, wrapper.data());
 }
 
