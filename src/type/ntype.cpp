@@ -8,8 +8,14 @@ namespace ntr
 {
 
 ntype::ntype(etype kind, uint32_t size, operations* ops, std::string_view name)
-    : _kind(kind), _size(size), _ops(ops), _name(name)
+    : _kind(kind), _is_registered(false), _size(size), _ops(ops), _name(name)
 {
+}
+
+void ntype::set_name(std::string_view name)
+{
+    _name = name;
+    _is_registered = true;
 }
 
 const nnumeric* ntype::as_numeric() const
