@@ -10,16 +10,17 @@ namespace ntr
 template <typename T>
 NTR_INLINE nobject nobject::make()
 {
-    return new_init(nregistrar::get_type<T>());
+    return std::move(nobject(nregistrar::get_type<T>()).alloc().init());
 }
 
 template <typename T>
 NTR_INLINE nobject nobject::make(T&& value)
 {
+    nobject obj(nregistrar::get_type<T>());
     if constexpr (std::is_lvalue_reference_v<T&&>)
-        return new_clone(nregistrar::get_type<T>(), &value);
+        return std::move(obj.alloc().init_copy(&value));
     else if constexpr (std::is_rvalue_reference_v<T&&>)
-        return new_steal(nregistrar::get_type<T>(), &value);
+        return std::move(obj.alloc().init_move(&value));
     else
         static_assert(!std::is_same_v<T, T>, "nobject::make : unknown type");
 }

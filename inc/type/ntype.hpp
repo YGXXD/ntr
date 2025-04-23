@@ -21,9 +21,9 @@ public:
 
     struct operations
     {
-        std::function<void(void*)> construct;
-        std::function<void(void*, const void* const)> copy;
-        std::function<void(void*, void*)> move;
+        std::function<void(void*)> default_construct;
+        std::function<void(void*, const void* const)> copy_construct;
+        std::function<void(void*, void*)> move_construct;
         std::function<void(void*)> destruct;
     };
 
@@ -34,6 +34,7 @@ public:
     NTR_INLINE uint32_t size() const { return _size; }
     NTR_INLINE const operations* ops() const { return _ops; }
     NTR_INLINE std::string_view name() const { return _name; }
+    
     NTR_INLINE bool is_unknown() const { return _kind == etype::eunknown; }
     NTR_INLINE bool is_numeric() const { return _kind == etype::enumeric; }
     NTR_INLINE bool is_enum() const { return _kind == etype::eenum; }
@@ -47,8 +48,8 @@ public:
     const class npointer* as_pointer() const;
 
     nobject object_new() const;
-    nobject object_clone(const nwrapper& wrapper) const;
-    nobject object_steal(const nwrapper& wrapper) const;
+    nobject object_copy(const nwrapper& wrapper) const;
+    nobject object_move(const nwrapper& wrapper) const;
 
 private:
     etype _kind;

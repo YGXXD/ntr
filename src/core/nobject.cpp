@@ -4,65 +4,15 @@
 namespace ntr
 {
 
-nobject nobject::new_init(const ntype* type)
+nobject::nobject(const class ntype* type) : _type(type), _bytes()
 {
-    nobject obj(type);
-    if (obj.is_valid())
-    {
-        if (obj.type()->ops()->construct)
-            obj.type()->ops()->construct(obj.data());
-        else
-            throw std::runtime_error("nobject::new_init : construct operation not found");
-    }
-    return obj;
-}
-
-nobject nobject::new_clone(const ntype* type, const void* const data)
-{
-    nobject obj(type);
-    if (obj.is_valid())
-    {
-        if (obj.type()->ops()->copy)
-            obj.type()->ops()->copy(obj.data(), data);
-        else
-            throw std::runtime_error("nobject::new_clone : copy operation not found");
-    }
-    return obj;
-}
-
-nobject nobject::new_steal(const ntype* type, void* data)
-{
-    nobject obj(type);
-    if (obj.is_valid())
-    {
-        if (obj.type()->ops()->move)
-            obj.type()->ops()->move(obj.data(), data);
-        else
-            throw std::runtime_error("nobject::new_steal : move operation not found");
-    }
-    return obj;
-}
-
-nobject::nobject(const class ntype* type) : _type(type), _small_data()
-{
-    if (is_heap())
-        _large_data = new std::byte[_type->size()];
-    else if (_type->size() > 0)
-        _small_data[0] = static_cast<std::byte>(1);
 }
 
 nobject::nobject(nobject&& other) : _type(other._type)
 {
-    if (is_heap())
-    {
-        _large_data = other._large_data;
-        other._large_data = nullptr;
-    }
-    else
-    {
-        _small_data = other._small_data;
-        other._small_data[0] = static_cast<std::byte>(0);
-    }
+    _bytes = other._bytes;
+    other._bytes[0] = static_cast<std::byte>(0);
+    other._bytes[1] = static_cast<std::byte>(0);
 }
 
 nobject& nobject::operator=(nobject&& other)
@@ -71,40 +21,108 @@ nobject& nobject::operator=(nobject&& other)
     {
         nobject temp(std::move(other));
         std::swap(_type, temp._type);
-        if (is_heap())
-            std::swap(_large_data, temp._large_data);
-        else
-            std::swap(_small_data, temp._small_data);
+        std::swap(_bytes, temp._bytes);
     }
     return *this;
 }
 
 nobject::~nobject()
 {
-    if (is_valid())
+    if (is_init())
         type()->ops()->destruct(data());
-    if (is_heap())
-        delete[] _large_data;
+    if (is_alloc() && is_heap())
+        delete[] data();
+}
+
+nobject& nobject::alloc()
+{
+    if (is_alloc())
+        throw std::runtime_error("nobject::allocate : object is already allocated");
+    if (_type->size() > 0)
+    {
+        _bytes[0] = static_cast<std::byte>(1);
+        if (is_heap())
+        {
+            std::byte* ptr = new std::byte[_type->size()];
+            *reinterpret_cast<std::byte**>(_bytes.data() + 2) = ptr;
+        }
+    }
+    return *this;
+}
+
+nobject& nobject::init()
+{
+    if (is_init())
+        throw std::runtime_error("nobject::init : object is already initialized");
+    if (is_alloc())
+    {
+        _bytes[1] = static_cast<std::byte>(1);
+        if (type()->ops()->default_construct)
+            type()->ops()->default_construct(data());
+        else
+            throw std::runtime_error(
+                "nobject::init : default_construct operation not found");
+    }
+    return *this;
+}
+
+nobject& nobject::init_copy(const void* const value)
+{
+    if (is_init())
+        throw std::runtime_error("nobject::init_copy : object is already initialized");
+    if (is_alloc())
+    {
+        _bytes[1] = static_cast<std::byte>(1);
+        if (type()->ops()->copy_construct)
+            type()->ops()->copy_construct(data(), value);
+        else
+            throw std::runtime_error(
+                "nobject::init_copy : copy_construct operation not found");
+    }
+    return *this;
+}
+
+nobject& nobject::init_move(void* value)
+{
+    if (is_init())
+        throw std::runtime_error("nobject::init_move : object is already initialized");
+    if (is_alloc())
+    {
+        _bytes[1] = static_cast<std::byte>(1);
+        if (type()->ops()->move_construct)
+            type()->ops()->move_construct(data(), value);
+        else
+            throw std::runtime_error(
+                "nobject::init_move : move_construct operation not found");
+    }
+    return *this;
 }
 
 bool nobject::is_heap() const
 {
-    return _type->size() > _small_data.size() - 1;
+    return _type->size() > _bytes.size() - 2;
 }
 
-bool nobject::is_valid() const
+bool nobject::is_alloc() const
 {
-    return is_heap() ? static_cast<bool>(_large_data) : static_cast<bool>(_small_data[0]);
+    return static_cast<bool>(_bytes[0]);
+}
+
+bool nobject::is_init() const
+{
+    return static_cast<bool>(_bytes[1]);
 }
 
 std::byte* nobject::data()
 {
-    return is_heap() ? _large_data : _small_data.data() + 1;
+    std::byte* ptr = _bytes.data() + 2;
+    return is_heap() ? *reinterpret_cast<std::byte**>(ptr) : ptr;
 }
 
 const std::byte* nobject::data() const
 {
-    return is_heap() ? _large_data : _small_data.data() + 1;
+    std::byte* ptr = const_cast<std::byte*>(_bytes.data() + 2);
+    return is_heap() ? *reinterpret_cast<const std::byte**>(ptr) : ptr;
 }
 
 } // namespace ntr

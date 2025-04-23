@@ -89,7 +89,8 @@ int main(int argc, char* argv[])
         .function("print_member", &MyClass::print_member);
 
     std::cout << ntr::nephren::get<uint64_t>()->name() << std::endl;
-    std::cout << ntr::nephren::get("int8")->name() << std::endl;
+    std::cout << static_cast<int>(ntr::nephren::get("int8")->as_numeric()->numeric_kind())
+              << std::endl;
 
     const ntr::nenum* enum_type = ntr::nephren::get("MyEnum")->as_enum();
     std::cout << enum_type->get_eitem(static_cast<long>(MyEnum::MyEnum3))->value()

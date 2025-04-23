@@ -42,23 +42,23 @@ const npointer* ntype::as_pointer() const
 
 nobject ntype::object_new() const
 {
-    return nobject::new_init(this);
+    return std::move(nobject(this).alloc().init());
 }
 
-nobject ntype::object_clone(const nwrapper& wrapper) const
+nobject ntype::object_copy(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::object_clone : wrapper's type is different from this");
-    return nobject::new_clone(this, wrapper.data());
+            "ntype::object_copy : wrapper's type is different from this");
+    return std::move(nobject(this).alloc().init_copy(wrapper.data()));
 }
 
-nobject ntype::object_steal(const nwrapper& wrapper) const
+nobject ntype::object_move(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::object_steal : wrapper's type is different from this");
-    return nobject::new_steal(this, wrapper.data());
+            "ntype::object_move : wrapper's type is different from this");
+    return std::move(nobject(this).alloc().init_move(wrapper.data()));
 }
 
 } // namespace ntr

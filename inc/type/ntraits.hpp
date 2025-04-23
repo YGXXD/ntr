@@ -98,35 +98,33 @@ struct ntype_ops_traits
 private:
     ntype_ops_traits() : ops()
     {
+        if constexpr (std::is_default_constructible_v<T>)
         {
-            if constexpr (std::is_default_constructible_v<T>)
+            ops.default_construct = [](void* self_data) -> void
             {
-                ops.construct = [](void* self_data) -> void
-                {
-                    new (self_data) T();
-                };
-            }
-            if constexpr (std::is_copy_constructible_v<T>)
+                new (self_data) T();
+            };
+        }
+        if constexpr (std::is_copy_constructible_v<T>)
+        {
+            ops.copy_construct = [](void* self_data, const void* const other_data) -> void
             {
-                ops.copy = [](void* self_data, const void* const other_data) -> void
-                {
-                    new (self_data) T(*static_cast<const T*>(other_data));
-                };
-            }
-            if constexpr (std::is_move_constructible_v<T>)
+                new (self_data) T(*static_cast<const T*>(other_data));
+            };
+        }
+        if constexpr (std::is_move_constructible_v<T>)
+        {
+            ops.move_construct = [](void* self_data, void* other_data) -> void
             {
-                ops.move = [](void* self_data, void* other_data) -> void
-                {
-                    new (self_data) T(std::move(*static_cast<T*>(other_data)));
-                };
-            }
-            if constexpr (std::is_destructible_v<T>)
+                new (self_data) T(std::move(*static_cast<T*>(other_data)));
+            };
+        }
+        if constexpr (std::is_destructible_v<T>)
+        {
+            ops.destruct = [](void* self_data) -> void
             {
-                ops.destruct = [](void* self_data) -> void
-                {
-                    static_cast<T*>(self_data)->~T();
-                };
-            }
+                static_cast<T*>(self_data)->~T();
+            };
         }
     }
 
