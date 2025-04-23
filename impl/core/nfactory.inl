@@ -17,23 +17,23 @@ namespace ntr
 template <typename T>
 nfactory<ntype::etype::eunknown, T>::nfactory()
 {
-    constexpr size_t size = []()
+    constexpr std::pair<uint32_t, uint32_t> size_align = []()
     {
         if constexpr (std::is_same_v<T, void>)
-            return 0;
+            return std::make_pair(0, 0);
         else
-            return sizeof(T);
+            return std::make_pair(sizeof(T), alignof(T));
     }();
-    _type =
-        std::make_unique<ntype>(ntype::etype::eunknown, size,
-                                &ntype_ops_traits<T>::instance().ops, typeid(T).name());
+    _type = std::make_unique<ntype>(
+        ntype::etype::eunknown, size_align.first, size_align.second,
+        &ntype_ops_traits<T>::instance().ops, typeid(T).name());
 }
 
 // ntype::etype::enumeric impl
 template <typename T>
 nfactory<ntype::etype::enumeric, T>::nfactory()
 {
-    _type = std::make_unique<nnumeric>(make_enumeric<T>(), sizeof(T),
+    _type = std::make_unique<nnumeric>(make_enumeric<T>(), sizeof(T), alignof(T),
                                        &ntype_ops_traits<T>::instance().ops,
                                        typeid(T).name());
 }
@@ -42,7 +42,7 @@ nfactory<ntype::etype::enumeric, T>::nfactory()
 template <typename T>
 nfactory<ntype::etype::eenum, T>::nfactory()
 {
-    _type = std::make_unique<nenum>(typeid(T).name(), sizeof(T),
+    _type = std::make_unique<nenum>(typeid(T).name(), sizeof(T), alignof(T),
                                     &ntype_ops_traits<T>::instance().ops);
 }
 
@@ -67,7 +67,7 @@ nfactory<ntype::etype::eenum, T>::remove(std::string_view name)
 template <typename T>
 nfactory<ntype::etype::eclass, T>::nfactory()
 {
-    _type = std::make_unique<nclass>(typeid(T).name(), sizeof(T),
+    _type = std::make_unique<nclass>(typeid(T).name(), sizeof(T), alignof(T),
                                      &ntype_ops_traits<T>::instance().ops);
 }
 
@@ -102,7 +102,7 @@ nfactory<ntype::etype::eclass, T>::function(std::string_view name,
 template <typename T>
 template <typename U>
 NTR_INLINE nfactory<ntype::etype::eclass, T>&
-nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::* member))
+nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::*member))
 {
     _type->add_property(std::make_unique<nproperty>(_type.get(), name, member));
     return *this;

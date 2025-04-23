@@ -7,8 +7,10 @@
 namespace ntr
 {
 
-ntype::ntype(etype kind, uint32_t size, operations* ops, std::string_view name)
-    : _kind(kind), _is_registered(false), _size(size), _ops(ops), _name(name)
+ntype::ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
+             std::string_view name)
+    : _kind(kind), _is_registered(false), _size(size), _align(align), _ops(ops),
+      _name(name)
 {
 }
 

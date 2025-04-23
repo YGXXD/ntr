@@ -5,8 +5,8 @@
 namespace ntr
 {
 
-nclass::nclass(std::string_view name, uint32_t size, operations* ops)
-    : ntype(etype::eclass, size, ops, name)
+nclass::nclass(std::string_view name, uint32_t size, uint32_t align, operations* ops)
+    : ntype(etype::eclass, size, align, ops, name)
 {
 }
 

@@ -37,9 +37,9 @@ public:
     bool is_heap() const;
     bool is_alloc() const;
     bool is_init() const;
-    
-    std::byte* data();
-    const std::byte* data() const;
+
+    void* data();
+    const void* data() const;
     NTR_INLINE const ntype* type() const { return _type; }
 
 private:
@@ -47,7 +47,8 @@ private:
     nobject& operator=(const nobject& other) = delete;
 
     const ntype* _type;
-    std::array<std::byte, 24> _bytes;
+    std::array<std::byte, 8> _status;
+    alignas(16) std::array<std::byte, 16> _bytes;
 };
 
 } // namespace ntr

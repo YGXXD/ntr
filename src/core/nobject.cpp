@@ -4,15 +4,15 @@
 namespace ntr
 {
 
-nobject::nobject(const class ntype* type) : _type(type), _bytes()
+nobject::nobject(const class ntype* type) : _type(type), _status(), _bytes()
 {
 }
 
-nobject::nobject(nobject&& other) : _type(other._type)
+nobject::nobject(nobject&& other)
+    : _type(other._type), _status(other._status), _bytes(other._bytes)
 {
-    _bytes = other._bytes;
-    other._bytes[0] = static_cast<std::byte>(0);
-    other._bytes[1] = static_cast<std::byte>(0);
+    other._status[0] = static_cast<std::byte>(0);
+    other._status[1] = static_cast<std::byte>(0);
 }
 
 nobject& nobject::operator=(nobject&& other)
@@ -31,7 +31,7 @@ nobject::~nobject()
     if (is_init())
         type()->ops()->destruct(data());
     if (is_alloc() && is_heap())
-        delete[] data();
+        std::free(data());
 }
 
 nobject& nobject::alloc()
@@ -40,11 +40,11 @@ nobject& nobject::alloc()
         throw std::runtime_error("nobject::allocate : object is already allocated");
     if (_type->size() > 0)
     {
-        _bytes[0] = static_cast<std::byte>(1);
+        _status[0] = static_cast<std::byte>(1);
         if (is_heap())
         {
-            std::byte* ptr = new std::byte[_type->size()];
-            *reinterpret_cast<std::byte**>(_bytes.data() + 2) = ptr;
+            void* ptr = std::aligned_alloc(_type->align(), _type->size());
+            *reinterpret_cast<void**>(_bytes.data()) = ptr;
         }
     }
     return *this;
@@ -56,7 +56,7 @@ nobject& nobject::init()
         throw std::runtime_error("nobject::init : object is already initialized");
     if (is_alloc())
     {
-        _bytes[1] = static_cast<std::byte>(1);
+        _status[1] = static_cast<std::byte>(1);
         if (type()->ops()->default_construct)
             type()->ops()->default_construct(data());
         else
@@ -72,7 +72,7 @@ nobject& nobject::init_copy(const void* const value)
         throw std::runtime_error("nobject::init_copy : object is already initialized");
     if (is_alloc())
     {
-        _bytes[1] = static_cast<std::byte>(1);
+        _status[1] = static_cast<std::byte>(1);
         if (type()->ops()->copy_construct)
             type()->ops()->copy_construct(data(), value);
         else
@@ -88,7 +88,7 @@ nobject& nobject::init_move(void* value)
         throw std::runtime_error("nobject::init_move : object is already initialized");
     if (is_alloc())
     {
-        _bytes[1] = static_cast<std::byte>(1);
+        _status[1] = static_cast<std::byte>(1);
         if (type()->ops()->move_construct)
             type()->ops()->move_construct(data(), value);
         else
@@ -100,29 +100,29 @@ nobject& nobject::init_move(void* value)
 
 bool nobject::is_heap() const
 {
-    return _type->size() > _bytes.size() - 2;
+    return _type->size() > _bytes.size();
 }
 
 bool nobject::is_alloc() const
 {
-    return static_cast<bool>(_bytes[0]);
+    return static_cast<bool>(_status[0]);
 }
 
 bool nobject::is_init() const
 {
-    return static_cast<bool>(_bytes[1]);
+    return static_cast<bool>(_status[1]);
 }
 
-std::byte* nobject::data()
+void* nobject::data()
 {
-    std::byte* ptr = _bytes.data() + 2;
-    return is_heap() ? *reinterpret_cast<std::byte**>(ptr) : ptr;
+    return is_heap() ? *reinterpret_cast<void**>(_bytes.data()) : _bytes.data();
 }
 
-const std::byte* nobject::data() const
+const void* nobject::data() const
 {
-    std::byte* ptr = const_cast<std::byte*>(_bytes.data() + 2);
-    return is_heap() ? *reinterpret_cast<const std::byte**>(ptr) : ptr;
+    return is_heap()
+               ? *reinterpret_cast<const void**>(const_cast<std::byte*>(_bytes.data()))
+               : _bytes.data();
 }
 
 } // namespace ntr

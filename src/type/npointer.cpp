@@ -32,8 +32,8 @@ nwrapper npointer::get_target(nobject& pointer)
 
 npointer::npointer(uint8_t depth, const ntype* pointed_type, std::string_view name,
                    operations* ops)
-    : ntype(ntype::etype::epointer, sizeof(void*), ops, name), _depth(depth),
-      _pointed_type(pointed_type)
+    : ntype(ntype::etype::epointer, sizeof(void*), alignof(void*), ops, name),
+      _depth(depth), _pointed_type(pointed_type)
 {
 }
 

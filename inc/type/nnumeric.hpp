@@ -34,7 +34,7 @@ public:
     static double get_value(class nobject& numeric);
     static void set_value(nobject& numeric, double value);
 
-    nnumeric(enumeric numeric_kind, uint32_t size, operations* ops,
+    nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops,
              std::string_view name);
 
     NTR_INLINE enumeric numeric_kind() const { return _numeric_kind; }

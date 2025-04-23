@@ -27,14 +27,16 @@ public:
         std::function<void(void*)> destruct;
     };
 
-    ntype(etype kind, uint32_t size, operations* ops, std::string_view name);
+    ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
+          std::string_view name);
 
     NTR_INLINE etype kind() const { return _kind; }
     NTR_INLINE bool is_registered() const { return _is_registered; }
+    NTR_INLINE uint32_t align() const { return _align; }
     NTR_INLINE uint32_t size() const { return _size; }
     NTR_INLINE const operations* ops() const { return _ops; }
     NTR_INLINE std::string_view name() const { return _name; }
-    
+
     NTR_INLINE bool is_unknown() const { return _kind == etype::eunknown; }
     NTR_INLINE bool is_numeric() const { return _kind == etype::enumeric; }
     NTR_INLINE bool is_enum() const { return _kind == etype::eenum; }
@@ -55,6 +57,7 @@ private:
     etype _kind;
     bool _is_registered;
     uint32_t _size;
+    uint32_t _align;
     operations* _ops;
     std::string _name;
 };
