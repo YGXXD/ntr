@@ -47,16 +47,14 @@ NTR_INLINE const T& nobject::as() const
     return *reinterpret_cast<const T*>(data());
 }
 
-template <typename T>
-NTR_INLINE T& nobject::as_wrapper_ref() const
+NTR_INLINE nwrapper& nobject::as_wrapper()
 {
-    return as<nwrapper>().ref<T>();
+    return as<nwrapper>();
 }
 
-template <typename T>
-NTR_INLINE const T& nobject::as_wrapper_cref() const
+NTR_INLINE const nwrapper& nobject::as_wrapper() const
 {
-    return as<nwrapper>().cref<T>();
+    return as<nwrapper>();
 }
 
 } // namespace ntr

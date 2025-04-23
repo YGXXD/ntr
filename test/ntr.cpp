@@ -107,15 +107,15 @@ int main(int argc, char* argv[])
 
     const ntr::nproperty* property = class_type->get_property("value");
     std::cout << property->property_type()->name() << std::endl;
-    std::cout << property->get(my_class).as_wrapper_cref<int>() << std::endl;
+    std::cout << property->get(my_class).as_wrapper().cref<int>() << std::endl;
     property->set(my_class, 20);
-    std::cout << property->get(my_class).as_wrapper_cref<int>() << std::endl;
+    std::cout << property->get(my_class).as_wrapper().cref<int>() << std::endl;
 
     property = class_type->get_property("float_value");
     std::cout << property->property_type()->name() << std::endl;
-    std::cout << property->get(my_class).as_wrapper_cref<double>() << std::endl;
+    std::cout << property->get(my_class).as_wrapper().cref<double>() << std::endl;
     property->set(my_class, double(20));
-    std::cout << property->get(my_class).as_wrapper_cref<double>() << std::endl;
+    std::cout << property->get(my_class).as_wrapper().cref<double>() << std::endl;
 
     const ntr::nfunction* function = class_type->get_function("print");
     std::cout << function->name() << std::endl;
@@ -133,8 +133,8 @@ int main(int argc, char* argv[])
     std::vector<ntr::nwrapper> args { my_class, x };
     function->invoke(args);
     auto result = function->invoke(args);
-    result.as_wrapper_ref<double>() = 10;
-    std::cout << result.as_wrapper_cref<double>() << std::endl;
+    result.as_wrapper().ref<double>() = 10;
+    std::cout << result.as_wrapper().cref<double>() << std::endl;
     std::cout << x << std::endl;
 
     ntr::nwrapper ref = ntr::nwrapper(100);
@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
     std::cout << ntr::nephren::get<int16_t*>()->name() << std::endl;
 
     uint16_t u16 = 100;
-    ntr::nobject obj2 = ntr::nephren::get<uint16_t*>()->object_new();
+    ntr::nobject obj2 = ntr::nephren::get<uint16_t*>()->new_object();
     ntr::npointer::set_value(obj2, &u16);
     std::cout << ntr::npointer::get_target(obj2).cref<uint16_t>() << std::endl;
 

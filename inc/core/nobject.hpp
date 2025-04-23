@@ -24,10 +24,8 @@ public:
     NTR_INLINE T& as();
     template <typename T>
     NTR_INLINE const T& as() const;
-    template <typename T>
-    NTR_INLINE T& as_wrapper_ref() const;
-    template <typename T>
-    NTR_INLINE const T& as_wrapper_cref() const;
+    NTR_INLINE class nwrapper& as_wrapper();
+    NTR_INLINE const nwrapper& as_wrapper() const;
 
     nobject& alloc();
     nobject& init();

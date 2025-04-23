@@ -42,24 +42,24 @@ const npointer* ntype::as_pointer() const
     return is_pointer() ? static_cast<const npointer*>(this) : nullptr;
 }
 
-nobject ntype::object_new() const
+nobject ntype::new_object() const
 {
     return std::move(nobject(this).alloc().init());
 }
 
-nobject ntype::object_copy(const nwrapper& wrapper) const
+nobject ntype::new_object(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::object_copy : wrapper's type is different from this");
+            "ntype::new_object : wrapper's type is different from this");
     return std::move(nobject(this).alloc().init_copy(wrapper.data()));
 }
 
-nobject ntype::object_move(const nwrapper& wrapper) const
+nobject ntype::new_object_rv(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::object_move : wrapper's type is different from this");
+            "ntype::new_object_rv : wrapper's type is different from this");
     return std::move(nobject(this).alloc().init_move(wrapper.data()));
 }
 

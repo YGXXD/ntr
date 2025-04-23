@@ -49,9 +49,9 @@ public:
     const class nclass* as_class() const;
     const class npointer* as_pointer() const;
 
-    nobject object_new() const;
-    nobject object_copy(const nwrapper& wrapper) const;
-    nobject object_move(const nwrapper& wrapper) const;
+    nobject new_object() const;
+    nobject new_object(const nwrapper& wrapper) const;
+    nobject new_object_rv(const nwrapper& wrapper) const;
 
 private:
     etype _kind;
