@@ -3,7 +3,8 @@
 namespace ntr
 {
 
-nwrapper::nwrapper(const ntype* type, void* data) : _type(type), _pdata(data)
+nwrapper::nwrapper(const ntype* type, const void* data)
+    : _type(type), _pdata(const_cast<void*>(data))
 {
     if (type == nullptr)
         throw std::invalid_argument("nwrapper::nwrapper : type is nullptr");
