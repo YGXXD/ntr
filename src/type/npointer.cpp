@@ -3,12 +3,12 @@
 namespace ntr
 {
 
-void* npointer::get_value(class nobject& pointer)
+void* npointer::get_value(const nobject& pointer)
 {
     if (!pointer.type()->is_pointer())
         throw std::invalid_argument(
             "npointer::get_value : pointer's type is not pointer type");
-    return *reinterpret_cast<void**>(pointer.data());
+    return *reinterpret_cast<void* const*>(pointer.data());
 }
 
 void npointer::set_value(nobject& pointer, void* value)
@@ -19,7 +19,7 @@ void npointer::set_value(nobject& pointer, void* value)
     *reinterpret_cast<void**>(pointer.data()) = value;
 }
 
-nwrapper npointer::get_target(nobject& pointer)
+nwrapper npointer::get_target(const nobject& pointer)
 {
     if (!pointer.type()->is_pointer())
         throw std::invalid_argument(

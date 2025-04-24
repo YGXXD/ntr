@@ -4,20 +4,24 @@
 namespace ntr
 {
 
-nenum::enum_integer_type nenum::get_value(class nobject& enum_)
+nenum::enum_integer_type nenum::get_value(const nobject& enum_)
 {
     if (!enum_.type()->is_enum())
         throw std::invalid_argument("nenum::get_value : enum_'s type is not enum type");
     switch (enum_.type()->size())
     {
     case 1:
-        return static_cast<enum_integer_type>(*reinterpret_cast<int8_t*>(enum_.data()));
+        return static_cast<enum_integer_type>(
+            *reinterpret_cast<const int8_t*>(enum_.data()));
     case 2:
-        return static_cast<enum_integer_type>(*reinterpret_cast<int16_t*>(enum_.data()));
+        return static_cast<enum_integer_type>(
+            *reinterpret_cast<const int16_t*>(enum_.data()));
     case 4:
-        return static_cast<enum_integer_type>(*reinterpret_cast<int32_t*>(enum_.data()));
+        return static_cast<enum_integer_type>(
+            *reinterpret_cast<const int32_t*>(enum_.data()));
     case 8:
-        return static_cast<enum_integer_type>(*reinterpret_cast<int64_t*>(enum_.data()));
+        return static_cast<enum_integer_type>(
+            *reinterpret_cast<const int64_t*>(enum_.data()));
     default:
         throw std::runtime_error("nenum::get_value : size mismatch");
     }

@@ -120,9 +120,8 @@ void* nobject::data()
 
 const void* nobject::data() const
 {
-    return is_heap()
-               ? *reinterpret_cast<const void**>(const_cast<std::byte*>(_bytes.data()))
-               : _bytes.data();
+    return is_heap() ? *reinterpret_cast<const void* const*>(_bytes.data())
+                     : _bytes.data();
 }
 
 } // namespace ntr
