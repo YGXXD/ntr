@@ -40,12 +40,14 @@ nobject& nobject::alloc()
         throw std::runtime_error("nobject::allocate : object is already allocated");
     if (_type->size() > 0)
     {
-        _status[0] = static_cast<std::byte>(1);
         if (is_heap())
         {
             void* ptr = std::aligned_alloc(_type->align(), _type->size());
+            if (!ptr)
+                throw std::runtime_error("nobject::allocate : failed to allocate memory");
             *reinterpret_cast<void**>(_bytes.data()) = ptr;
         }
+        _status[0] = static_cast<std::byte>(1);
     }
     return *this;
 }
@@ -56,9 +58,11 @@ nobject& nobject::init()
         throw std::runtime_error("nobject::init : object is already initialized");
     if (is_alloc())
     {
-        _status[1] = static_cast<std::byte>(1);
         if (type()->ops()->default_construct)
+        {
             type()->ops()->default_construct(data());
+            _status[1] = static_cast<std::byte>(1);
+        }
         else
             throw std::runtime_error(
                 "nobject::init : default_construct operation not found");
@@ -72,9 +76,11 @@ nobject& nobject::init_copy(const void* const value)
         throw std::runtime_error("nobject::init_copy : object is already initialized");
     if (is_alloc())
     {
-        _status[1] = static_cast<std::byte>(1);
         if (type()->ops()->copy_construct)
+        {
             type()->ops()->copy_construct(data(), value);
+            _status[1] = static_cast<std::byte>(1);
+        }
         else
             throw std::runtime_error(
                 "nobject::init_copy : copy_construct operation not found");
@@ -88,9 +94,11 @@ nobject& nobject::init_move(void* value)
         throw std::runtime_error("nobject::init_move : object is already initialized");
     if (is_alloc())
     {
-        _status[1] = static_cast<std::byte>(1);
         if (type()->ops()->move_construct)
+        {
             type()->ops()->move_construct(data(), value);
+            _status[1] = static_cast<std::byte>(1);
+        }
         else
             throw std::runtime_error(
                 "nobject::init_move : move_construct operation not found");

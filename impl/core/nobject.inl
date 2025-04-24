@@ -17,12 +17,10 @@ template <typename T>
 NTR_INLINE nobject nobject::make(T&& value)
 {
     nobject obj(nregistrar::get_type<T>());
-    if constexpr (std::is_lvalue_reference_v<T&&>)
+    if constexpr (std::is_lvalue_reference_v<T>)
         return std::move(obj.alloc().init_copy(&value));
-    else if constexpr (std::is_rvalue_reference_v<T&&>)
-        return std::move(obj.alloc().init_move(&value));
     else
-        static_assert(!std::is_same_v<T, T>, "nobject::make : unknown type");
+        return std::move(obj.alloc().init_move(&value));
 }
 
 template <typename T>
