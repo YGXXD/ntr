@@ -1,8 +1,5 @@
 #include "../../inc/type/ntype.hpp"
-#include "../../inc/type/nnumeric.hpp"
-#include "../../inc/type/nenum.hpp"
-#include "../../inc/type/nclass.hpp"
-#include "../../inc/type/npointer.hpp"
+#include "../../inc/implement.hpp"
 
 namespace ntr
 {

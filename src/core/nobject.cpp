@@ -1,10 +1,10 @@
 #include "../../inc/core/nobject.hpp"
-#include "../../inc/type/ntype.hpp"
+#include "../../inc/implement.hpp"
 
 namespace ntr
 {
 
-nobject::nobject(const class ntype* type) : _type(type), _status(), _bytes()
+nobject::nobject(const ntype* type) : _type(type), _status(), _bytes()
 {
 }
 

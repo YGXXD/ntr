@@ -12,13 +12,14 @@ public:
 
     static void* get_value(const class nobject& pointer);
     static void set_value(nobject& pointer, void* value);
+    static nobject get_target(const nobject& pointer);
 
     NTR_INLINE uint8_t depth() const { return _depth; }
-    NTR_INLINE const ntype* pointed_type() const { return _pointed_type; }
+    NTR_INLINE const ntype* pointing_type() const { return _pointing_type; }
 
 private:
     uint8_t _depth;
-    const ntype* _pointed_type;
+    const ntype* _pointing_type;
 };
 
 } // namespace ntr

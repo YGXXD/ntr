@@ -1,4 +1,5 @@
 #include "../../inc/core/nregistrar.hpp"
+#include "../../inc/implement.hpp"
 
 namespace ntr
 {

@@ -1,5 +1,5 @@
 #include "../../inc/field/neitem.hpp"
-#include "../../inc/type/nenum.hpp"
+#include "../../inc/implement.hpp"
 
 namespace ntr
 {

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "implement.hpp"
-#include "core/nfactory.hpp"
-#include "core/nregistrar.hpp"
 
 namespace ntr
 {

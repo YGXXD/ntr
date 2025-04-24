@@ -1,5 +1,5 @@
 #include "../../inc/field/nfunction.hpp"
-#include "../../inc/type/nclass.hpp"
+#include "../../inc/implement.hpp"
 
 namespace ntr
 {
