@@ -12,15 +12,15 @@ NTR_INLINE nobject nfunction::wrapper_call(OP op,
 {
     if constexpr (std::is_lvalue_reference_v<Ret>)
     {
-        return nobject::make_wrapper(op((it++)->any<Args>()...));
+        return nobject::make_wrapper(op((it++)->unwrap<Args>()...));
     }
     else if constexpr (!std::is_same_v<Ret, void>)
     {
-        return nobject::make(op((it++)->any<Args>()...));
+        return nobject::make(op((it++)->unwrap<Args>()...));
     }
     else
     {
-        op((it++)->any<Args>()...);
+        op((it++)->unwrap<Args>()...);
         return nobject::make<void>();
     }
 }
@@ -49,7 +49,8 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->ref<ClassT>().*fun)(args...); }, args.begin() + 1);
+        { return (instance->ref<ClassT>().*fun)(args...); },
+            args.begin() + 1);
     };
 }
 
@@ -66,7 +67,8 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->cref<ClassT>().*fun)(args...); }, args.begin() + 1);
+        { return (instance->cref<ClassT>().*fun)(args...); },
+            args.begin() + 1);
     };
 }
 

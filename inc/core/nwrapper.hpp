@@ -25,7 +25,7 @@ public:
     template <typename T>
     NTR_INLINE T&& rref() const;
     template <typename T>
-    NTR_INLINE auto&& any() const;
+    NTR_INLINE auto&& unwrap() const;
 
     NTR_INLINE const ntype* type() const { return _type; }
     NTR_INLINE void* data() const { return _pdata; }

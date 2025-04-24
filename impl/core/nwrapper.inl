@@ -34,7 +34,7 @@ NTR_INLINE T&& nwrapper::rref() const
 }
 
 template <typename T>
-NTR_INLINE auto&& nwrapper::any() const
+NTR_INLINE auto&& nwrapper::unwrap() const
 {
     if constexpr (std::is_rvalue_reference_v<T>)
         return rref<std::decay_t<T>>();
