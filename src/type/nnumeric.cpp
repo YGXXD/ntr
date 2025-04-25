@@ -1,5 +1,6 @@
 #include "../../inc/type/nnumeric.hpp"
 #include "../../inc/implement.hpp"
+
 namespace ntr
 {
 
