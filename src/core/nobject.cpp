@@ -89,6 +89,7 @@ nobject& nobject::operator=(nobject&& other)
     {
         nobject temp(std::move(other));
         std::swap(_type, temp._type);
+        std::swap(_status, temp._status);
         std::swap(_bytes, temp._bytes);
     }
     return *this;
