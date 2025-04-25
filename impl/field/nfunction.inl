@@ -10,7 +10,7 @@ template <typename Ret, typename... Args, typename OP>
 NTR_INLINE nobject nfunction::wrapper_call(OP op,
                                            std::vector<nwrapper>::const_iterator it)
 {
-    if constexpr (std::is_lvalue_reference_v<Ret>)
+    if constexpr (std::is_reference_v<Ret>)
     {
         return nobject::make_ref(op((it++)->unwrap<Args>()...));
     }
@@ -49,7 +49,8 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->ref<ClassT>().*fun)(args...); }, args.begin() + 1);
+        { return (instance->ref<ClassT>().*fun)(args...); },
+            args.begin() + 1);
     };
 }
 
@@ -66,7 +67,8 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     {
         return wrapper_call<Ret, Args...>(
             [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->cref<ClassT>().*fun)(args...); }, args.begin() + 1);
+        { return (instance->cref<ClassT>().*fun)(args...); },
+            args.begin() + 1);
     };
 }
 
