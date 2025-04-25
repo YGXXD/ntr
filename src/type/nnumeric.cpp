@@ -28,80 +28,50 @@ double nnumeric::get_value(const nobject& numeric)
     switch (numeric.type()->as_numeric()->numeric_kind())
     {
     case enumeric::ebool:
-    {
         value = numeric.as<B8>();
         break;
-    }
     case enumeric::echar:
-    {
         value = numeric.as<C8>();
         break;
-    }
     case enumeric::ewchar:
-    {
         value = numeric.as<WC>();
         break;
-    }
     case enumeric::echar16:
-    {
         value = numeric.as<C16>();
         break;
-    }
     case enumeric::echar32:
-    {
         value = numeric.as<C32>();
         break;
-    }
     case enumeric::eint8:
-    {
         value = numeric.as<I8>();
         break;
-    }
     case enumeric::eint16:
-    {
         value = numeric.as<I16>();
         break;
-    }
     case enumeric::eint32:
-    {
         value = numeric.as<I32>();
         break;
-    }
     case enumeric::eint64:
-    {
         value = numeric.as<I64>();
         break;
-    }
     case enumeric::euint8:
-    {
         value = numeric.as<U8>();
         break;
-    }
     case enumeric::euint16:
-    {
         value = numeric.as<U16>();
         break;
-    }
     case enumeric::euint32:
-    {
         value = numeric.as<U32>();
         break;
-    }
     case enumeric::euint64:
-    {
         value = numeric.as<U64>();
         break;
-    }
     case enumeric::efloat:
-    {
         value = numeric.as<F32>();
         break;
-    }
     case enumeric::edouble:
-    {
         value = numeric.as<F64>();
         break;
-    }
     }
     return value;
 }
@@ -114,80 +84,50 @@ void nnumeric::set_value(nobject& numeric, double value)
     switch (numeric.type()->as_numeric()->numeric_kind())
     {
     case enumeric::ebool:
-    {
         numeric.as<B8>() = static_cast<B8>(value);
         break;
-    }
     case enumeric::echar:
-    {
         numeric.as<C8>() = static_cast<C8>(value);
         break;
-    }
     case enumeric::ewchar:
-    {
         numeric.as<WC>() = static_cast<WC>(value);
         break;
-    }
     case enumeric::echar16:
-    {
         numeric.as<C16>() = static_cast<C16>(value);
         break;
-    }
     case enumeric::echar32:
-    {
         numeric.as<C32>() = static_cast<C32>(value);
         break;
-    }
     case enumeric::eint8:
-    {
         numeric.as<I8>() = static_cast<I8>(value);
         break;
-    }
     case enumeric::eint16:
-    {
         numeric.as<I16>() = static_cast<I16>(value);
         break;
-    }
     case enumeric::eint32:
-    {
         numeric.as<I32>() = static_cast<I32>(value);
         break;
-    }
     case enumeric::eint64:
-    {
         numeric.as<I64>() = static_cast<I64>(value);
         break;
-    }
     case enumeric::euint8:
-    {
         numeric.as<U8>() = static_cast<U8>(value);
         break;
-    }
     case enumeric::euint16:
-    {
         numeric.as<U16>() = static_cast<U16>(value);
         break;
-    }
     case enumeric::euint32:
-    {
         numeric.as<U32>() = static_cast<U32>(value);
         break;
-    }
     case enumeric::euint64:
-    {
         numeric.as<U64>() = static_cast<U64>(value);
         break;
-    }
     case enumeric::efloat:
-    {
         numeric.as<F32>() = static_cast<F32>(value);
         break;
-    }
     case enumeric::edouble:
-    {
         numeric.as<F64>() = value;
         break;
-    }
     }
 }
 
@@ -198,110 +138,80 @@ nnumeric::nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operati
     switch (numeric_kind)
     {
     case enumeric::ebool:
-    {
-        _is_signed = std::is_signed_v<bool>;
-        _is_integral = std::is_integral_v<bool>;
-        _is_floating_point = std::is_floating_point_v<bool>;
+        _is_signed = std::is_signed_v<B8>;
+        _is_integral = std::is_integral_v<B8>;
+        _is_floating_point = std::is_floating_point_v<B8>;
         break;
-    }
     case enumeric::echar:
-    {
-        _is_signed = std::is_signed_v<char>;
-        _is_integral = std::is_integral_v<char>;
-        _is_floating_point = std::is_floating_point_v<char>;
+        _is_signed = std::is_signed_v<C8>;
+        _is_integral = std::is_integral_v<C8>;
+        _is_floating_point = std::is_floating_point_v<C8>;
         break;
-    }
     case enumeric::ewchar:
-    {
-        _is_signed = std::is_signed_v<wchar_t>;
-        _is_integral = std::is_integral_v<wchar_t>;
-        _is_floating_point = std::is_floating_point_v<wchar_t>;
+        _is_signed = std::is_signed_v<WC>;
+        _is_integral = std::is_integral_v<WC>;
+        _is_floating_point = std::is_floating_point_v<WC>;
         break;
-    }
     case enumeric::echar16:
-    {
-        _is_signed = std::is_signed_v<char16_t>;
-        _is_integral = std::is_integral_v<char16_t>;
-        _is_floating_point = std::is_floating_point_v<char16_t>;
+        _is_signed = std::is_signed_v<C16>;
+        _is_integral = std::is_integral_v<C16>;
+        _is_floating_point = std::is_floating_point_v<C16>;
         break;
-    }
     case enumeric::echar32:
-    {
-        _is_signed = std::is_signed_v<char32_t>;
-        _is_integral = std::is_integral_v<char32_t>;
-        _is_floating_point = std::is_floating_point_v<char32_t>;
+        _is_signed = std::is_signed_v<C32>;
+        _is_integral = std::is_integral_v<C32>;
+        _is_floating_point = std::is_floating_point_v<C32>;
         break;
-    }
     case enumeric::eint8:
-    {
-        _is_signed = std::is_signed_v<int8_t>;
-        _is_integral = std::is_integral_v<int8_t>;
-        _is_floating_point = std::is_floating_point_v<int8_t>;
+        _is_signed = std::is_signed_v<I8>;
+        _is_integral = std::is_integral_v<I8>;
+        _is_floating_point = std::is_floating_point_v<I8>;
         break;
-    }
     case enumeric::eint16:
-    {
-        _is_signed = std::is_signed_v<int16_t>;
-        _is_integral = std::is_integral_v<int16_t>;
-        _is_floating_point = std::is_floating_point_v<int16_t>;
+        _is_signed = std::is_signed_v<I16>;
+        _is_integral = std::is_integral_v<I16>;
+        _is_floating_point = std::is_floating_point_v<I16>;
         break;
-    }
     case enumeric::eint32:
-    {
-        _is_signed = std::is_signed_v<int32_t>;
-        _is_integral = std::is_integral_v<int32_t>;
-        _is_floating_point = std::is_floating_point_v<int32_t>;
+        _is_signed = std::is_signed_v<I32>;
+        _is_integral = std::is_integral_v<I32>;
+        _is_floating_point = std::is_floating_point_v<I32>;
         break;
-    }
     case enumeric::eint64:
-    {
-        _is_signed = std::is_signed_v<int64_t>;
-        _is_integral = std::is_integral_v<int64_t>;
-        _is_floating_point = std::is_floating_point_v<int64_t>;
+        _is_signed = std::is_signed_v<I64>;
+        _is_integral = std::is_integral_v<I64>;
+        _is_floating_point = std::is_floating_point_v<I64>;
         break;
-    }
     case enumeric::euint8:
-    {
-        _is_signed = std::is_signed_v<uint8_t>;
-        _is_integral = std::is_integral_v<uint8_t>;
-        _is_floating_point = std::is_floating_point_v<uint8_t>;
+        _is_signed = std::is_signed_v<U8>;
+        _is_integral = std::is_integral_v<U8>;
+        _is_floating_point = std::is_floating_point_v<U8>;
         break;
-    }
     case enumeric::euint16:
-    {
-        _is_signed = std::is_signed_v<uint16_t>;
-        _is_integral = std::is_integral_v<uint16_t>;
-        _is_floating_point = std::is_floating_point_v<uint16_t>;
+        _is_signed = std::is_signed_v<U16>;
+        _is_integral = std::is_integral_v<U16>;
+        _is_floating_point = std::is_floating_point_v<U16>;
         break;
-    }
     case enumeric::euint32:
-    {
-        _is_signed = std::is_signed_v<uint32_t>;
-        _is_integral = std::is_integral_v<uint32_t>;
-        _is_floating_point = std::is_floating_point_v<uint32_t>;
+        _is_signed = std::is_signed_v<U32>;
+        _is_integral = std::is_integral_v<U32>;
+        _is_floating_point = std::is_floating_point_v<U32>;
         break;
-    }
     case enumeric::euint64:
-    {
-        _is_signed = std::is_signed_v<uint64_t>;
-        _is_integral = std::is_integral_v<uint64_t>;
-        _is_floating_point = std::is_floating_point_v<uint64_t>;
+        _is_signed = std::is_signed_v<U64>;
+        _is_integral = std::is_integral_v<U64>;
+        _is_floating_point = std::is_floating_point_v<U64>;
         break;
-    }
     case enumeric::efloat:
-    {
-        _is_signed = std::is_signed_v<float>;
-        _is_integral = std::is_integral_v<float>;
-        _is_floating_point = std::is_floating_point_v<float>;
+        _is_signed = std::is_signed_v<F32>;
+        _is_integral = std::is_integral_v<F32>;
+        _is_floating_point = std::is_floating_point_v<F32>;
         break;
-    }
     case enumeric::edouble:
-    {
-        _is_signed = std::is_signed_v<double>;
-        _is_integral = std::is_integral_v<double>;
-        _is_floating_point = std::is_floating_point_v<double>;
+        _is_signed = std::is_signed_v<F64>;
+        _is_integral = std::is_integral_v<F64>;
+        _is_floating_point = std::is_floating_point_v<F64>;
         break;
-    }
     }
 }
 

@@ -52,6 +52,7 @@ public:
     nobject new_object() const;
     nobject new_object(const nwrapper& wrapper) const;
     nobject new_object_rv(const nwrapper& wrapper) const;
+    nobject new_object_ref(const nwrapper& wrapper) const;
 
 private:
     etype _kind;

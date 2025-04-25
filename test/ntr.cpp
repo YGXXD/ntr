@@ -107,15 +107,15 @@ int main(int argc, char* argv[])
 
     const ntr::nproperty* property = class_type->get_property("value");
     std::cout << property->property_type()->name() << std::endl;
-    std::cout << property->get(my_class).as_wrapper().cref<int>() << std::endl;
+    std::cout << property->get(my_class).as<int>() << std::endl;
     property->set(my_class, 20);
-    std::cout << property->get(my_class).as_wrapper().cref<int>() << std::endl;
+    std::cout << property->get(my_class).as<int>() << std::endl;
 
     property = class_type->get_property("float_value");
     std::cout << property->property_type()->name() << std::endl;
-    std::cout << property->get(my_class).as_wrapper().cref<double>() << std::endl;
+    std::cout << property->get(my_class).as<double>() << std::endl;
     property->set(my_class, double(20));
-    std::cout << property->get(my_class).as_wrapper().cref<double>() << std::endl;
+    std::cout << property->get(my_class).as<double>() << std::endl;
 
     const ntr::nfunction* function = class_type->get_function("print");
     std::cout << function->name() << std::endl;
@@ -133,8 +133,8 @@ int main(int argc, char* argv[])
     std::vector<ntr::nwrapper> args { my_class, x };
     function->invoke(args);
     auto result = function->invoke(args);
-    result.as_wrapper().ref<double>() = 10;
-    std::cout << result.as_wrapper().cref<double>() << std::endl;
+    result.as<double>() = 10;
+    std::cout << result.as<double>() << std::endl;
     std::cout << x << std::endl;
 
     ntr::nwrapper ref = ntr::nwrapper(100);
@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
     std::unique_ptr<int> a = std::make_unique<int>(100);
     a = std::make_unique<int>(200);
 
-    ntr::nobject obj = ntr::nobject::make<int>(100);
+    ntr::nobject obj = ntr::nobject::make_obtain<int>(100);
 
     ntr::nnumeric::set_value(obj, 205.2);
     std::cout << ntr::nnumeric::get_value(obj) << std::endl;
@@ -160,7 +160,7 @@ int main(int argc, char* argv[])
     uint16_t u16 = 100;
     ntr::nobject obj2 = ntr::nephren::get<uint16_t*>()->new_object();
     ntr::npointer::set_value(obj2, &u16);
-    std::cout << ntr::npointer::get_target(obj2).cref<uint16_t>() << std::endl;
+    std::cout << ntr::npointer::get_target(obj2).as<uint16_t>() << std::endl;
 
     std::cout << std::is_copy_constructible_v<int[10]> << std::endl;
 

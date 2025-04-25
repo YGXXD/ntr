@@ -41,7 +41,7 @@ const npointer* ntype::as_pointer() const
 
 nobject ntype::new_object() const
 {
-    return std::move(nobject(this).alloc().init());
+    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init());
 }
 
 nobject ntype::new_object(const nwrapper& wrapper) const
@@ -49,7 +49,7 @@ nobject ntype::new_object(const nwrapper& wrapper) const
     if (wrapper.type() != this)
         throw std::invalid_argument(
             "ntype::new_object : wrapper's type is different from this");
-    return std::move(nobject(this).alloc().init_copy(wrapper.data()));
+    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_copy(wrapper));
 }
 
 nobject ntype::new_object_rv(const nwrapper& wrapper) const
@@ -57,7 +57,15 @@ nobject ntype::new_object_rv(const nwrapper& wrapper) const
     if (wrapper.type() != this)
         throw std::invalid_argument(
             "ntype::new_object_rv : wrapper's type is different from this");
-    return std::move(nobject(this).alloc().init_move(wrapper.data()));
+    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_move(wrapper));
+}
+
+nobject ntype::new_object_ref(const nwrapper& wrapper) const
+{
+    if (wrapper.type() != this)
+        throw std::invalid_argument(
+            "ntype::new_object_ref : wrapper's type is different from this");
+    return std::move(nobject(this, nobject::eobject::eref).hold_ref(wrapper));
 }
 
 } // namespace ntr

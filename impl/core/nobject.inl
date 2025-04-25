@@ -8,25 +8,26 @@ namespace ntr
 {
 
 template <typename T>
-NTR_INLINE nobject nobject::make()
+NTR_INLINE nobject nobject::make_obtain()
 {
-    return std::move(nobject(nregistrar::get_type<T>()).alloc().init());
+    return std::move(nobject(nregistrar::get_type<T>(), eobject::eobtain).alloc().init());
 }
 
 template <typename T>
-NTR_INLINE nobject nobject::make(T&& value)
+NTR_INLINE nobject nobject::make_obtain(T&& value)
 {
-    nobject obj(nregistrar::get_type<T>());
+    nobject obj(nregistrar::get_type<T>(), eobject::eobtain);
     if constexpr (std::is_lvalue_reference_v<T>)
-        return std::move(obj.alloc().init_copy(&value));
+        return std::move(obj.alloc().init_copy(nwrapper(std::forward<T>(value))));
     else
-        return std::move(obj.alloc().init_move(&value));
+        return std::move(obj.alloc().init_move(nwrapper(std::forward<T>(value))));
 }
 
 template <typename T>
-NTR_INLINE nobject nobject::make_wrapper(T&& value)
+NTR_INLINE nobject nobject::make_ref(T&& value)
 {
-    return make(nwrapper(std::forward<T&&>(value)));
+    return std::move(nobject(nregistrar::get_type<T>(), eobject::eref)
+                         .hold_ref(nwrapper(std::forward<T>(value))));
 }
 
 template <typename T>
@@ -43,16 +44,6 @@ NTR_INLINE const T& nobject::as() const
     if (_type != nregistrar::get_type<T>())
         throw std::runtime_error("nobject::as : type mismatch");
     return *reinterpret_cast<const T*>(data());
-}
-
-NTR_INLINE nwrapper& nobject::as_wrapper()
-{
-    return as<nwrapper>();
-}
-
-NTR_INLINE const nwrapper& nobject::as_wrapper() const
-{
-    return as<nwrapper>();
 }
 
 } // namespace ntr

@@ -25,7 +25,8 @@ nobject npointer::get_target(const nobject& pointer)
     void* ptr = get_value(pointer);
     if (ptr == nullptr)
         throw std::invalid_argument("npointer::get_target : pointer's value is nullptr");
-    return nobject::make(nwrapper(pointer.type()->as_pointer()->pointing_type(), ptr));
+    const ntype* pointing_type = pointer.type()->as_pointer()->pointing_type();
+    return pointing_type->new_object_ref(nwrapper(pointing_type, ptr));
 }
 
 npointer::npointer(uint8_t depth, const ntype* pointing_type, std::string_view name,

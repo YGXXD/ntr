@@ -8,14 +8,19 @@ namespace ntr
 class NTR_API nobject
 {
 public:
-    template <typename T>
-    static NTR_INLINE nobject make();
-    template <typename T>
-    static NTR_INLINE nobject make(T&& value);
-    template <typename T>
-    static NTR_INLINE nobject make_wrapper(T&& value);
+    enum class eobject : uint8_t
+    {
+        eobtain,
+        eref
+    };
 
-    nobject(const class ntype* type);
+    template <typename T>
+    static NTR_INLINE nobject make_obtain();
+    template <typename T>
+    static NTR_INLINE nobject make_obtain(T&& value);
+    template <typename T>
+    static NTR_INLINE nobject make_ref(T&& value);
+
     nobject(nobject&& other);
     nobject& operator=(nobject&& other);
     ~nobject();
@@ -24,25 +29,25 @@ public:
     NTR_INLINE T& as();
     template <typename T>
     NTR_INLINE const T& as() const;
-    NTR_INLINE class nwrapper& as_wrapper();
-    NTR_INLINE const nwrapper& as_wrapper() const;
+
+    NTR_INLINE const class ntype* type() const { return _type; }
+    eobject kind() const;
+    bool is_valid() const;
+    void* data();
+    const void* data() const;
+
+private:
+    friend class ntype;
+
+    nobject(const ntype* type, eobject kind);
+    nobject(const nobject& other) = delete;
+    nobject& operator=(const nobject& other) = delete;
 
     nobject& alloc();
     nobject& init();
-    nobject& init_copy(const void* const value);
-    nobject& init_move(void* value);
-
-    bool is_heap() const;
-    bool is_alloc() const;
-    bool is_init() const;
-
-    void* data();
-    const void* data() const;
-    NTR_INLINE const ntype* type() const { return _type; }
-
-private:
-    nobject(const nobject& other) = delete;
-    nobject& operator=(const nobject& other) = delete;
+    nobject& init_copy(const class nwrapper& wrapper);
+    nobject& init_move(const nwrapper& wrapper);
+    nobject& hold_ref(const nwrapper& wrapper);
 
     const ntype* _type;
     std::array<std::byte, 8> _status;
