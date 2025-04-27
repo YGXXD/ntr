@@ -31,7 +31,7 @@ public:
     NTR_INLINE const T& as() const;
 
     NTR_INLINE const class ntype* type() const { return _type; }
-    eobject kind() const;
+    NTR_INLINE eobject kind() const { return _kind; };
     bool is_valid() const;
     void* data();
     const void* data() const;
@@ -50,7 +50,15 @@ private:
     nobject& hold_ref(const nwrapper& wrapper);
 
     const ntype* _type;
-    std::array<std::byte, 8> _status;
+    union
+    {
+        struct
+        {
+            eobject _kind;
+            std::array<std::byte, 7> _status;
+        };
+        std::array<std::byte, 8> _padding;
+    };
     alignas(16) std::array<std::byte, 16> _bytes;
 };
 
