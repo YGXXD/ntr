@@ -30,7 +30,7 @@ install(EXPORT ntr-targets
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/ntr-config.cmake.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ntr-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/ntr-config.cmake
     INSTALL_DESTINATION lib/cmake/ntr
 )
@@ -41,7 +41,7 @@ install(FILES
 
 if(NOT TARGET uninstall)
     configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
         IMMEDIATE @ONLY)
 
