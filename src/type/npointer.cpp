@@ -1,5 +1,5 @@
-#include "../../inc/type/npointer.hpp"
-#include "../../inc/implement.hpp"
+#include "type/npointer.hpp"
+#include "implement.hpp"
 
 namespace ntr
 {

@@ -1,5 +1,5 @@
-#include "../../inc/core/nwrapper.hpp"
-#include "../../inc/implement.hpp"
+#include "core/nwrapper.hpp"
+#include "implement.hpp"
 
 namespace ntr
 {

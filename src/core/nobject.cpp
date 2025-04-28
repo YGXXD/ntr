@@ -1,5 +1,5 @@
-#include "../../inc/core/nobject.hpp"
-#include "../../inc/implement.hpp"
+#include "core/nobject.hpp"
+#include "implement.hpp"
 
 namespace ntr
 {

@@ -1,5 +1,5 @@
-#include "../../inc/field/neitem.hpp"
-#include "../../inc/implement.hpp"
+#include "field/neitem.hpp"
+#include "implement.hpp"
 
 namespace ntr
 {

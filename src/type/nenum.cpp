@@ -1,5 +1,5 @@
-#include "../../inc/type/nenum.hpp"
-#include "../../inc/implement.hpp"
+#include "type/nenum.hpp"
+#include "implement.hpp"
 
 namespace ntr
 {
