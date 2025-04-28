@@ -9,6 +9,10 @@ project(ntr)
 
 file(GLOB_RECURSE NTR_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
+if(NTR_BUILD_TESTING)
+    add_subdirectory(test)
+endif()
+
 add_library(ntr STATIC ${NTR_SOURCE_FILES})
 target_include_directories(ntr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>

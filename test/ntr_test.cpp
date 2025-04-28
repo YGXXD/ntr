@@ -1,4 +1,4 @@
-#include "../inc/nephren.hpp"
+#include "nephren.hpp"
 #include <iostream>
 
 static int nephren_register_numeric = []() -> int
