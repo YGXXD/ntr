@@ -1,5 +1,5 @@
-#include "../../inc/core/nwrapper.hpp"
-#include "../../inc/core/nregistrar.hpp"
+#include "../../core/nwrapper.hpp"
+#include "../../core/nregistrar.hpp"
 
 namespace ntr
 {

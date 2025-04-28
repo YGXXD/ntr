@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../../inc/core/nfactory.hpp"
-#include "../../inc/core/nregistrar.hpp"
-#include "../../inc/type/nnumeric.hpp"
-#include "../../inc/type/nenum.hpp"
-#include "../../inc/type/nclass.hpp"
-#include "../../inc/type/npointer.hpp"
-#include "../../inc/field/neitem.hpp"
-#include "../../inc/field/nfunction.hpp"
-#include "../../inc/field/nproperty.hpp"
+#include "../../core/nfactory.hpp"
+#include "../../core/nregistrar.hpp"
+#include "../../type/nnumeric.hpp"
+#include "../../type/nenum.hpp"
+#include "../../type/nclass.hpp"
+#include "../../type/npointer.hpp"
+#include "../../field/neitem.hpp"
+#include "../../field/nfunction.hpp"
+#include "../../field/nproperty.hpp"
 
 namespace ntr
 {

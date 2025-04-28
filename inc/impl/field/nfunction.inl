@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../inc/field/nfunction.hpp"
-#include "../../inc/core/nregistrar.hpp"
+#include "../../field/nfunction.hpp"
+#include "../../core/nregistrar.hpp"
 
 namespace ntr
 {
