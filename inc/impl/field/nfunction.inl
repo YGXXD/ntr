@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../../field/nfunction.hpp"
-#include "../../core/nregistrar.hpp"
+#include "field/nfunction.hpp"
+#include "core/nregistrar.hpp"
 
 namespace ntr
 {
@@ -51,7 +51,7 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument(
             "nfunction::nfunction : parent type is not function's class type");
-    init_function_types<Ret, ClassT&, Args...>();
+    init_function_types<Ret, Args...>();
     _function = [fun](const std::vector<nwrapper>& args) -> nobject
     {
         return wrapper_call<Ret, Args...>(

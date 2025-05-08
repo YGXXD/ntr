@@ -33,7 +33,7 @@ nobject npointer::get_target(const nobject& pointer)
     if (ptr == nullptr)
         throw std::invalid_argument("npointer::get_target : pointer's value is nullptr");
     const ntype* pointing_type = pointer.type()->as_pointer()->pointing_type();
-    return pointing_type->new_object_ref(nwrapper(pointing_type, ptr));
+    return pointing_type->new_reference(nwrapper(pointing_type, ptr));
 }
 
 npointer::npointer(uint8_t depth, const ntype* pointing_type, std::string_view name,

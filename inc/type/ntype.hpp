@@ -55,10 +55,10 @@ public:
     const class nclass* as_class() const;
     const class npointer* as_pointer() const;
 
-    nobject new_object() const;
-    nobject new_object(const nwrapper& wrapper) const;
-    nobject new_object_rv(const nwrapper& wrapper) const;
-    nobject new_object_ref(const nwrapper& wrapper) const;
+    nobject new_instance() const;
+    nobject new_instance(const nwrapper& wrapper) const;
+    nobject new_instance_rv(const nwrapper& wrapper) const;
+    nobject new_reference(const nwrapper& wrapper) const;
 
 private:
     etype _kind;

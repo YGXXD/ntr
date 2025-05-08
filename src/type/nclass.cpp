@@ -65,4 +65,20 @@ const nproperty* nclass::get_property(std::string_view name) const
     return property->get();
 }
 
+nobject nclass::call(std::string_view name, const std::vector<nwrapper>& args) const
+{
+    return get_function(name)->call(args);
+}
+
+nobject nclass::get(std::string_view name, const nwrapper& instance) const
+{
+    return get_property(name)->get(instance);
+}
+
+void nclass::set(std::string_view name, const nwrapper& instance,
+                 const nwrapper& value) const
+{
+    get_property(name)->set(instance, value);
+}
+
 } // namespace ntr

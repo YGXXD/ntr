@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ntype.hpp"
+#include "core/nobject.hpp"
 
 namespace ntr
 {
@@ -24,6 +25,11 @@ public:
 
     const nfunction* get_function(std::string_view name) const;
     const nproperty* get_property(std::string_view name) const;
+
+    nobject call(std::string_view name, const std::vector<nwrapper>& args) const;
+    nobject get(std::string_view name, const nwrapper& instance) const;
+    void set(std::string_view name, const nwrapper& instance,
+             const nwrapper& value) const;
 
 private:
     std::list<std::unique_ptr<nfunction>> _functions;

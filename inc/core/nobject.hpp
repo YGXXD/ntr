@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "../setup.hpp"
+#include "setup.hpp"
+#include "nwrapper.hpp"
 
 namespace ntr
 {
@@ -42,6 +43,7 @@ public:
     bool is_valid() const;
     void* data();
     const void* data() const;
+    nwrapper wrapper() const;
 
 private:
     friend class ntype;

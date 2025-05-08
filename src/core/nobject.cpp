@@ -235,4 +235,9 @@ const void* nobject::data() const
     return _bytes.data();
 }
 
+nwrapper nobject::wrapper() const
+{
+    return nwrapper(_type, data());
+}
+
 } // namespace ntr

@@ -8,8 +8,9 @@
 #pragma once
 
 #include "nfield.hpp"
-#include "../core/nobject.hpp"
-#include "../core/nwrapper.hpp"
+#include "core/nobject.hpp"
+#include "core/nwrapper.hpp"
+
 namespace ntr
 {
 
@@ -25,7 +26,7 @@ public:
     nfunction(const ntype* parent_type, std::string_view name,
               Ret (ClassT::*fun)(Args...) const);
 
-    nobject invoke(const std::vector<nwrapper>& args) const;
+    nobject call(const std::vector<nwrapper>& args) const;
 
     const class nclass* class_type() const;
     NTR_INLINE const ntype* return_type() const { return _return_type; }

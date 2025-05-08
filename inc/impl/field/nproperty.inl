@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "../../field/nproperty.hpp"
-#include "../../core/nregistrar.hpp"
+#include "field/nproperty.hpp"
+#include "core/nregistrar.hpp"
+
 namespace ntr
 {
 

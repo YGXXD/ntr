@@ -46,32 +46,32 @@ const npointer* ntype::as_pointer() const
     return is_pointer() ? static_cast<const npointer*>(this) : nullptr;
 }
 
-nobject ntype::new_object() const
+nobject ntype::new_instance() const
 {
     return std::move(nobject(this, nobject::eobject::eobtain).alloc().init());
 }
 
-nobject ntype::new_object(const nwrapper& wrapper) const
+nobject ntype::new_instance(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_object : wrapper's type is different from this");
+            "ntype::new_instance : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_copy(wrapper));
 }
 
-nobject ntype::new_object_rv(const nwrapper& wrapper) const
+nobject ntype::new_instance_rv(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_object_rv : wrapper's type is different from this");
+            "ntype::new_instance_rv : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_move(wrapper));
 }
 
-nobject ntype::new_object_ref(const nwrapper& wrapper) const
+nobject ntype::new_reference(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_object_ref : wrapper's type is different from this");
+            "ntype::new_reference : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eref).hold_ref(wrapper));
 }
 
