@@ -1,8 +1,14 @@
+//  MIT License
+//
+//  Copyright (c) 2025 有个小小杜
+//
+//  Created by 有个小小杜
+//
+
 #pragma once
 
 #include "../../field/nproperty.hpp"
 #include "../../core/nregistrar.hpp"
-
 namespace ntr
 {
 

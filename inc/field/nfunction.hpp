@@ -1,9 +1,15 @@
+//  MIT License
+//
+//  Copyright (c) 2025 有个小小杜
+//
+//  Created by 有个小小杜
+//
+
 #pragma once
 
 #include "nfield.hpp"
 #include "../core/nobject.hpp"
 #include "../core/nwrapper.hpp"
-
 namespace ntr
 {
 
