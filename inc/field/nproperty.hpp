@@ -9,7 +9,6 @@
 
 #include "nfield.hpp"
 #include "core/nobject.hpp"
-#include "core/nwrapper.hpp"
 
 namespace ntr
 {

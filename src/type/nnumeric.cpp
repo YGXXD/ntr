@@ -6,7 +6,7 @@
 //
 
 #include "type/nnumeric.hpp"
-#include "implement.hpp"
+#include "type/ntraits.hpp"
 
 namespace ntr
 {
@@ -36,49 +36,49 @@ double nnumeric::get_value(const nobject& numeric)
     switch (numeric.type()->as_numeric()->numeric_kind())
     {
     case enumeric::ebool:
-        value = numeric.as<B8>();
+        value = *reinterpret_cast<const B8*>(numeric.data());
         break;
     case enumeric::echar:
-        value = numeric.as<C8>();
+        value = *reinterpret_cast<const C8*>(numeric.data());
         break;
     case enumeric::ewchar:
-        value = numeric.as<WC>();
+        value = *reinterpret_cast<const WC*>(numeric.data());
         break;
     case enumeric::echar16:
-        value = numeric.as<C16>();
+        value = *reinterpret_cast<const C16*>(numeric.data());
         break;
     case enumeric::echar32:
-        value = numeric.as<C32>();
+        value = *reinterpret_cast<const C32*>(numeric.data());
         break;
     case enumeric::eint8:
-        value = numeric.as<I8>();
+        value = *reinterpret_cast<const I8*>(numeric.data());
         break;
     case enumeric::eint16:
-        value = numeric.as<I16>();
+        value = *reinterpret_cast<const I16*>(numeric.data());
         break;
     case enumeric::eint32:
-        value = numeric.as<I32>();
+        value = *reinterpret_cast<const I32*>(numeric.data());
         break;
     case enumeric::eint64:
-        value = numeric.as<I64>();
+        value = *reinterpret_cast<const I64*>(numeric.data());
         break;
     case enumeric::euint8:
-        value = numeric.as<U8>();
+        value = *reinterpret_cast<const U8*>(numeric.data());
         break;
     case enumeric::euint16:
-        value = numeric.as<U16>();
+        value = *reinterpret_cast<const U16*>(numeric.data());
         break;
     case enumeric::euint32:
-        value = numeric.as<U32>();
+        value = *reinterpret_cast<const U32*>(numeric.data());
         break;
     case enumeric::euint64:
-        value = numeric.as<U64>();
+        value = *reinterpret_cast<const U64*>(numeric.data());
         break;
     case enumeric::efloat:
-        value = numeric.as<F32>();
+        value = *reinterpret_cast<const F32*>(numeric.data());
         break;
     case enumeric::edouble:
-        value = numeric.as<F64>();
+        value = *reinterpret_cast<const F64*>(numeric.data());
         break;
     }
     return value;
@@ -92,49 +92,49 @@ void nnumeric::set_value(nobject& numeric, double value)
     switch (numeric.type()->as_numeric()->numeric_kind())
     {
     case enumeric::ebool:
-        numeric.as<B8>() = static_cast<B8>(value);
+        *reinterpret_cast<B8*>(numeric.data()) = static_cast<B8>(value);
         break;
     case enumeric::echar:
-        numeric.as<C8>() = static_cast<C8>(value);
+        *reinterpret_cast<C8*>(numeric.data()) = static_cast<C8>(value);
         break;
     case enumeric::ewchar:
-        numeric.as<WC>() = static_cast<WC>(value);
+        *reinterpret_cast<WC*>(numeric.data()) = static_cast<WC>(value);
         break;
     case enumeric::echar16:
-        numeric.as<C16>() = static_cast<C16>(value);
+        *reinterpret_cast<C16*>(numeric.data()) = static_cast<C16>(value);
         break;
     case enumeric::echar32:
-        numeric.as<C32>() = static_cast<C32>(value);
+        *reinterpret_cast<C32*>(numeric.data()) = static_cast<C32>(value);
         break;
     case enumeric::eint8:
-        numeric.as<I8>() = static_cast<I8>(value);
+        *reinterpret_cast<I8*>(numeric.data()) = static_cast<I8>(value);
         break;
     case enumeric::eint16:
-        numeric.as<I16>() = static_cast<I16>(value);
+        *reinterpret_cast<I16*>(numeric.data()) = static_cast<I16>(value);
         break;
     case enumeric::eint32:
-        numeric.as<I32>() = static_cast<I32>(value);
+        *reinterpret_cast<I32*>(numeric.data()) = static_cast<I32>(value);
         break;
     case enumeric::eint64:
-        numeric.as<I64>() = static_cast<I64>(value);
+        *reinterpret_cast<I64*>(numeric.data()) = static_cast<I64>(value);
         break;
     case enumeric::euint8:
-        numeric.as<U8>() = static_cast<U8>(value);
+        *reinterpret_cast<U8*>(numeric.data()) = static_cast<U8>(value);
         break;
     case enumeric::euint16:
-        numeric.as<U16>() = static_cast<U16>(value);
+        *reinterpret_cast<U16*>(numeric.data()) = static_cast<U16>(value);
         break;
     case enumeric::euint32:
-        numeric.as<U32>() = static_cast<U32>(value);
+        *reinterpret_cast<U32*>(numeric.data()) = static_cast<U32>(value);
         break;
     case enumeric::euint64:
-        numeric.as<U64>() = static_cast<U64>(value);
+        *reinterpret_cast<U64*>(numeric.data()) = static_cast<U64>(value);
         break;
     case enumeric::efloat:
-        numeric.as<F32>() = static_cast<F32>(value);
+        *reinterpret_cast<F32*>(numeric.data()) = static_cast<F32>(value);
         break;
     case enumeric::edouble:
-        numeric.as<F64>() = value;
+        *reinterpret_cast<F64*>(numeric.data()) = value;
         break;
     }
 }

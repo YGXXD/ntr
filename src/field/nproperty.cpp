@@ -6,7 +6,7 @@
 //
 
 #include "field/nproperty.hpp"
-#include "implement.hpp"
+#include "type/nclass.hpp"
 
 namespace ntr
 {

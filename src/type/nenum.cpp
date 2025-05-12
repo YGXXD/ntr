@@ -6,7 +6,6 @@
 //
 
 #include "type/nenum.hpp"
-#include "implement.hpp"
 
 namespace ntr
 {

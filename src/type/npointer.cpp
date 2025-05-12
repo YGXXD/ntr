@@ -6,7 +6,6 @@
 //
 
 #include "type/npointer.hpp"
-#include "implement.hpp"
 
 namespace ntr
 {

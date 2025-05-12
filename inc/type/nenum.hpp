@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ntype.hpp"
+#include "field/neitem.hpp"
 
 namespace ntr
 {
@@ -26,7 +27,7 @@ public:
     nenum& operator=(const nenum&) = delete;
     nenum& operator=(nenum&&) = delete;
 
-    void add_eitem(std::unique_ptr<class neitem>&& item);
+    void add_eitem(std::unique_ptr<neitem>&& item);
     void remove_eitem(std::string_view name);
 
     const neitem* get_eitem(enum_integer_type value) const;

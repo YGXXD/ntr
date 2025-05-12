@@ -6,8 +6,7 @@
 //
 
 #include "field/neitem.hpp"
-#include "implement.hpp"
-
+#include "type/nenum.hpp"
 namespace ntr
 {
 

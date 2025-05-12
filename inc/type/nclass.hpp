@@ -9,6 +9,8 @@
 
 #include "ntype.hpp"
 #include "core/nobject.hpp"
+#include "field/nfunction.hpp"
+#include "field/nproperty.hpp"
 
 namespace ntr
 {
@@ -22,8 +24,8 @@ public:
     nclass& operator=(const nclass&) = delete;
     nclass& operator=(nclass&&) = delete;
 
-    void add_function(std::unique_ptr<class nfunction>&& function);
-    void add_property(std::unique_ptr<class nproperty>&& property);
+    void add_function(std::unique_ptr<nfunction>&& function);
+    void add_property(std::unique_ptr<nproperty>&& property);
 
     void remove(std::string_view name);
 

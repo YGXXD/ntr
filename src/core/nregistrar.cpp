@@ -6,7 +6,7 @@
 //
 
 #include "core/nregistrar.hpp"
-#include "implement.hpp"
+#include "type/ntype.hpp"
 
 namespace ntr
 {

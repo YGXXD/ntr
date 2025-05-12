@@ -6,7 +6,10 @@
 //
 
 #include "type/ntype.hpp"
-#include "implement.hpp"
+#include "type/nnumeric.hpp"
+#include "type/nenum.hpp"
+#include "type/nclass.hpp"
+#include "type/npointer.hpp"
 
 namespace ntr
 {
