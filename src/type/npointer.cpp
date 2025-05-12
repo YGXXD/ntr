@@ -36,10 +36,10 @@ nobject npointer::get_target(const nobject& pointer)
     return pointing_type->new_reference(nwrapper(pointing_type, ptr));
 }
 
-npointer::npointer(uint8_t depth, const ntype* pointing_type, std::string_view name,
-                   operations* ops)
+npointer::npointer(uint8_t depth, bool pointing_is_const, const ntype* pointing_type,
+                   std::string_view name, operations* ops)
     : ntype(ntype::etype::epointer, sizeof(void*), alignof(void*), ops, name),
-      _depth(depth), _pointing_type(pointing_type)
+      _depth(depth), _pointing_is_const(pointing_is_const), _pointing_type(pointing_type)
 {
 }
 

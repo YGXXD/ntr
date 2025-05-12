@@ -109,7 +109,7 @@ nfactory<ntype::etype::eclass, T>::function(std::string_view name,
 template <typename T>
 template <typename U>
 NTR_INLINE nfactory<ntype::etype::eclass, T>&
-nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::* member))
+nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::*member))
 {
     _type->add_property(std::make_unique<nproperty>(_type.get(), name, member));
     return *this;
@@ -137,8 +137,9 @@ template <typename T>
 nfactory<ntype::etype::epointer, T>::nfactory()
 {
     _type = std::make_unique<npointer>(
-        make_pointer_depth<T>(), nregistrar::get_type<std::remove_pointer_t<T>>(),
-        typeid(T).name(), &ntype_ops_traits<T>::instance().ops);
+        make_pointer_depth<T>(), std::is_const_v<std::remove_pointer_t<T>>,
+        nregistrar::get_type<std::remove_pointer_t<T>>(), typeid(T).name(),
+        &ntype_ops_traits<T>::instance().ops);
 }
 
 } // namespace ntr
