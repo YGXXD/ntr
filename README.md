@@ -102,3 +102,7 @@ int main()
     return 0;
 }
 ```
+
+### 许可证
+
+&emsp;&emsp;ntr使用MIT许可证，详细信息请参见[LICENSE](LICENSE)文件。

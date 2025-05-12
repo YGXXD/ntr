@@ -235,6 +235,21 @@ const void* nobject::data() const
     return _bytes.data();
 }
 
+nobject nobject::clone() const
+{
+    return std::move(nobject(_type, eobject::eobtain).alloc().init_copy(wrapper()));
+}
+
+nobject nobject::steal() const
+{
+    return std::move(nobject(_type, eobject::eobtain).alloc().init_move(wrapper()));
+}
+
+nobject nobject::refer() const
+{
+    return std::move(nobject(_type, eobject::eref).hold_ref(wrapper()));
+}
+
 nwrapper nobject::wrapper() const
 {
     return nwrapper(_type, data());

@@ -43,6 +43,10 @@ public:
     bool is_valid() const;
     void* data();
     const void* data() const;
+
+    nobject clone() const;
+    nobject steal() const;
+    nobject refer() const;
     nwrapper wrapper() const;
 
 private:
