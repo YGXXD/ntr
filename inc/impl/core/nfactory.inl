@@ -32,24 +32,27 @@ nfactory<ntype::etype::eunknown, T>::nfactory()
             return std::make_pair(sizeof(T), alignof(T));
     }();
     _type = std::make_unique<ntype>(
-        ntype::etype::eunknown, size_align.first, size_align.second,
-        &ntype_ops_traits<T>::instance().ops, typeid(T).name());
+        ntype::etype::eunknown, static_cast<uint32_t>(size_align.first),
+        static_cast<uint32_t>(size_align.second), &ntype_ops_traits<T>::instance().ops,
+        typeid(T).name());
 }
 
 // ntype::etype::enumeric impl
 template <typename T>
 nfactory<ntype::etype::enumeric, T>::nfactory()
 {
-    _type = std::make_unique<nnumeric>(make_enumeric<T>(), sizeof(T), alignof(T),
-                                       &ntype_ops_traits<T>::instance().ops,
-                                       typeid(T).name());
+    _type = std::make_unique<nnumeric>(
+        make_enumeric<T>(), static_cast<uint32_t>(sizeof(T)),
+        static_cast<uint32_t>(alignof(T)), &ntype_ops_traits<T>::instance().ops,
+        typeid(T).name());
 }
 
 // ntype::etype::eenum impl
 template <typename T>
 nfactory<ntype::etype::eenum, T>::nfactory()
 {
-    _type = std::make_unique<nenum>(typeid(T).name(), sizeof(T), alignof(T),
+    _type = std::make_unique<nenum>(typeid(T).name(), static_cast<uint32_t>(sizeof(T)),
+                                    static_cast<uint32_t>(alignof(T)),
                                     &ntype_ops_traits<T>::instance().ops);
 }
 
@@ -74,7 +77,8 @@ nfactory<ntype::etype::eenum, T>::remove(std::string_view name)
 template <typename T>
 nfactory<ntype::etype::eclass, T>::nfactory()
 {
-    _type = std::make_unique<nclass>(typeid(T).name(), sizeof(T), alignof(T),
+    _type = std::make_unique<nclass>(typeid(T).name(), static_cast<uint32_t>(sizeof(T)),
+                                     static_cast<uint32_t>(alignof(T)),
                                      &ntype_ops_traits<T>::instance().ops);
 }
 

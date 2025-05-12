@@ -17,6 +17,10 @@ class NTR_API nclass : public ntype
 {
 public:
     nclass(std::string_view name, uint32_t size, uint32_t align, operations* ops);
+    nclass(const nclass&) = delete;
+    nclass(nclass&&) = delete;
+    nclass& operator=(const nclass&) = delete;
+    nclass& operator=(nclass&&) = delete;
 
     void add_function(std::unique_ptr<class nfunction>&& function);
     void add_property(std::unique_ptr<class nproperty>&& property);

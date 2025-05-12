@@ -101,7 +101,7 @@ nobject::~nobject()
             type()->ops()->destruct(data());
         if (obtain_status(_status) >= eobtain_status::eallocated &&
             storage_type(_status) == estorage_type::eheap)
-            std::free(data());
+            NTR_ALIGN_FREE(data());
         break;
     case eobject::eref:
         break;
@@ -119,7 +119,7 @@ nobject& nobject::alloc()
     {
         if (storage_type(_status) == estorage_type::eheap)
         {
-            void* ptr = std::aligned_alloc(_type->align(), _type->size());
+            void* ptr = NTR_ALIGN_ALLOC(_type->size(), _type->align());
             if (!ptr)
                 throw std::runtime_error("nobject::allocate : failed to allocate memory");
             *reinterpret_cast<void**>(_bytes.data()) = ptr;
@@ -219,6 +219,7 @@ bool nobject::is_valid() const
     case eobject::eref:
         return ref_status(_status) == eref_status::evalid;
     }
+    return false;
 }
 
 void* nobject::data()

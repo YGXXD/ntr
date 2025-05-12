@@ -17,6 +17,10 @@ class NTR_API npointer : public ntype
 public:
     npointer(uint8_t depth, bool pointing_is_const, const ntype* pointed_type,
              std::string_view name, operations* ops);
+    npointer(const npointer&) = delete;
+    npointer& operator=(const npointer&) = delete;
+    npointer(npointer&&) = delete;
+    npointer& operator=(npointer&&) = delete;
 
     static void* get_value(const class nobject& pointer);
     static void set_value(nobject& pointer, void* value);

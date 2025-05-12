@@ -63,14 +63,13 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-        echo "build-output-test-dir=${{ github.workspace }}/build/test" >> "$GITHUB_OUTPUT" 
 
     - name: Configure CMake
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DKTM_BUILD_TESTING=ON
+        -DNTR_BUILD_TESTING=ON
         -S ${{ github.workspace }}
         -G ${{ matrix.cmake_project }}
 
@@ -78,7 +77,7 @@ jobs:
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-test-dir }}
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --output-on-failure --build-config ${{ matrix.build_type }}
 
     - name: Install

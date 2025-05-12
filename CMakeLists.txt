@@ -10,10 +10,14 @@ project(ntr)
 file(GLOB_RECURSE NTR_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 if(NTR_BUILD_TESTING)
-    add_subdirectory(test)
+    enable_testing()
+    add_executable(ntr_test test/ntr.cpp)
+    target_link_libraries(ntr_test PRIVATE ntr)
+    add_test(ntr_test ntr_test)
 endif()
 
-add_library(ntr STATIC ${NTR_SOURCE_FILES})
+add_library(ntr SHARED ${NTR_SOURCE_FILES})
+target_compile_definitions(ntr PRIVATE NTR_BUILDING_LIB)
 target_include_directories(ntr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
     $<INSTALL_INTERFACE:include>

@@ -21,12 +21,13 @@ public:
     template <typename Ret, typename... Args>
     nfunction(const ntype* parent_type, std::string_view name, Ret (*fun)(Args...));
     template <typename Ret, typename ClassT, typename... Args>
-    nfunction(const ntype* parent_type, std::string_view name, Ret (ClassT::*fun)(Args...));
+    nfunction(const ntype* parent_type, std::string_view name,
+              Ret (ClassT::*fun)(Args...));
     template <typename Ret, typename ClassT, typename... Args>
     nfunction(const ntype* parent_type, std::string_view name,
               Ret (ClassT::*fun)(Args...) const);
 
-    nobject call(const std::vector<nwrapper>& args) const;
+    nobject call(const std::vector<nwrapper>& arg_arr) const;
 
     const class nclass* class_type() const;
     NTR_INLINE const ntype* return_type() const { return _return_type; }

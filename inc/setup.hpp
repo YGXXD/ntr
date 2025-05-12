@@ -16,14 +16,26 @@
 
 #include <type_traits>
 #include <cstdint>
+#include <cstddef>
 #include <stdexcept>
 #include <memory>
 #include <string>
 #include <string_view>
+#include <array>
 #include <list>
 #include <unordered_map>
 #include <functional>
 #include <utility>
+
+#if defined(_WIN32)
+#    define NTR_ALIGN_ALLOC(size, alignment) \
+        _aligned_malloc(static_cast<size_t>(size), static_cast<size_t>(alignment))
+#    define NTR_ALIGN_FREE(ptr) _aligned_free((ptr))
+#else
+#    define NTR_ALIGN_ALLOC(size, alignment) \
+        std::aligned_alloc(static_cast<size_t>(alignment), static_cast<size_t>(size))
+#    define NTR_ALIGN_FREE(ptr) std::free((ptr))
+#endif
 
 #if defined(__clang__) && defined(__GNUC__)
 #    define NTR_COMPILER_CLANG
@@ -57,7 +69,7 @@
 #    define NTR_API __attribute__((visibility("default")))
 #elif defined(NTR_COMPILER_GCC)
 #    if defined(_WIN32)
-#        ifdef NTR_BUILD_LIB
+#        if defined(NTR_BUILDING_LIB)
 #            define NTR_API __attribute__((dllexport))
 #        else
 #            define NTR_API __attribute__((dllimport))
@@ -66,7 +78,7 @@
 #        define NTR_API __attribute__((visibility("default")))
 #    endif
 #elif defined(NTR_COMPILER_MSVC)
-#    ifdef NTR_BUILD_LIB
+#    if defined(NTR_BUILDING_LIB)
 #        define NTR_API __declspec(dllexport)
 #    else
 #        define NTR_API __declspec(dllimport)

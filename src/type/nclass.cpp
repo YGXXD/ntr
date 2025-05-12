@@ -21,8 +21,9 @@ void nclass::add_function(std::unique_ptr<nfunction>&& function)
     if (_field_map.find(function.get()->name()) == _field_map.end())
     {
         _functions.push_back(std::move(function));
-        auto function = --_functions.end();
-        _field_map.insert({ function->get()->name(), { function, _properties.end() } });
+        auto function_it = --_functions.end();
+        _field_map.insert(
+            { function_it->get()->name(), { function_it, _properties.end() } });
     }
 }
 
@@ -31,8 +32,9 @@ void nclass::add_property(std::unique_ptr<nproperty>&& property)
     if (_field_map.find(property.get()->name()) == _field_map.end())
     {
         _properties.push_back(std::move(property));
-        auto property = --_properties.end();
-        _field_map.insert({ property->get()->name(), { _functions.end(), property } });
+        auto property_it = --_properties.end();
+        _field_map.insert(
+            { property_it->get()->name(), { _functions.end(), property_it } });
     }
 }
 

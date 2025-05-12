@@ -35,6 +35,10 @@ public:
 
     ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
           std::string_view name);
+    ntype(const ntype&) = delete;
+    ntype& operator=(const ntype&) = delete;
+    ntype(ntype&&) = delete;
+    ntype& operator=(ntype&&) = delete;
 
     NTR_INLINE etype kind() const { return _kind; }
     NTR_INLINE bool is_registered() const { return _is_registered; }

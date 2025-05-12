@@ -37,9 +37,9 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name, Ret (*fun)
     : nfunction(parent_type, name)
 {
     init_function_types<Ret, Args...>();
-    _function = [fun](const std::vector<nwrapper>& args) -> nobject
+    _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
-        return wrapper_call<Ret, Args...>(fun, args.begin());
+        return wrapper_call<Ret, Args...>(fun, arg_arr.begin());
     };
 }
 
@@ -52,12 +52,12 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
         throw std::invalid_argument(
             "nfunction::nfunction : parent type is not function's class type");
     init_function_types<Ret, ClassT&, Args...>();
-    _function = [fun](const std::vector<nwrapper>& args) -> nobject
+    _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
-            [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->ref<ClassT>().*fun)(args...); },
-            args.begin() + 1);
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret
+        { return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...); },
+            arg_arr.begin() + 1);
     };
 }
 
@@ -70,12 +70,12 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
         throw std::invalid_argument(
             "nfunction::nfunction : parent type is not function's class type");
     init_function_types<Ret, const ClassT&, Args...>();
-    _function = [fun](const std::vector<nwrapper>& args) -> nobject
+    _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
-            [instance = args.begin(), fun](Args... args) -> Ret
-        { return (instance->cref<ClassT>().*fun)(args...); },
-            args.begin() + 1);
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret
+        { return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...); },
+            arg_arr.begin() + 1);
     };
 }
 

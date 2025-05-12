@@ -64,9 +64,9 @@ void nenum::add_eitem(std::unique_ptr<neitem>&& item)
     if (_str_field_map.find(item.get()->name()) == _str_field_map.end())
     {
         _items.push_back(std::move(item));
-        auto item = --_items.end();
-        _str_field_map.insert({ item->get()->name(), item });
-        _enum_field_map.insert({ item->get()->value(), item });
+        auto item_it = --_items.end();
+        _str_field_map.insert({ item_it->get()->name(), item_it });
+        _enum_field_map.insert({ item_it->get()->value(), item_it });
     }
 }
 
