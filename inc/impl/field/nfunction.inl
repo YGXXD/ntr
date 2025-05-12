@@ -55,9 +55,9 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
-            [instance = arg_arr.begin(), fun](Args... args) -> Ret
-        { return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...); },
-            arg_arr.begin() + 1);
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret {
+            return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...);
+        }, arg_arr.begin() + 1);
     };
 }
 
@@ -73,9 +73,9 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
-            [instance = arg_arr.begin(), fun](Args... args) -> Ret
-        { return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...); },
-            arg_arr.begin() + 1);
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret {
+            return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...);
+        }, arg_arr.begin() + 1);
     };
 }
 
