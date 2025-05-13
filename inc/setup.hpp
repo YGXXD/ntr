@@ -28,13 +28,13 @@
 #include <utility>
 
 #if defined(_WIN32)
-#    define NTR_ALIGN_ALLOC(size, alignment) \
+#    define _ntr_align_alloc(size, alignment) \
         _aligned_malloc(static_cast<size_t>(size), static_cast<size_t>(alignment))
-#    define NTR_ALIGN_FREE(ptr) _aligned_free((ptr))
+#    define _ntr_align_free(ptr) _aligned_free((ptr))
 #else
-#    define NTR_ALIGN_ALLOC(size, alignment) \
+#    define _ntr_align_alloc(size, alignment) \
         std::aligned_alloc(static_cast<size_t>(alignment), static_cast<size_t>(size))
-#    define NTR_ALIGN_FREE(ptr) std::free((ptr))
+#    define _ntr_align_free(ptr) std::free((ptr))
 #endif
 
 #if defined(__clang__) && defined(__GNUC__)
