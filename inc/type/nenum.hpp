@@ -30,8 +30,12 @@ public:
     void add_eitem(std::unique_ptr<neitem>&& item);
     void remove_eitem(std::string_view name);
 
+    NTR_INLINE auto eitem_begin() const { return _items.begin(); }
+    NTR_INLINE auto eitem_end() const { return _items.end(); }
     const neitem* get_eitem(enum_integer_type value) const;
     const neitem* get_eitem(std::string_view name) const;
+    bool has_eitem(std::string_view name) const;
+    bool has_eitem(enum_integer_type value) const;
 
 private:
     std::list<std::unique_ptr<neitem>> _items;

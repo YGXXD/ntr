@@ -52,6 +52,7 @@ public:
     NTR_INLINE bool is_signed() const { return _is_signed; }
     NTR_INLINE bool is_floating_point() const { return _is_floating_point; }
     NTR_INLINE bool is_integral() const { return _is_integral; }
+    NTR_INLINE bool is_boolean() const { return _numeric_kind == enumeric::ebool; }
 
 private:
     enumeric _numeric_kind;

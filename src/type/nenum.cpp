@@ -82,12 +82,26 @@ void nenum::remove_eitem(std::string_view name)
 
 const neitem* nenum::get_eitem(enum_integer_type value) const
 {
+    if (_enum_field_map.find(value) == _enum_field_map.end())
+        return nullptr;
     return _enum_field_map.at(value)->get();
 }
 
 const neitem* nenum::get_eitem(std::string_view name) const
 {
+    if (_str_field_map.find(name) == _str_field_map.end())
+        return nullptr;
     return _str_field_map.at(std::string_view(name))->get();
+}
+
+bool nenum::has_eitem(std::string_view name) const
+{
+    return _str_field_map.find(name) != _str_field_map.end();
+}
+
+bool nenum::has_eitem(enum_integer_type value) const
+{
+    return _enum_field_map.find(value) != _enum_field_map.end();
 }
 
 } // namespace ntr

@@ -52,18 +52,40 @@ void nclass::remove(std::string_view name)
 
 const nfunction* nclass::get_function(std::string_view name) const
 {
-    auto function = _field_map.at(name).first;
-    if (function == _functions.end())
-        throw std::out_of_range("unordered_map::at: key not found");
-    return function->get();
+    auto field_it = _field_map.find(name);
+    if (field_it == _field_map.end())
+        return nullptr;
+    auto function_it = field_it->second.first;
+    if (function_it == _functions.end())
+        return nullptr;
+    return function_it->get();
 }
 
 const nproperty* nclass::get_property(std::string_view name) const
 {
-    auto property = _field_map.at(name).second;
-    if (property == _properties.end())
-        throw std::out_of_range("unordered_map::at: key not found");
-    return property->get();
+    auto field_it = _field_map.find(name);
+    if (field_it == _field_map.end())
+        return nullptr;
+    auto property_it = field_it->second.second;
+    if (property_it == _properties.end())
+        return nullptr;
+    return property_it->get();
+}
+
+bool nclass::has_function(std::string_view name) const
+{
+    auto field_it = _field_map.find(name);
+    if (field_it == _field_map.end())
+        return false;
+    return field_it->second.first != _functions.end();
+}
+
+bool nclass::has_property(std::string_view name) const
+{
+    auto field_it = _field_map.find(name);
+    if (field_it == _field_map.end())
+        return false;
+    return field_it->second.second != _properties.end();
 }
 
 nobject nclass::call(std::string_view name, const std::vector<nwrapper>& args) const
