@@ -29,8 +29,14 @@ public:
 
     void remove(std::string_view name);
 
+    NTR_INLINE auto function_begin() const { return _functions.begin(); }
+    NTR_INLINE auto function_end() const { return _functions.end(); }
+    NTR_INLINE auto property_begin() const { return _properties.begin(); }
+    NTR_INLINE auto property_end() const { return _properties.end(); }
     const nfunction* get_function(std::string_view name) const;
     const nproperty* get_property(std::string_view name) const;
+    bool has_function(std::string_view name) const;
+    bool has_property(std::string_view name) const;
 
     nobject call(std::string_view name, const std::vector<nwrapper>& args) const;
     nobject get(std::string_view name, const nwrapper& instance) const;
