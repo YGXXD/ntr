@@ -17,6 +17,7 @@ if(NTR_BUILD_TESTING)
 endif()
 
 add_library(ntr SHARED ${NTR_SOURCE_FILES})
+target_compile_definitions(ntr PUBLIC NTR_LIB_EXPORT)
 target_compile_definitions(ntr PRIVATE NTR_BUILDING_LIB)
 target_include_directories(ntr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
