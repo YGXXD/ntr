@@ -36,7 +36,7 @@ cmake --install ./build --config Release
 ### 项目中使用 
 
 ```cmake
-# CMakeLists
+# CMakeLists.txt
 add_executable(exemple main.cpp)
 
 find_package(ntr REQUIRED)

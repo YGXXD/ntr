@@ -65,22 +65,26 @@
 #    define NTR_INLINE __forceinline
 #endif
 
-#if defined(NTR_COMPILER_CLANG)
-#    define NTR_API __attribute__((visibility("default")))
-#elif defined(NTR_COMPILER_GCC)
-#    if defined(_WIN32)
-#        if defined(NTR_BUILDING_LIB)
-#            define NTR_API __attribute__((dllexport))
-#        else
-#            define NTR_API __attribute__((dllimport))
-#        endif
-#    else
+#if defined(NTR_LIB_EXPORT)
+#    if defined(NTR_COMPILER_CLANG)
 #        define NTR_API __attribute__((visibility("default")))
+#    elif defined(NTR_COMPILER_GCC)
+#        if defined(_WIN32)
+#            if defined(NTR_BUILDING_LIB)
+#                define NTR_API __attribute__((dllexport))
+#            else
+#                define NTR_API __attribute__((dllimport))
+#            endif
+#        else
+#            define NTR_API __attribute__((visibility("default")))
+#        endif
+#    elif defined(NTR_COMPILER_MSVC)
+#        if defined(NTR_BUILDING_LIB)
+#            define NTR_API __declspec(dllexport)
+#        else
+#            define NTR_API __declspec(dllimport)
+#        endif
 #    endif
-#elif defined(NTR_COMPILER_MSVC)
-#    if defined(NTR_BUILDING_LIB)
-#        define NTR_API __declspec(dllexport)
-#    else
-#        define NTR_API __declspec(dllimport)
-#    endif
+#else
+#    define NTR_API
 #endif
