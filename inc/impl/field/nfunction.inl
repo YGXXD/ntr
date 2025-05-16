@@ -34,7 +34,7 @@ NTR_INLINE nobject nfunction::wrapper_call(OP op,
 
 template <typename Ret, typename... Args>
 nfunction::nfunction(const ntype* parent_type, std::string_view name, Ret (*fun)(Args...))
-    : nfunction(parent_type, name)
+    : nfunction(parent_type, name, true)
 {
     init_function_types<Ret, Args...>();
     _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
@@ -46,7 +46,7 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name, Ret (*fun)
 template <typename Ret, typename ClassT, typename... Args>
 nfunction::nfunction(const ntype* parent_type, std::string_view name,
                      Ret (ClassT::*fun)(Args...))
-    : nfunction(parent_type, name)
+    : nfunction(parent_type, name, false)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument(
@@ -55,16 +55,16 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
-            [instance = arg_arr.begin(), fun](Args... args) -> Ret {
-            return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...);
-        }, arg_arr.begin() + 1);
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret
+        { return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...); },
+            arg_arr.begin() + 1);
     };
 }
 
 template <typename Ret, typename ClassT, typename... Args>
 nfunction::nfunction(const ntype* parent_type, std::string_view name,
                      Ret (ClassT::*fun)(Args...) const)
-    : nfunction(parent_type, name)
+    : nfunction(parent_type, name, false)
 {
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument(
@@ -73,9 +73,9 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
-            [instance = arg_arr.begin(), fun](Args... args) -> Ret {
-            return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...);
-        }, arg_arr.begin() + 1);
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret
+        { return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...); },
+            arg_arr.begin() + 1);
     };
 }
 

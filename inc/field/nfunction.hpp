@@ -16,7 +16,7 @@ namespace ntr
 class NTR_API nfunction : public nfield
 {
 public:
-    nfunction(const ntype* parent_type, std::string_view name);
+    nfunction(const ntype* parent_type, std::string_view name, bool is_static);
     template <typename Ret, typename... Args>
     nfunction(const ntype* parent_type, std::string_view name, Ret (*fun)(Args...));
     template <typename Ret, typename ClassT, typename... Args>
@@ -29,6 +29,7 @@ public:
     nobject call(const std::vector<nwrapper>& arg_arr) const;
 
     const class nclass* class_type() const;
+    NTR_INLINE bool is_static() const { return _is_static; }
     NTR_INLINE const ntype* return_type() const { return _return_type; }
     NTR_INLINE const auto& argument_types() const { return _argument_types; }
 
@@ -40,6 +41,7 @@ private:
     template <typename Ret, typename... Args>
     NTR_INLINE void init_function_types();
 
+    bool _is_static;
     const ntype* _return_type;
     std::vector<const ntype*> _argument_types;
     std::function<nobject(const std::vector<nwrapper>&)> _function;
