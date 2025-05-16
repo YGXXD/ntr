@@ -11,8 +11,8 @@
 namespace ntr
 {
 
-nfunction::nfunction(const ntype* parent_type, std::string_view name)
-    : nfield(parent_type, efield::eproperty, name)
+nfunction::nfunction(const ntype* parent_type, std::string_view name, bool is_static)
+    : nfield(parent_type, efield::eproperty, name), _is_static(is_static)
 {
     if (parent_type->kind() != ntype::etype::eclass)
         throw std::invalid_argument(
