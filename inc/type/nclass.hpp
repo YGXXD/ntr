@@ -8,9 +8,9 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "core/nobject.hpp"
-#include "field/nfunction.hpp"
-#include "field/nproperty.hpp"
+#include "../core/nobject.hpp"
+#include "../field/nfunction.hpp"
+#include "../field/nproperty.hpp"
 
 namespace ntr
 {

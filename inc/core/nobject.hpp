@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "setup.hpp"
+#include "../setup.hpp"
 #include "nwrapper.hpp"
 
 namespace ntr

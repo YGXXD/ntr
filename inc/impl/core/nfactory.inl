@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include "core/nfactory.hpp"
-#include "core/nregistrar.hpp"
-#include "type/nnumeric.hpp"
-#include "type/nenum.hpp"
-#include "type/nclass.hpp"
-#include "type/npointer.hpp"
-#include "field/neitem.hpp"
-#include "field/nfunction.hpp"
-#include "field/nproperty.hpp"
+#include "../../core/nfactory.hpp"
+#include "../../core/nregistrar.hpp"
+#include "../../type/nnumeric.hpp"
+#include "../../type/nenum.hpp"
+#include "../../type/nclass.hpp"
+#include "../../type/npointer.hpp"
+#include "../../field/neitem.hpp"
+#include "../../field/nfunction.hpp"
+#include "../../field/nproperty.hpp"
 
 namespace ntr
 {

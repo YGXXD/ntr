@@ -10,6 +10,7 @@
 #include "../setup.hpp"
 #include "../core/nobject.hpp"
 #include "../core/nwrapper.hpp"
+
 namespace ntr
 {
 

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "core/nobject.hpp"
-#include "core/nwrapper.hpp"
-#include "core/nregistrar.hpp"
+#include "../../core/nobject.hpp"
+#include "../../core/nwrapper.hpp"
+#include "../../core/nregistrar.hpp"
 
 namespace ntr
 {

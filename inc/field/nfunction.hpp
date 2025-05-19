@@ -8,7 +8,7 @@
 #pragma once
 
 #include "nfield.hpp"
-#include "core/nobject.hpp"
+#include "../core/nobject.hpp"
 
 namespace ntr
 {
