@@ -5,8 +5,8 @@
 //  Created by 有个小小杜
 //
 
-#include "core/nwrapper.hpp"
-#include "core/nregistrar.hpp"
+#include "../../core/nwrapper.hpp"
+#include "../../core/nregistrar.hpp"
 
 namespace ntr
 {

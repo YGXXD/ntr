@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "field/nfunction.hpp"
-#include "core/nregistrar.hpp"
+#include "../../field/nfunction.hpp"
+#include "../../core/nregistrar.hpp"
 
 namespace ntr
 {

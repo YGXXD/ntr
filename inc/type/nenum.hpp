@@ -8,7 +8,7 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "field/neitem.hpp"
+#include "../field/neitem.hpp"
 
 namespace ntr
 {
