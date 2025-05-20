@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/ntr-targets.cmake")
 check_required_components(ntr)
 
 if(TARGET ntr::ntr)
-    if(WIN32)
+    if(WIN32 AND NOT MINGW)
         set_target_properties(ntr::ntr PROPERTIES
             IMPORTED_LOCATION "${PACKAGE_PREFIX_DIR}/lib/ntr.lib"
         )
