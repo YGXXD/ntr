@@ -24,6 +24,7 @@ if(NTR_BUILD_SHARED)
 else()
     set(NTR_CONFIG_CMAKE_IN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ntr-config-static.cmake.in)
     add_library(ntr STATIC ${NTR_SOURCE_FILES})
+    set_property(TARGET ntr PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 target_include_directories(ntr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
