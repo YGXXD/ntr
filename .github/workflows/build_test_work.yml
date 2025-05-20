@@ -17,6 +17,7 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         build_type: [Release]
+        build_lib: [static, shared]
         c_compiler: [gcc, clang, cl]
         include:
           - os: macos-latest
@@ -70,6 +71,7 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DNTR_BUILD_TESTING=ON
+        -DNTR_BUILD_SHARED=${{ matrix.build_lib == 'shared' && 'ON' || 'OFF' }}
         -S ${{ github.workspace }}
         -G ${{ matrix.cmake_project }}
 
