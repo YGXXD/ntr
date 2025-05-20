@@ -23,13 +23,18 @@
 ### 构建和安装 
 
 ```shell
-# unix
-mkdir build && cd build
-cmake ..
+# consfig static lib
+cmake -S . -B ./build
+
+# consfig shared lib
+cmake -DNTR_BUILD_SHARED=ON -S . -B ./build
+
+# install unix
+cd build && make
 sudo make install
 
-# windows
-cmake -S . -B ./build
+# install windows
+cmake --build ./build --config Release
 cmake --install ./build --config Release
 ```
 

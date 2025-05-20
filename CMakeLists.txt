@@ -16,9 +16,15 @@ if(NTR_BUILD_TESTING)
     add_test(ntr_test ntr_test)
 endif()
 
-add_library(ntr SHARED ${NTR_SOURCE_FILES})
-target_compile_definitions(ntr PUBLIC NTR_LIB_EXPORT)
-target_compile_definitions(ntr PRIVATE NTR_BUILDING_LIB)
+if(NTR_BUILD_SHARED)
+    set(NTR_CONFIG_CMAKE_IN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ntr-config-shared.cmake.in)
+    add_library(ntr SHARED ${NTR_SOURCE_FILES})
+    target_compile_definitions(ntr PUBLIC NTR_LIB_EXPORT)
+    target_compile_definitions(ntr PRIVATE NTR_BUILDING_LIB)
+else()
+    set(NTR_CONFIG_CMAKE_IN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ntr-config-static.cmake.in)
+    add_library(ntr STATIC ${NTR_SOURCE_FILES})
+endif()
 target_include_directories(ntr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
     $<INSTALL_INTERFACE:include>
@@ -27,8 +33,8 @@ target_include_directories(ntr PUBLIC
 install(DIRECTORY inc/ DESTINATION include/ntr)
 install(TARGETS ntr
     EXPORT ntr-targets
-    LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
 )
@@ -39,7 +45,7 @@ install(EXPORT ntr-targets
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ntr-config.cmake.in
+    ${NTR_CONFIG_CMAKE_IN_FILE}
     ${CMAKE_CURRENT_BINARY_DIR}/ntr-config.cmake
     INSTALL_DESTINATION lib/cmake/ntr
 )
