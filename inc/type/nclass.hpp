@@ -47,12 +47,9 @@ public:
 
 private:
     std::vector<std::pair<const nclass*, ptrdiff_t>> _base_type_pairs;
-    std::list<std::unique_ptr<nfunction>> _functions;
-    std::list<std::unique_ptr<nproperty>> _properties;
-    std::unordered_map<std::string_view,
-                       std::pair<std::list<std::unique_ptr<nfunction>>::const_iterator,
-                                 std::list<std::unique_ptr<nproperty>>::const_iterator>>
-        _field_map;
+    std::vector<std::unique_ptr<nfunction>> _functions;
+    std::vector<std::unique_ptr<nproperty>> _properties;
+    std::unordered_map<std::string_view, std::pair<nfunction*, nproperty*>> _field_map;
 };
 
 } // namespace ntr

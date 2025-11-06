@@ -31,10 +31,10 @@ nfactory<ntype::etype::eunknown, T>::nfactory()
         else
             return std::make_pair(sizeof(T), alignof(T));
     }();
-    _type = std::make_unique<ntype>(
-        ntype::etype::eunknown, static_cast<uint32_t>(size_align.first),
-        static_cast<uint32_t>(size_align.second), &ntype_ops_traits<T>::instance().ops,
-        typeid(T).name());
+    _type = std::make_unique<ntype>(ntype::etype::eunknown,
+                                    static_cast<uint32_t>(size_align.first),
+                                    static_cast<uint32_t>(size_align.second),
+                                    &ntype_ops_traits<T>::instance().ops, "");
 }
 
 // ntype::etype::enumeric impl
@@ -43,15 +43,14 @@ nfactory<ntype::etype::enumeric, T>::nfactory()
 {
     _type = std::make_unique<nnumeric>(
         make_enumeric<T>(), static_cast<uint32_t>(sizeof(T)),
-        static_cast<uint32_t>(alignof(T)), &ntype_ops_traits<T>::instance().ops,
-        typeid(T).name());
+        static_cast<uint32_t>(alignof(T)), &ntype_ops_traits<T>::instance().ops, "");
 }
 
 // ntype::etype::eenum impl
 template <typename T>
 nfactory<ntype::etype::eenum, T>::nfactory()
 {
-    _type = std::make_unique<nenum>(typeid(T).name(), static_cast<uint32_t>(sizeof(T)),
+    _type = std::make_unique<nenum>("", static_cast<uint32_t>(sizeof(T)),
                                     static_cast<uint32_t>(alignof(T)),
                                     &ntype_ops_traits<T>::instance().ops);
 }
@@ -77,7 +76,7 @@ nfactory<ntype::etype::eenum, T>::remove(std::string_view name)
 template <typename T>
 nfactory<ntype::etype::eclass, T>::nfactory()
 {
-    _type = std::make_unique<nclass>(typeid(T).name(), static_cast<uint32_t>(sizeof(T)),
+    _type = std::make_unique<nclass>("", static_cast<uint32_t>(sizeof(T)),
                                      static_cast<uint32_t>(alignof(T)),
                                      &ntype_ops_traits<T>::instance().ops);
 }
@@ -151,10 +150,10 @@ nfactory<ntype::etype::eclass, T>::remove(std::string_view name)
 template <typename T>
 nfactory<ntype::etype::epointer, T>::nfactory()
 {
-    _type = std::make_unique<npointer>(
-        make_pointer_depth<T>(), std::is_const_v<std::remove_pointer_t<T>>,
-        nregistrar::get_type<std::remove_pointer_t<T>>(), typeid(T).name(),
-        &ntype_ops_traits<T>::instance().ops);
+    _type = std::make_unique<npointer>(make_pointer_depth<T>(),
+                                       std::is_const_v<std::remove_pointer_t<T>>,
+                                       nregistrar::get_type<std::remove_pointer_t<T>>(),
+                                       "", &ntype_ops_traits<T>::instance().ops);
 }
 
 } // namespace ntr

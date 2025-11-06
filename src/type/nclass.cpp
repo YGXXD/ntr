@@ -19,10 +19,8 @@ void nclass::add_function(std::unique_ptr<nfunction>&& function)
 {
     if (_field_map.find(function.get()->name()) == _field_map.end())
     {
+        _field_map.insert({ function->name(), { function.get(), nullptr } });
         _functions.push_back(std::move(function));
-        auto function_it = --_functions.end();
-        _field_map.insert(
-            { function_it->get()->name(), { function_it, _properties.end() } });
     }
 }
 
@@ -30,11 +28,9 @@ void nclass::add_property(std::unique_ptr<nproperty>&& property)
 {
     if (_field_map.find(property.get()->name()) == _field_map.end())
     {
+        _field_map.insert({ property->name(), { nullptr, property.get() } });
         _properties.push_back(std::move(property));
-        auto property_it = --_properties.end();
-        _field_map.insert(
-            { property_it->get()->name(), { _functions.end(), property_it } });
-    }
+    } // namespace ntr
 }
 
 void nclass::add_base_type(const nclass* base_type, ptrdiff_t offset)
@@ -42,7 +38,7 @@ void nclass::add_base_type(const nclass* base_type, ptrdiff_t offset)
     if (std::find_if(_base_type_pairs.begin(), _base_type_pairs.end(),
                      [base_type](const auto& base_type_pair)
     { return base_type_pair.first == base_type; }) == _base_type_pairs.end())
-        _base_type_pairs.push_back(std::make_pair(base_type, offset));
+        _base_type_pairs.push_back({ base_type, offset });
 }
 
 void nclass::remove_field(std::string_view name)
@@ -51,17 +47,21 @@ void nclass::remove_field(std::string_view name)
     {
         auto field = _field_map.at(name);
         _field_map.erase(name);
-        if (field.first != _functions.end())
-            _functions.erase(field.first);
+        if (field.first != nullptr)
+            _functions.erase(std::find_if(_functions.begin(), _functions.end(),
+                                          [&field](const auto& function)
+            { return field.first == function.get(); }));
         else
-            _properties.erase(field.second);
+            _properties.erase(std::find_if(_properties.begin(), _properties.end(),
+                                           [&field](const auto& property)
+            { return field.second == property.get(); }));
     }
 }
 
 const nfunction* nclass::get_function(std::string_view name) const
 {
     auto field_it = _field_map.find(name);
-    if (field_it == _field_map.end() || field_it->second.first == _functions.end())
+    if (field_it == _field_map.end() || !field_it->second.first)
     {
         for (auto& base_type_pair : _base_type_pairs)
         {
@@ -70,13 +70,13 @@ const nfunction* nclass::get_function(std::string_view name) const
         }
         return nullptr;
     }
-    return field_it->second.first->get();
+    return field_it->second.first;
 }
 
 const nproperty* nclass::get_property(std::string_view name) const
 {
     auto field_it = _field_map.find(name);
-    if (field_it == _field_map.end() || field_it->second.second == _properties.end())
+    if (field_it == _field_map.end() || !field_it->second.second)
     {
         for (auto& base_type_pair : _base_type_pairs)
         {
@@ -85,7 +85,7 @@ const nproperty* nclass::get_property(std::string_view name) const
         }
         return nullptr;
     }
-    return field_it->second.second->get();
+    return field_it->second.second;
 }
 
 void* nclass::cast_to(const nclass* type, void* pointer) const
@@ -128,7 +128,7 @@ bool nclass::has_function(std::string_view name) const
     auto field_it = _field_map.find(name);
     if (field_it == _field_map.end())
         return false;
-    return field_it->second.first != _functions.end();
+    return field_it->second.first != nullptr;
 }
 
 bool nclass::has_property(std::string_view name) const
@@ -136,7 +136,7 @@ bool nclass::has_property(std::string_view name) const
     auto field_it = _field_map.find(name);
     if (field_it == _field_map.end())
         return false;
-    return field_it->second.second != _properties.end();
+    return field_it->second.second != nullptr;
 }
 
 nobject nclass::call(std::string_view name, const std::vector<nwrapper>& args) const

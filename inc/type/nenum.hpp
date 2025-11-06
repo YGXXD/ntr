@@ -38,13 +38,9 @@ public:
     bool has_eitem(enum_integer_type value) const;
 
 private:
-    std::list<std::unique_ptr<neitem>> _items;
-    std::unordered_map<std::string_view,
-                       std::list<std::unique_ptr<neitem>>::const_iterator>
-        _str_field_map;
-    std::unordered_map<enum_integer_type,
-                       std::list<std::unique_ptr<neitem>>::const_iterator>
-        _enum_field_map;
+    std::vector<std::unique_ptr<neitem>> _items;
+    std::unordered_map<std::string_view, neitem*> _str_field_map;
+    std::unordered_map<enum_integer_type, neitem*> _enum_field_map;
 };
 
 } // namespace ntr

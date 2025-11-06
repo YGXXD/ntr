@@ -62,10 +62,9 @@ void nenum::add_eitem(std::unique_ptr<neitem>&& item)
 {
     if (_str_field_map.find(item.get()->name()) == _str_field_map.end())
     {
+        _str_field_map.insert({ item->name(), item.get() });
+        _enum_field_map.insert({ item->value(), item.get() });
         _items.push_back(std::move(item));
-        auto item_it = --_items.end();
-        _str_field_map.insert({ item_it->get()->name(), item_it });
-        _enum_field_map.insert({ item_it->get()->value(), item_it });
     }
 }
 
@@ -74,9 +73,10 @@ void nenum::remove_eitem(std::string_view name)
     if (_str_field_map.find(name) != _str_field_map.end())
     {
         auto item = _str_field_map.at(name);
-        _str_field_map.erase(item->get()->name());
-        _enum_field_map.erase(item->get()->value());
-        _items.erase(item);
+        _str_field_map.erase(item->name());
+        _enum_field_map.erase(item->value());
+        _items.erase(std::find_if(_items.begin(), _items.end(),
+                                  [item](const auto& it) { return it.get() == item; }));
     }
 }
 
@@ -84,14 +84,14 @@ const neitem* nenum::get_eitem(enum_integer_type value) const
 {
     if (_enum_field_map.find(value) == _enum_field_map.end())
         return nullptr;
-    return _enum_field_map.at(value)->get();
+    return _enum_field_map.at(value);
 }
 
 const neitem* nenum::get_eitem(std::string_view name) const
 {
     if (_str_field_map.find(name) == _str_field_map.end())
         return nullptr;
-    return _str_field_map.at(std::string_view(name))->get();
+    return _str_field_map.at(std::string_view(name));
 }
 
 bool nenum::has_eitem(std::string_view name) const
