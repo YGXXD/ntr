@@ -17,7 +17,43 @@
 
 using namespace ntr;
 
-class kutori
+class sword
+{
+public:
+    sword() {}
+    virtual ~sword() {}
+
+    virtual void print_sword() { std::cout << "sword name: " << "sword" << std::endl; }
+};
+
+class fairy
+{
+public:
+    fairy() : _name("fairy") {}
+    ~fairy() {}
+
+    void print_fairy() { std::cout << "fairy name: " << _name << std::endl; }
+
+private:
+    std::string _name;
+};
+
+class seniorious : public sword
+{
+public:
+    seniorious() : _name("seniorious") {}
+    virtual ~seniorious() override {}
+
+    virtual void print_sword() override
+    {
+        std::cout << "sword name: " << _name << std::endl;
+    }
+
+private:
+    std::string _name;
+};
+
+class kutori : public fairy, public seniorious
 {
 public:
     kutori() : height(0.0f), weight(0.0f), _age(0), _value(new double(666.0)) {}
@@ -31,7 +67,7 @@ public:
     {
         other._value = nullptr;
     }
-    ~kutori()
+    virtual ~kutori()
     {
         if (_value)
             delete _value;
@@ -122,7 +158,13 @@ int main()
 
         // test kutori type
         {
+            nephren::type<sword>("sword").function("print_sword", &sword::print_sword);
+            nephren::type<fairy>("fairy").function("print_fairy", &fairy::print_fairy);
+            nephren::type<seniorious>("seniorious").base_type<sword>();
+
             nephren::type<kutori>("kutori")
+                .base_type<fairy>()
+                .base_type<seniorious>()
                 .property("age", &kutori::age, &kutori::set_age)
                 .property("height", &kutori::height)
                 .property("weight", &kutori::weight)
@@ -132,6 +174,15 @@ int main()
             const nclass* kutori_type = nephren::get<kutori>();
             const nclass* kutori_type_by_name = nephren::get("kutori")->as_class();
             NTR_TEST_ASSERT(kutori_type == kutori_type_by_name);
+
+            const nfunction* kutori_print_fairy =
+                kutori_type->get_function("print_fairy");
+            NTR_TEST_ASSERT(kutori_print_fairy->return_type() ==
+                            nregistrar::get_type<void>());
+            const nfunction* kutori_print_sword =
+                kutori_type->get_function("print_sword");
+            NTR_TEST_ASSERT(kutori_print_sword->return_type() ==
+                            nregistrar::get_type<void>());
 
             const nfunction* kutori_update_info =
                 kutori_type->get_function("update_info");
@@ -170,17 +221,23 @@ int main()
                             nregistrar::get_type<float>());
 
             nobject kutori_obj = kutori_type->new_instance();
-            kutori_type->call("update_info", { kutori_obj.wrapper(), 160.0f, 45.0f });
-            kutori_type->set("age", kutori_obj.wrapper(), 15);
+            nwrapper kutori_wrapper = kutori_obj.wrapper();
+            nwrapper fairy_wrapper =
+                kutori_wrapper.cast_to(kutori_print_fairy->argument_types()[0]);
+            nwrapper sword_wrapper =
+                kutori_wrapper.cast_to(kutori_print_sword->argument_types()[0]);
+            kutori_type->call("print_fairy", { fairy_wrapper });
+            kutori_type->call("print_sword", { sword_wrapper });
+            kutori_type->call("update_info", { kutori_wrapper, 160.0f, 45.0f });
+            kutori_type->set("age", kutori_wrapper, 15);
 
-            nobject height = kutori_type_by_name->get("height", kutori_obj.wrapper());
+            nobject height = kutori_type_by_name->get("height", kutori_wrapper);
             NTR_TEST_ASSERT(height.type()->is_numeric());
-            nobject weight = kutori_type_by_name->get("weight", kutori_obj.wrapper());
+            nobject weight = kutori_type_by_name->get("weight", kutori_wrapper);
             NTR_TEST_ASSERT(weight.type()->is_numeric());
-            nobject age = kutori_type_by_name->get("age", kutori_obj.wrapper());
+            nobject age = kutori_type_by_name->get("age", kutori_wrapper);
             NTR_TEST_ASSERT(age.type()->is_numeric());
-            nobject value =
-                kutori_type_by_name->call("get_value", { kutori_obj.wrapper() });
+            nobject value = kutori_type_by_name->call("get_value", { kutori_wrapper });
             NTR_TEST_ASSERT(value.type()->is_pointer());
             std::cout << "kutori's height is: " << nnumeric::get_value(height) << "cm"
                       << std::endl;

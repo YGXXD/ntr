@@ -33,6 +33,9 @@ public:
     NTR_INLINE T&& rref() const;
     template <typename T>
     NTR_INLINE auto&& unwrap() const;
+    template <typename T>
+    nwrapper cast_to() const;
+    nwrapper cast_to(const ntype* to_type) const;
 
     NTR_INLINE const ntype* type() const { return _type; }
     NTR_INLINE void* data() const { return _pdata; }
