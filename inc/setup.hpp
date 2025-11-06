@@ -26,6 +26,7 @@
 #include <unordered_map>
 #include <functional>
 #include <utility>
+#include <algorithm>
 
 #if defined(_WIN32)
 #    define _ntr_align_alloc(size, alignment) \

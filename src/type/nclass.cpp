@@ -6,7 +6,6 @@
 //
 
 #include "type/nclass.hpp"
-#include <algorithm>
 
 namespace ntr
 {
