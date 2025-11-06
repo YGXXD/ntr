@@ -78,6 +78,9 @@ public:
     friend class nregistrar;
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::eclass, T>)
 
+    template <typename U, typename = std::enable_if_t<std::is_base_of_v<U, T>>>
+    NTR_INLINE nfactory& base_type();
+
     template <typename Ret, typename... Args>
     NTR_INLINE nfactory& function(std::string_view name, Ret (*fun)(Args...));
     template <typename Ret, typename... Args>
@@ -86,7 +89,7 @@ public:
     NTR_INLINE nfactory& function(std::string_view name, Ret (T::*fun)(Args...) const);
 
     template <typename U>
-    NTR_INLINE nfactory& property(std::string_view name, U(T::*member));
+    NTR_INLINE nfactory& property(std::string_view name, U(T::* member));
     template <typename U>
     NTR_INLINE nfactory& property(std::string_view name, const U& (T::*getter)() const,
                                   void (T::*setter)(const U&));

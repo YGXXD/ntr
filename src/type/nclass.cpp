@@ -6,6 +6,7 @@
 //
 
 #include "type/nclass.hpp"
+#include <algorithm>
 
 namespace ntr
 {
@@ -37,7 +38,15 @@ void nclass::add_property(std::unique_ptr<nproperty>&& property)
     }
 }
 
-void nclass::remove(std::string_view name)
+void nclass::add_base_type(const nclass* base_type, ptrdiff_t offset)
+{
+    if (std::find_if(_base_type_pairs.begin(), _base_type_pairs.end(),
+                     [base_type](const auto& base_type_pair)
+    { return base_type_pair.first == base_type; }) == _base_type_pairs.end())
+        _base_type_pairs.push_back(std::make_pair(base_type, offset));
+}
+
+void nclass::remove_field(std::string_view name)
 {
     if (_field_map.find(name) != _field_map.end())
     {
@@ -53,23 +62,66 @@ void nclass::remove(std::string_view name)
 const nfunction* nclass::get_function(std::string_view name) const
 {
     auto field_it = _field_map.find(name);
-    if (field_it == _field_map.end())
+    if (field_it == _field_map.end() || field_it->second.first == _functions.end())
+    {
+        for (auto& base_type_pair : _base_type_pairs)
+        {
+            if (const nfunction* function = base_type_pair.first->get_function(name))
+                return function;
+        }
         return nullptr;
-    auto function_it = field_it->second.first;
-    if (function_it == _functions.end())
-        return nullptr;
-    return function_it->get();
+    }
+    return field_it->second.first->get();
 }
 
 const nproperty* nclass::get_property(std::string_view name) const
 {
     auto field_it = _field_map.find(name);
-    if (field_it == _field_map.end())
+    if (field_it == _field_map.end() || field_it->second.second == _properties.end())
+    {
+        for (auto& base_type_pair : _base_type_pairs)
+        {
+            if (const nproperty* property = base_type_pair.first->get_property(name))
+                return property;
+        }
         return nullptr;
-    auto property_it = field_it->second.second;
-    if (property_it == _properties.end())
-        return nullptr;
-    return property_it->get();
+    }
+    return field_it->second.second->get();
+}
+
+void* nclass::cast_to(const nclass* type, void* pointer) const
+{
+    if (type)
+    {
+        ptrdiff_t offset;
+        if (has_base_type(type, &offset))
+            return static_cast<void*>(static_cast<char*>(pointer) + offset);
+    }
+    return nullptr;
+}
+
+bool nclass::has_base_type(const nclass* type, ptrdiff_t* out_offset) const
+{
+    auto it = std::find_if(_base_type_pairs.begin(), _base_type_pairs.end(),
+                           [type](const auto& base_type_pair)
+    { return base_type_pair.first == type; });
+    if (it != _base_type_pairs.end())
+    {
+        if (out_offset)
+            *out_offset = it->second;
+        return true;
+    }
+    for (auto& base_type_pair : _base_type_pairs)
+    {
+        ptrdiff_t offset;
+        if (base_type_pair.first->has_base_type(type, &offset))
+        {
+            if (out_offset)
+                *out_offset = base_type_pair.second + offset;
+            return true;
+        }
+    }
+    return false;
 }
 
 bool nclass::has_function(std::string_view name) const

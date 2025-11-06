@@ -26,8 +26,8 @@ public:
 
     void add_function(std::unique_ptr<nfunction>&& function);
     void add_property(std::unique_ptr<nproperty>&& property);
-
-    void remove(std::string_view name);
+    void add_base_type(const nclass* _base_type, ptrdiff_t offset);
+    void remove_field(std::string_view name);
 
     NTR_INLINE auto function_begin() const { return _functions.begin(); }
     NTR_INLINE auto function_end() const { return _functions.end(); }
@@ -35,6 +35,8 @@ public:
     NTR_INLINE auto property_end() const { return _properties.end(); }
     const nfunction* get_function(std::string_view name) const;
     const nproperty* get_property(std::string_view name) const;
+    void* cast_to(const nclass* type, void* pointer) const;
+    bool has_base_type(const nclass* type, ptrdiff_t* out_offset = nullptr) const;
     bool has_function(std::string_view name) const;
     bool has_property(std::string_view name) const;
 
@@ -44,9 +46,9 @@ public:
              const nwrapper& value) const;
 
 private:
+    std::vector<std::pair<const nclass*, ptrdiff_t>> _base_type_pairs;
     std::list<std::unique_ptr<nfunction>> _functions;
     std::list<std::unique_ptr<nproperty>> _properties;
-
     std::unordered_map<std::string_view,
                        std::pair<std::list<std::unique_ptr<nfunction>>::const_iterator,
                                  std::list<std::unique_ptr<nproperty>>::const_iterator>>

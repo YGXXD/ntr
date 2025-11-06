@@ -83,6 +83,17 @@ nfactory<ntype::etype::eclass, T>::nfactory()
 }
 
 template <typename T>
+template <typename U, typename>
+NTR_INLINE nfactory<ntype::etype::eclass, T>&
+nfactory<ntype::etype::eclass, T>::base_type()
+{
+    _type->add_base_type(
+        nregistrar::get_type<U>(),
+        reinterpret_cast<ptrdiff_t>(static_cast<U*>(reinterpret_cast<T*>(1))) - 1);
+    return *this;
+}
+
+template <typename T>
 template <typename Ret, typename... Args>
 NTR_INLINE nfactory<ntype::etype::eclass, T>&
 nfactory<ntype::etype::eclass, T>::function(std::string_view name, Ret (*fun)(Args...))
@@ -113,7 +124,7 @@ nfactory<ntype::etype::eclass, T>::function(std::string_view name,
 template <typename T>
 template <typename U>
 NTR_INLINE nfactory<ntype::etype::eclass, T>&
-nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::*member))
+nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::* member))
 {
     _type->add_property(std::make_unique<nproperty>(_type.get(), name, member));
     return *this;
@@ -132,7 +143,7 @@ template <typename T>
 NTR_INLINE nfactory<ntype::etype::eclass, T>&
 nfactory<ntype::etype::eclass, T>::remove(std::string_view name)
 {
-    _type->remove(name);
+    _type->remove_field(name);
     return *this;
 }
 

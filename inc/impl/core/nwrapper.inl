@@ -7,6 +7,7 @@
 
 #include "../../core/nwrapper.hpp"
 #include "../../core/nregistrar.hpp"
+#include "../../type/nclass.hpp"
 
 namespace ntr
 {
@@ -49,6 +50,12 @@ NTR_INLINE auto&& nwrapper::unwrap() const
         return ref<std::decay_t<T>>();
     else
         return cref<std::decay_t<T>>();
+}
+
+template <typename T>
+NTR_INLINE nwrapper nwrapper::cast_to() const
+{
+    return cast_to(nregistrar::get_type<T>());
 }
 
 } // namespace ntr
