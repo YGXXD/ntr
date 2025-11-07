@@ -28,10 +28,10 @@ public:
 
     struct operations
     {
-        std::function<void(void*)> default_construct;
-        std::function<void(void*, const void* const)> copy_construct;
-        std::function<void(void*, void*)> move_construct;
-        std::function<void(void*)> destruct;
+        void (*default_construct)(void*);
+        void (*copy_construct)(void*, const void* const);
+        void (*move_construct)(void*, void*);
+        void (*destruct)(void*);
     };
 
     ntype(etype kind, uint32_t size, uint32_t align, operations* ops,

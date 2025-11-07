@@ -36,7 +36,7 @@ public:
     const nfunction* get_function(std::string_view name) const;
     const nproperty* get_property(std::string_view name) const;
     void* cast_to(const nclass* type, void* pointer) const;
-    bool has_base_type(const nclass* type, ptrdiff_t* out_offset = nullptr) const;
+    bool has_base_type(const nclass* type) const;
     bool has_function(std::string_view name) const;
     bool has_property(std::string_view name) const;
 
@@ -46,6 +46,8 @@ public:
              const nwrapper& value) const;
 
 private:
+    bool check_base_type(const nclass* type, ptrdiff_t* out_offset) const;
+
     std::vector<std::pair<const nclass*, ptrdiff_t>> _base_type_pairs;
     std::vector<std::unique_ptr<nfunction>> _functions;
     std::vector<std::unique_ptr<nproperty>> _properties;

@@ -92,35 +92,20 @@ void* nclass::cast_to(const nclass* type, void* pointer) const
 {
     if (type)
     {
+        if (type == this)
+            return pointer;
         ptrdiff_t offset;
-        if (has_base_type(type, &offset))
+        if (check_base_type(type, &offset))
             return static_cast<void*>(static_cast<char*>(pointer) + offset);
+        if (type->check_base_type(this, &offset))
+            return static_cast<void*>(static_cast<char*>(pointer) - offset);
     }
     return nullptr;
 }
 
-bool nclass::has_base_type(const nclass* type, ptrdiff_t* out_offset) const
+bool nclass::has_base_type(const nclass* type) const
 {
-    auto it = std::find_if(_base_type_pairs.begin(), _base_type_pairs.end(),
-                           [type](const auto& base_type_pair)
-    { return base_type_pair.first == type; });
-    if (it != _base_type_pairs.end())
-    {
-        if (out_offset)
-            *out_offset = it->second;
-        return true;
-    }
-    for (auto& base_type_pair : _base_type_pairs)
-    {
-        ptrdiff_t offset;
-        if (base_type_pair.first->has_base_type(type, &offset))
-        {
-            if (out_offset)
-                *out_offset = base_type_pair.second + offset;
-            return true;
-        }
-    }
-    return false;
+    return type && check_base_type(type, nullptr);
 }
 
 bool nclass::has_function(std::string_view name) const
@@ -153,6 +138,30 @@ void nclass::set(std::string_view name, const nwrapper& instance,
                  const nwrapper& value) const
 {
     get_property(name)->set(instance, value);
+}
+
+bool nclass::check_base_type(const nclass* type, ptrdiff_t* out_offset) const
+{
+    auto it = std::find_if(_base_type_pairs.begin(), _base_type_pairs.end(),
+                           [type](const auto& base_type_pair)
+    { return base_type_pair.first == type; });
+    if (it != _base_type_pairs.end())
+    {
+        if (out_offset)
+            *out_offset = it->second;
+        return true;
+    }
+    for (auto& base_type_pair : _base_type_pairs)
+    {
+        ptrdiff_t offset;
+        if (base_type_pair.first->check_base_type(type, &offset))
+        {
+            if (out_offset)
+                *out_offset = base_type_pair.second + offset;
+            return true;
+        }
+    }
+    return false;
 }
 
 } // namespace ntr
