@@ -14,3 +14,4 @@
 #include "impl/core/nregistrar.inl"
 #include "impl/core/nobject.inl"
 #include "impl/core/nwrapper.inl"
+#include "impl/core/ntable.inl"
