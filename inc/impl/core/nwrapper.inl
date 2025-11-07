@@ -7,7 +7,6 @@
 
 #include "../../core/nwrapper.hpp"
 #include "../../core/nregistrar.hpp"
-#include "../../type/nclass.hpp"
 
 namespace ntr
 {

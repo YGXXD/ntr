@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../../core/ntable.hpp"
+#include "../../type/ntraits.hpp"
 
 namespace ntr
 {
@@ -168,6 +169,43 @@ NTR_INLINE bool nhash_map<Key, Value, Hash>::contains(const Key& key) const
 }
 
 template <class Key, class Value, class Hash>
+NTR_INLINE bool nhash_map<Key, Value, Hash>::contains(Key&& key) const
+{
+    return ntable::contains(&key, item_size, hash, get_key, key_equal);
+}
+
+template <class Key, class Value, class Hash>
+NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
+nhash_map<Key, Value, Hash>::find(const Key& key) const
+{
+    return iterator(
+        ntable::find(const_cast<Key*>(&key), item_size, hash, get_key, key_equal),
+        ntable::end(item_size));
+}
+
+template <class Key, class Value, class Hash>
+NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
+nhash_map<Key, Value, Hash>::find(Key&& key) const
+{
+    return iterator(ntable::find(&key, item_size, hash, get_key, key_equal),
+                    ntable::end(item_size));
+}
+
+template <class Key, class Value, class Hash>
+NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
+nhash_map<Key, Value, Hash>::begin() const
+{
+    return iterator(ntable::begin(item_size), ntable::end(item_size));
+}
+
+template <class Key, class Value, class Hash>
+NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
+nhash_map<Key, Value, Hash>::end() const
+{
+    return iterator(ntable::end(item_size), ntable::end(item_size));
+}
+
+template <class Key, class Value, class Hash>
 NTR_INLINE Value& nhash_map<Key, Value, Hash>::operator[](const Key& key)
 {
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
@@ -186,20 +224,6 @@ NTR_INLINE const Value& nhash_map<Key, Value, Hash>::operator[](const Key& key) 
         throw std::out_of_range("nhash_map<Key, Value, Hash>::operator[] : invalid key");
     return *static_cast<const item_type*>(
         get_item(get_bucket(_buckets, position, item_size)));
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
-nhash_map<Key, Value, Hash>::begin() const
-{
-    return iterator(ntable::begin(item_size), ntable::end(item_size));
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
-nhash_map<Key, Value, Hash>::end() const
-{
-    return iterator(ntable::end(item_size), ntable::end(item_size));
 }
 
 } // namespace ntr

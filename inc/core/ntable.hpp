@@ -9,7 +9,6 @@
 
 #include "setup.hpp"
 #include "type/ntype.hpp"
-#include "type/ntraits.hpp"
 
 namespace ntr
 {
@@ -74,6 +73,8 @@ protected:
                   get_key_function get_key, key_equal_function key_equal) const;
     uint32_t find_position(void* key_data, size_t item_size, hash_function hash,
                            get_key_function get_key, key_equal_function key_equal) const;
+    void* find(void* key_data, size_t item_size, hash_function hash,
+               get_key_function get_key, key_equal_function key_equal) const;
     void* begin(size_t item_size) const;
     void* end(size_t item_size) const;
 
@@ -144,10 +145,13 @@ public:
     NTR_INLINE bool remove(const Key& key);
     NTR_INLINE bool remove(Key&& key);
     NTR_INLINE bool contains(const Key& key) const;
-    NTR_INLINE Value& operator[](const Key& key);
-    NTR_INLINE const Value& operator[](const Key& key) const;
+    NTR_INLINE bool contains(Key&& key) const;
+    NTR_INLINE iterator find(const Key& key) const;
+    NTR_INLINE iterator find(Key&& key) const;
     NTR_INLINE iterator begin() const;
     NTR_INLINE iterator end() const;
+    NTR_INLINE Value& operator[](const Key& key);
+    NTR_INLINE const Value& operator[](const Key& key) const;
 };
 
 } // namespace ntr

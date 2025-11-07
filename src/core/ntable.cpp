@@ -94,7 +94,7 @@ void ntable::insert(void* item_data, size_t item_size, hash_function hash,
 {
     uint32_t position =
         find_position(get_key(item_data), item_size, hash, get_key, key_equal);
-    if (position == std::numeric_limits<uint32_t>::max())
+    if (position == _capacity)
     {
         insert_force(item_data, item_size, hash, get_key, construct_type, ops);
     }
@@ -158,7 +158,7 @@ bool ntable::remove(void* key_data, size_t item_size, hash_function hash,
                     ntype::operations* ops)
 {
     uint32_t position = find_position(key_data, item_size, hash, get_key, key_equal);
-    if (position != std::numeric_limits<uint32_t>::max())
+    if (position != _capacity)
     {
         bucket_info* binfo =
             static_cast<bucket_info*>(get_bucket(_buckets, position, item_size));
@@ -203,8 +203,7 @@ void ntable::clear(size_t item_size, ntype::operations* ops)
 bool ntable::contains(void* key_data, size_t item_size, hash_function hash,
                       get_key_function get_key, key_equal_function key_equal) const
 {
-    return find_position(key_data, item_size, hash, get_key, key_equal) !=
-           std::numeric_limits<uint32_t>::max();
+    return find_position(key_data, item_size, hash, get_key, key_equal) != _capacity;
 }
 
 uint32_t ntable::find_position(void* key_data, size_t item_size, hash_function hash,
@@ -212,7 +211,7 @@ uint32_t ntable::find_position(void* key_data, size_t item_size, hash_function h
                                key_equal_function key_equal) const
 {
     if (_capacity == 0)
-        return std::numeric_limits<uint32_t>::max();
+        return _capacity;
     uint32_t position = hash(key_data) % _capacity;
     uint32_t distance = 0;
     bucket_info* binfo =
@@ -227,7 +226,14 @@ uint32_t ntable::find_position(void* key_data, size_t item_size, hash_function h
         binfo = static_cast<bucket_info*>(get_bucket(_buckets, position, item_size));
         ++distance;
     };
-    return std::numeric_limits<uint32_t>::max();
+    return _capacity;
+}
+
+void* ntable::find(void* key_data, size_t item_size, hash_function hash,
+                   get_key_function get_key, key_equal_function key_equal) const
+{
+    uint32_t position = find_position(key_data, item_size, hash, get_key, key_equal);
+    return get_bucket(_buckets, position, item_size);
 }
 
 void* ntable::begin(size_t item_size) const
