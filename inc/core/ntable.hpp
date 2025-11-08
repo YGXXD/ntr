@@ -19,25 +19,10 @@ struct bucket_info
     uint16_t distance;
 };
 
-constexpr NTR_INLINE size_t bucket_size(size_t item_size)
-{
-    return sizeof(bucket_info) + item_size;
-}
-
-NTR_INLINE void* bucket_pp(void* _bucket, size_t item_size)
-{
-    return static_cast<char*>(_bucket) + bucket_size(item_size);
-}
-
-NTR_INLINE void* get_item(void* _bucket)
-{
-    return static_cast<char*>(_bucket) + sizeof(bucket_info);
-}
-
-NTR_INLINE void* get_bucket(void* buckets, uint32_t position, size_t item_size)
-{
-    return static_cast<char*>(buckets) + position * bucket_size(item_size);
-}
+constexpr NTR_INLINE size_t bucket_size(size_t item_size);
+NTR_INLINE void* bucket_pp(void* _bucket, size_t item_size);
+NTR_INLINE void* get_item(void* _bucket);
+NTR_INLINE void* get_bucket(void* buckets, uint32_t position, size_t item_size);
 
 class ntable
 {
@@ -155,3 +140,5 @@ public:
 };
 
 } // namespace ntr
+
+#include "../impl/core/ntable.inl"

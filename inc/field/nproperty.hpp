@@ -36,3 +36,5 @@ private:
 };
 
 } // namespace ntr
+
+#include "../impl/field/nproperty.inl"

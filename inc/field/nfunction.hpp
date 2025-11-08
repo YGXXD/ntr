@@ -48,3 +48,5 @@ private:
 };
 
 } // namespace ntr
+
+#include "../impl/field/nfunction.inl"

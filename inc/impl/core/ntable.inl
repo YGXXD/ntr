@@ -13,6 +13,26 @@
 namespace ntr
 {
 
+constexpr NTR_INLINE size_t bucket_size(size_t item_size)
+{
+    return sizeof(bucket_info) + item_size;
+}
+
+NTR_INLINE void* bucket_pp(void* _bucket, size_t item_size)
+{
+    return static_cast<char*>(_bucket) + bucket_size(item_size);
+}
+
+NTR_INLINE void* get_item(void* _bucket)
+{
+    return static_cast<char*>(_bucket) + sizeof(bucket_info);
+}
+
+NTR_INLINE void* get_bucket(void* buckets, uint32_t position, size_t item_size)
+{
+    return static_cast<char*>(buckets) + position * bucket_size(item_size);
+}
+
 template <typename T>
 table_iterator<T>::table_iterator(void* bucket, void* end)
     : _bucket(bucket), _end(end) {};
@@ -121,7 +141,7 @@ NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, const Value&
 {
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
                                               get_key, key_equal);
-    if (position == std::numeric_limits<uint32_t>::max())
+    if (position == _capacity)
     {
         item_type item = { key, value };
         position = ntable::insert_force(&item, item_size, hash, get_key, 1,
@@ -137,7 +157,7 @@ NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, Value&& valu
 {
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
                                               get_key, key_equal);
-    if (position == std::numeric_limits<uint32_t>::max())
+    if (position == _capacity)
     {
         item_type item = { key, std::move(value) };
         position = ntable::insert_force(&item, item_size, hash, get_key, 1,
@@ -210,7 +230,7 @@ NTR_INLINE Value& nhash_map<Key, Value, Hash>::operator[](const Key& key)
 {
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
                                               get_key, key_equal);
-    if (position == std::numeric_limits<uint32_t>::max())
+    if (position == _capacity)
         throw std::out_of_range("nhash_map<Key, Value, Hash>::operator[] : invalid key");
     return *static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)));
 }
@@ -220,7 +240,7 @@ NTR_INLINE const Value& nhash_map<Key, Value, Hash>::operator[](const Key& key) 
 {
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
                                               get_key, key_equal);
-    if (position == std::numeric_limits<uint32_t>::max())
+    if (position == _capacity)
         throw std::out_of_range("nhash_map<Key, Value, Hash>::operator[] : invalid key");
     return *static_cast<const item_type*>(
         get_item(get_bucket(_buckets, position, item_size)));

@@ -19,6 +19,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <memory>
+#include <cstring>
 #include <string>
 #include <string_view>
 #include <array>
