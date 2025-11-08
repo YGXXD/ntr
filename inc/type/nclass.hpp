@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ntype.hpp"
+#include "../core/ntable.hpp"
 #include "../core/nobject.hpp"
 #include "../field/nfunction.hpp"
 #include "../field/nproperty.hpp"
@@ -51,7 +52,7 @@ private:
     std::vector<std::pair<const nclass*, ptrdiff_t>> _base_type_pairs;
     std::vector<std::unique_ptr<nfunction>> _functions;
     std::vector<std::unique_ptr<nproperty>> _properties;
-    std::unordered_map<std::string_view, std::pair<nfunction*, nproperty*>> _field_map;
+    nhash_map<std::string_view, std::pair<nfunction*, nproperty*>> _field_map;
 };
 
 } // namespace ntr

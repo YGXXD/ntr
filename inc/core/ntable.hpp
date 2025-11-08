@@ -24,7 +24,7 @@ NTR_INLINE void* bucket_pp(void* _bucket, size_t item_size);
 NTR_INLINE void* get_item(void* _bucket);
 NTR_INLINE void* get_bucket(void* buckets, uint32_t position, size_t item_size);
 
-class ntable
+class NTR_API ntable
 {
 public:
     NTR_INLINE uint32_t size() const { return size(); };
@@ -129,6 +129,7 @@ public:
     NTR_INLINE void insert(const Key& key, Value&& value);
     NTR_INLINE bool remove(const Key& key);
     NTR_INLINE bool remove(Key&& key);
+    NTR_INLINE bool remove(const iterator& it);
     NTR_INLINE bool contains(const Key& key) const;
     NTR_INLINE bool contains(Key&& key) const;
     NTR_INLINE iterator find(const Key& key) const;

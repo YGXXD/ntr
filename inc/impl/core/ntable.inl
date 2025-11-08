@@ -183,6 +183,13 @@ NTR_INLINE bool nhash_map<Key, Value, Hash>::remove(Key&& key)
 }
 
 template <class Key, class Value, class Hash>
+NTR_INLINE bool nhash_map<Key, Value, Hash>::remove(const iterator& it)
+{
+    return ntable::remove(const_cast<Key*>(&it->first), item_size, hash, get_key,
+                          key_equal, &ntype_ops_traits<item_type>::instance().ops);
+}
+
+template <class Key, class Value, class Hash>
 NTR_INLINE bool nhash_map<Key, Value, Hash>::contains(const Key& key) const
 {
     return ntable::contains(const_cast<Key*>(&key), item_size, hash, get_key, key_equal);

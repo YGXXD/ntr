@@ -17,7 +17,7 @@ nclass::nclass(std::string_view name, uint32_t size, uint32_t align, operations*
 
 void nclass::add_function(std::unique_ptr<nfunction>&& function)
 {
-    if (_field_map.find(function.get()->name()) == _field_map.end())
+    if (!_field_map.contains(function->name()))
     {
         _field_map.insert({ function->name(), { function.get(), nullptr } });
         _functions.push_back(std::move(function));
@@ -26,7 +26,7 @@ void nclass::add_function(std::unique_ptr<nfunction>&& function)
 
 void nclass::add_property(std::unique_ptr<nproperty>&& property)
 {
-    if (_field_map.find(property.get()->name()) == _field_map.end())
+    if (!_field_map.contains(property->name()))
     {
         _field_map.insert({ property->name(), { nullptr, property.get() } });
         _properties.push_back(std::move(property));
@@ -43,18 +43,18 @@ void nclass::add_base_type(const nclass* base_type, ptrdiff_t offset)
 
 void nclass::remove_field(std::string_view name)
 {
-    if (_field_map.find(name) != _field_map.end())
+    auto it = _field_map.find(name);
+    if (it != _field_map.end())
     {
-        auto field = _field_map.at(name);
-        _field_map.erase(name);
-        if (field.first != nullptr)
+        if (it->first != nullptr)
             _functions.erase(std::find_if(_functions.begin(), _functions.end(),
-                                          [&field](const auto& function)
-            { return field.first == function.get(); }));
+                                          [&it](const auto& function)
+            { return it->second.first == function.get(); }));
         else
             _properties.erase(std::find_if(_properties.begin(), _properties.end(),
-                                           [&field](const auto& property)
-            { return field.second == property.get(); }));
+                                           [&it](const auto& property)
+            { return it->second.second == property.get(); }));
+        _field_map.remove(it);
     }
 }
 

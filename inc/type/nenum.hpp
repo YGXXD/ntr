@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ntype.hpp"
+#include "../core/ntable.hpp"
 #include "../field/neitem.hpp"
 
 namespace ntr
@@ -39,8 +40,8 @@ public:
 
 private:
     std::vector<std::unique_ptr<neitem>> _items;
-    std::unordered_map<std::string_view, neitem*> _str_field_map;
-    std::unordered_map<enum_integer_type, neitem*> _enum_field_map;
+    nhash_map<std::string_view, neitem*> _str_field_map;
+    nhash_map<enum_integer_type, neitem*> _enum_field_map;
 };
 
 } // namespace ntr
