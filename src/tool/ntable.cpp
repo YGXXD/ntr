@@ -112,16 +112,20 @@ uint32_t ntable::insert_force(void* item_data, size_t item_size, hash_function h
         reserve((_capacity == 0 ? 32 : _capacity * 2), item_size, hash, get_key, ops);
     uint32_t position = hash(get_key(item_data)) % _capacity;
     uint16_t distance = 0;
-    void* insert_item = std::malloc(item_size);
+    constexpr size_t item_stack_buffer_max_size = 128;
+    char buffer[item_stack_buffer_max_size * 2];
+    void* insert_item = &buffer[0];
+    void* temp_item = &buffer[item_stack_buffer_max_size];
+    if (item_size > item_stack_buffer_max_size)
+    {
+        reinterpret_cast<char**>(buffer)[0] = static_cast<char*>(malloc(item_size * 2));
+        insert_item = &reinterpret_cast<char**>(buffer)[0][0];
+        temp_item = &reinterpret_cast<char**>(buffer)[0][item_size];
+    }
     if (is_move)
-    {
         ops->move_construct(insert_item, item_data);
-    }
     else
-    {
         ops->copy_construct(insert_item, item_data);
-    }
-    void* temp_item = nullptr;
     while (true)
     {
         bucket_info* binfo =
@@ -134,15 +138,12 @@ uint32_t ntable::insert_force(void* item_data, size_t item_size, hash_function h
             binfo->distance = distance;
             ++_size;
             ops->destruct(insert_item);
-            std::free(insert_item);
-            if (temp_item)
-                std::free(temp_item);
+            if (item_size > item_stack_buffer_max_size)
+                free(reinterpret_cast<char**>(buffer)[0]);
             return position;
         }
         if (distance > binfo->distance)
         {
-            if (!temp_item)
-                temp_item = std::malloc(item_size);
             std::swap(binfo->distance, distance);
             ops->move_construct(temp_item, bitem);
             ops->destruct(bitem);
