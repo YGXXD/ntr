@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../../tool/ntable.hpp"
-#include "../../type/ntraits.hpp"
+#include "../../tool/ntraits.hpp"
 
 namespace ntr
 {

@@ -15,8 +15,8 @@ namespace ntr
 template <typename T>
 NTR_INLINE auto& nregistrar::factory_wrapper()
 {
-    using MakeType = make_type_t<T>;
-    return nfactory<make_etype<MakeType>(), MakeType>::instance();
+    using mt = make_type_t<T>;
+    return nfactory<make_etype<mt>(), mt>::instance();
 }
 
 template <typename T>
