@@ -6,14 +6,18 @@
 //
 
 #include "type/nclass.hpp"
+#include "field/nfunction.hpp"
+#include "field/nproperty.hpp"
 
 namespace ntr
 {
 
-nclass::nclass(std::string_view name, uint32_t size, uint32_t align, operations* ops)
+nclass::nclass(uint32_t size, uint32_t align, operations* ops, std::string_view name)
     : ntype(etype::eclass, size, align, ops, name)
 {
 }
+
+nclass::~nclass() = default;
 
 void nclass::add_function(std::unique_ptr<nfunction>&& function)
 {

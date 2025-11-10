@@ -22,7 +22,7 @@ NTR_INLINE auto& nregistrar::factory_wrapper()
 template <typename T>
 NTR_INLINE const auto* nregistrar::get_type()
 {
-    return factory_wrapper<T>()._type.get();
+    return &factory_wrapper<T>()._type;
 }
 
 template <typename T>
@@ -31,7 +31,7 @@ NTR_INLINE auto& nregistrar::regist_type(std::string_view name)
     static_assert(is_etype_type<T>(),
                   "nregistrar::regist_type : template parameter \"T\" is not valid type");
     auto& fact = factory_wrapper<T>();
-    regist_type(name, fact._type.get());
+    regist_type(name, &fact._type);
     return fact;
 }
 

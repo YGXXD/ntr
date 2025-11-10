@@ -6,6 +6,7 @@
 //
 
 #include "type/nenum.hpp"
+#include "field/neitem.hpp"
 
 namespace ntr
 {
@@ -53,10 +54,12 @@ void nenum::set_value(nobject& enum_, enum_integer_type value)
         break;
     }
 }
-nenum::nenum(std::string_view name, uint32_t size, uint32_t align, operations* ops)
+nenum::nenum(uint32_t size, uint32_t align, operations* ops, std::string_view name)
     : ntype(etype::eenum, size, align, ops, name)
 {
 }
+
+nenum::~nenum() = default;
 
 void nenum::add_eitem(std::unique_ptr<neitem>&& item)
 {

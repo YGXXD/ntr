@@ -23,6 +23,8 @@ public:
     };
 
     nfield(const class ntype* parent_type, efield kind, std::string_view name);
+    NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nfield)
+    ~nfield();
 
     NTR_INLINE const ntype* parent_type() const { return _parent_type; }
     NTR_INLINE efield kind() const { return _kind; }

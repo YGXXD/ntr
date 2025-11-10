@@ -43,10 +43,8 @@ public:
 
     nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops,
              std::string_view name);
-    nnumeric(const nnumeric&) = delete;
-    nnumeric& operator=(const nnumeric&) = delete;
-    nnumeric(nnumeric&&) = delete;
-    nnumeric& operator=(nnumeric&&) = delete;
+    NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nnumeric)
+    ~nnumeric();
 
     NTR_INLINE enumeric numeric_kind() const { return _numeric_kind; }
     NTR_INLINE bool is_signed() const { return _is_signed; }

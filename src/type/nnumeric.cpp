@@ -223,4 +223,6 @@ nnumeric::nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operati
     }
 }
 
+nnumeric::~nnumeric() = default;
+
 } // namespace ntr

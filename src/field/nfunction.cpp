@@ -19,6 +19,8 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name, bool is_st
             "nfunction::nfunction : parent type is not class type");
 }
 
+nfunction::~nfunction() = default;
+
 nobject nfunction::call(const std::vector<nwrapper>& arg_arr) const
 {
     if (arg_arr.size() != _argument_types.size())

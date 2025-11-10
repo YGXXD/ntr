@@ -21,6 +21,8 @@ ntype::ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
 {
 }
 
+ntype::~ntype() = default;
+
 void ntype::set_name(std::string_view name)
 {
     if (is_registered())

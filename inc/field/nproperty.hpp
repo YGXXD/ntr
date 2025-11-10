@@ -22,6 +22,8 @@ public:
     template <typename T, typename ClassT>
     nproperty(const ntype* parent_type, std::string_view name, const T& (ClassT::*getter)() const,
               void (ClassT::*setter)(const T&));
+    NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nproperty)
+    ~nproperty();
 
     nobject get(const nwrapper& instance) const;
     void set(const nwrapper& instance, const nwrapper& value) const;

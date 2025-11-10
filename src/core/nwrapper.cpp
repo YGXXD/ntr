@@ -20,6 +20,12 @@ nwrapper::nwrapper(const ntype* type, const void* data)
         throw std::invalid_argument("nwrapper::nwrapper : data is nullptr");
 }
 
+nwrapper::nwrapper(const nwrapper& other) = default;
+nwrapper::nwrapper(nwrapper&& other) = default;
+nwrapper& nwrapper::operator=(const nwrapper& other) = default;
+nwrapper& nwrapper::operator=(nwrapper&& other) = default;
+nwrapper::~nwrapper() = default;
+
 nwrapper nwrapper::cast_to(const ntype* to_type) const
 {
     if (_type == to_type)

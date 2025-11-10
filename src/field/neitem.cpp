@@ -17,6 +17,8 @@ neitem::neitem(ntype* parent_type, std::string_view name, long value)
         throw std::invalid_argument("neitem::neitem : parent type is not enum type");
 }
 
+neitem::~neitem() = default;
+
 const nenum* neitem::enum_type() const
 {
     return static_cast<const nenum*>(parent_type());

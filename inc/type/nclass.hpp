@@ -10,8 +10,6 @@
 #include "ntype.hpp"
 #include "../tool/ntable.hpp"
 #include "../core/nobject.hpp"
-#include "../field/nfunction.hpp"
-#include "../field/nproperty.hpp"
 
 namespace ntr
 {
@@ -19,14 +17,12 @@ namespace ntr
 class NTR_API nclass : public ntype
 {
 public:
-    nclass(std::string_view name, uint32_t size, uint32_t align, operations* ops);
-    nclass(const nclass&) = delete;
-    nclass(nclass&&) = delete;
-    nclass& operator=(const nclass&) = delete;
-    nclass& operator=(nclass&&) = delete;
+    nclass(uint32_t size, uint32_t align, operations* ops, std::string_view name);
+    NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nclass)
+    ~nclass();
 
-    void add_function(std::unique_ptr<nfunction>&& function);
-    void add_property(std::unique_ptr<nproperty>&& property);
+    void add_function(std::unique_ptr<class nfunction>&& function);
+    void add_property(std::unique_ptr<class nproperty>&& property);
     void add_base_type(const nclass* _base_type, ptrdiff_t offset);
     void remove_field(std::string_view name);
 
