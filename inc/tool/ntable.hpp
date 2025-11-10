@@ -41,13 +41,12 @@ protected:
     void destruct(size_t item_size, ntype::operations* ops);
 
     void reserve(uint32_t new_capacity, size_t item_size, hash_function hash,
-                 get_key_function get_key);
+                 get_key_function get_key, ntype::operations* ops);
     void insert(void* item_data, size_t item_size, hash_function hash,
                 get_key_function get_key, key_equal_function key_equal,
-                int construct_type, ntype::operations* ops);
+                ntype::operations* ops, bool is_move);
     uint32_t insert_force(void* item_data, size_t item_size, hash_function hash,
-                          get_key_function get_key, int construct_type,
-                          ntype::operations* ops);
+                          get_key_function get_key, ntype::operations* ops, bool is_move);
     bool remove(void* key_data, size_t item_size, hash_function hash,
                 get_key_function get_key, key_equal_function key_equal,
                 ntype::operations* ops);

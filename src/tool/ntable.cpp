@@ -66,63 +66,62 @@ void ntable::destruct(size_t item_size, ntype::operations* ops)
 }
 
 void ntable::reserve(uint32_t new_capacity, size_t item_size, hash_function hash,
-                     get_key_function get_key)
+                     get_key_function get_key, ntype::operations* ops)
 {
-    void* old_buckets = _buckets;
-    uint32_t old_capacity = _capacity;
-    _capacity = new_capacity;
-    _size = 0;
-    const size_t alloc_size = bucket_size(item_size) * new_capacity;
-    _buckets = malloc(alloc_size);
-    memset(_buckets, 0, alloc_size);
-    for (uint32_t i = 0; i < old_capacity; ++i)
+    if (new_capacity > _capacity)
     {
-        bucket_info* old_binfo =
-            static_cast<bucket_info*>(get_bucket(old_buckets, i, item_size));
-        if (old_binfo->valid)
+        void* old_buckets = _buckets;
+        uint32_t old_capacity = _capacity;
+        _capacity = new_capacity;
+        _size = 0;
+        const size_t alloc_size = bucket_size(item_size) * new_capacity;
+        _buckets = malloc(alloc_size);
+        memset(_buckets, 0, alloc_size);
+        for (uint32_t i = 0; i < old_capacity; ++i)
         {
-            insert_force(get_item(old_binfo), item_size, hash, get_key, 2, nullptr);
+            bucket_info* old_binfo =
+                static_cast<bucket_info*>(get_bucket(old_buckets, i, item_size));
+            if (old_binfo->valid)
+            {
+                void* old_item = get_item(old_binfo);
+                insert_force(old_item, item_size, hash, get_key, ops, true);
+                ops->destruct(old_item);
+            }
         }
+        free(old_buckets);
     }
-    free(old_buckets);
 }
 
 void ntable::insert(void* item_data, size_t item_size, hash_function hash,
                     get_key_function get_key, key_equal_function key_equal,
-                    int construct_type, ntype::operations* ops)
+                    ntype::operations* ops, bool is_move)
 {
     uint32_t position =
         find_position(get_key(item_data), item_size, hash, get_key, key_equal);
     if (position == _capacity)
     {
-        insert_force(item_data, item_size, hash, get_key, construct_type, ops);
+        insert_force(item_data, item_size, hash, get_key, ops, is_move);
     }
 }
 
 uint32_t ntable::insert_force(void* item_data, size_t item_size, hash_function hash,
-                              get_key_function get_key, int construct_type,
-                              ntype::operations* ops)
+                              get_key_function get_key, ntype::operations* ops,
+                              bool is_move)
 {
-    if (_size >= _capacity * 3 / 4)
-        reserve((_capacity == 0 ? 32 : _capacity * 2), item_size, hash, get_key);
+    if (_size >= _capacity * 4 / 5)
+        reserve((_capacity == 0 ? 32 : _capacity * 2), item_size, hash, get_key, ops);
     uint32_t position = hash(get_key(item_data)) % _capacity;
     uint16_t distance = 0;
-    char* insert_item = static_cast<char*>(std::malloc(item_size));
-    switch (construct_type)
+    void* insert_item = std::malloc(item_size);
+    if (is_move)
     {
-    case 0:
-        ops->copy_construct(insert_item, item_data);
-        break;
-    case 1:
         ops->move_construct(insert_item, item_data);
-        break;
-    case 2:
-        memcpy(insert_item, item_data, item_size);
-        break;
-    default:
-        throw std::invalid_argument("nhash_map::insert : insert construct type error");
-        break;
     }
+    else
+    {
+        ops->copy_construct(insert_item, item_data);
+    }
+    void* temp_item = nullptr;
     while (true)
     {
         bucket_info* binfo =
@@ -130,18 +129,27 @@ uint32_t ntable::insert_force(void* item_data, size_t item_size, hash_function h
         void* bitem = get_item(binfo);
         if (!binfo->valid)
         {
-            memcpy(bitem, insert_item, item_size);
+            ops->move_construct(bitem, insert_item);
             binfo->valid = 1;
             binfo->distance = distance;
             ++_size;
+            ops->destruct(insert_item);
             std::free(insert_item);
+            if (temp_item)
+                std::free(temp_item);
             return position;
         }
         if (distance > binfo->distance)
         {
-            std::swap_ranges(static_cast<char*>(bitem),
-                             static_cast<char*>(bitem) + item_size, insert_item);
+            if (!temp_item)
+                temp_item = std::malloc(item_size);
             std::swap(binfo->distance, distance);
+            ops->move_construct(temp_item, bitem);
+            ops->destruct(bitem);
+            ops->move_construct(bitem, insert_item);
+            ops->destruct(insert_item);
+            ops->move_construct(insert_item, temp_item);
+            ops->destruct(temp_item);
         }
         position = (position + 1) % _capacity;
         ++distance;

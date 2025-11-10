@@ -50,7 +50,7 @@ void nclass::remove_field(std::string_view name)
     auto it = _field_map.find(name);
     if (it != _field_map.end())
     {
-        if (it->first != nullptr)
+        if (it->second.first != nullptr)
             _functions.erase(std::find_if(_functions.begin(), _functions.end(),
                                           [&it](const auto& function)
             { return it->second.first == function.get(); }));

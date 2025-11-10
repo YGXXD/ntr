@@ -56,16 +56,35 @@ int main()
         kutori_map.remove("du");
         kutori_map.remove("chen");
         NTR_TEST_ASSERT(kutori_map.empty());
-        NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct + kutori_move_construct == kutori_destroy)
+        NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
+                            kutori_move_construct ==
+                        kutori_destroy);
         // clear
         int curr_copy_construct = kutori_copy_construct;
         kutori_map["nota"] = kutori("nota");
         kutori_map["123"] = kutori("123");
-        kutori_map.insert({"kfs", kutori("kfs")});
-        kutori_map.insert({"ssp", kutori("ssp")});
+        kutori_map.insert({ "kfs", kutori("kfs") });
+        kutori_map.insert({ "ssp", kutori("ssp") });
         kutori_map.clear();
         NTR_TEST_ASSERT(curr_copy_construct == kutori_copy_construct);
-        NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct + kutori_move_construct == kutori_destroy)
+        NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
+                            kutori_move_construct ==
+                        kutori_destroy);
+
+        // hash conflict
+        nhash_map<int, kutori> kutori_imap;
+        kutori_imap[1] = kutori("1");
+        kutori_imap[2] = kutori("2");
+        kutori_imap[3] = kutori("3");
+        kutori_imap[33] = kutori("33");
+        kutori_imap[65] = kutori("65");
+        // reserve
+        kutori_imap.reserve(65);
+        NTR_TEST_ASSERT(kutori_imap.size() == 5);
+        kutori_imap.clear();
+        NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
+                            kutori_move_construct ==
+                        kutori_destroy);
         return 0;
     }
     catch (const std::exception& e)

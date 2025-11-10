@@ -119,21 +119,22 @@ nhash_map<Key, Value, Hash>::~nhash_map()
 template <class Key, class Value, class Hash>
 NTR_INLINE void nhash_map<Key, Value, Hash>::reserve(uint32_t new_capacity)
 {
-    ntable::reserve(new_capacity, item_size, hash, get_key);
+    ntable::reserve(new_capacity, item_size, hash, get_key,
+                    &ntype_ops_traits<item_type>::instance().ops);
 }
 
 template <class Key, class Value, class Hash>
 NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const item_type& item)
 {
-    ntable::insert(const_cast<void*>(&item), item_size, hash, get_key, key_equal, 0,
-                   &ntype_ops_traits<item_type>::instance().ops);
+    ntable::insert(const_cast<void*>(&item), item_size, hash, get_key, key_equal,
+                   &ntype_ops_traits<item_type>::instance().ops, false);
 }
 
 template <class Key, class Value, class Hash>
 NTR_INLINE void nhash_map<Key, Value, Hash>::insert(item_type&& item)
 {
-    ntable::insert(&item, item_size, hash, get_key, key_equal, 1,
-                   &ntype_ops_traits<item_type>::instance().ops);
+    ntable::insert(&item, item_size, hash, get_key, key_equal,
+                   &ntype_ops_traits<item_type>::instance().ops, true);
 }
 
 template <class Key, class Value, class Hash>
@@ -144,8 +145,8 @@ NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, const Value&
     if (position == _capacity)
     {
         item_type item = { key, value };
-        position = ntable::insert_force(&item, item_size, hash, get_key, 1,
-                                        &ntype_ops_traits<item_type>::instance().ops);
+        ntable::insert_force(&item, item_size, hash, get_key,
+                             &ntype_ops_traits<item_type>::instance().ops, true);
     }
 }
 
@@ -157,8 +158,8 @@ NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, Value&& valu
     if (position == _capacity)
     {
         item_type item = { key, std::move(value) };
-        position = ntable::insert_force(&item, item_size, hash, get_key, 1,
-                                        &ntype_ops_traits<item_type>::instance().ops);
+        ntable::insert_force(&item, item_size, hash, get_key,
+                             &ntype_ops_traits<item_type>::instance().ops, true);
     }
 }
 
@@ -261,7 +262,12 @@ NTR_INLINE Value& nhash_map<Key, Value, Hash>::operator[](const Key& key)
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
                                               get_key, key_equal);
     if (position == _capacity)
-        insert({ key, Value() });
+    {
+        item_type item = { key, Value() };
+        position =
+            ntable::insert_force(&item, item_size, hash, get_key,
+                                 &ntype_ops_traits<item_type>::instance().ops, true);
+    }
     return static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)))
         ->second;
 }
@@ -272,7 +278,12 @@ NTR_INLINE const Value& nhash_map<Key, Value, Hash>::operator[](const Key& key) 
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
                                               get_key, key_equal);
     if (position == _capacity)
-        insert({ key, Value() });
+    {
+        item_type item = { key, Value() };
+        position =
+            ntable::insert_force(&item, item_size, hash, get_key,
+                                 &ntype_ops_traits<item_type>::instance().ops, true);
+    }
     return static_cast<const item_type*>(
                get_item(get_bucket(_buckets, position, item_size)))
         ->second;
