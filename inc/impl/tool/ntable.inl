@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../../core/ntable.hpp"
+#include "../../tool/ntable.hpp"
 #include "../../type/ntraits.hpp"
 
 namespace ntr

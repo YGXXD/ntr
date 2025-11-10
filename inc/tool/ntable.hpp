@@ -142,4 +142,4 @@ public:
 
 } // namespace ntr
 
-#include "../impl/core/ntable.inl"
+#include "../impl/tool/ntable.inl"

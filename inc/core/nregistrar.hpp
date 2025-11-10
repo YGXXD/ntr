@@ -8,7 +8,7 @@
 #pragma once
 
 #include "nfactory.hpp"
-#include "ntable.hpp"
+#include "../tool/ntable.hpp"
 
 namespace ntr
 {

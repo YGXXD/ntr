@@ -8,7 +8,7 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "../core/ntable.hpp"
+#include "../tool/ntable.hpp"
 #include "../core/nobject.hpp"
 #include "../field/nfunction.hpp"
 #include "../field/nproperty.hpp"

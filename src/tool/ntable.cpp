@@ -5,7 +5,7 @@
 //  Created by 有个小小杜
 //
 
-#include "core/ntable.hpp"
+#include "tool/ntable.hpp"
 
 namespace ntr
 {
