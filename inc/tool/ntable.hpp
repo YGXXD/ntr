@@ -27,14 +27,13 @@ NTR_INLINE void* get_bucket(void* buckets, uint32_t position, size_t item_size);
 class NTR_API ntable
 {
 public:
-    NTR_INLINE uint32_t size() const { return size(); };
+    NTR_INLINE uint32_t size() const { return _size; };
     NTR_INLINE bool empty() const { return _size == 0; };
 
 protected:
     using hash_function = uint32_t (*)(void*);
     using get_key_function = void* (*)(void*);
     using key_equal_function = bool (*)(void*, void*);
-    using update_value_function = void (*)(void*, void*);
 
     ntable();
     void copy_init(const ntable& other, size_t item_size, ntype::operations* ops);
@@ -45,8 +44,7 @@ protected:
                  get_key_function get_key);
     void insert(void* item_data, size_t item_size, hash_function hash,
                 get_key_function get_key, key_equal_function key_equal,
-                int construct_type, ntype::operations* ops,
-                update_value_function update_value);
+                int construct_type, ntype::operations* ops);
     uint32_t insert_force(void* item_data, size_t item_size, hash_function hash,
                           get_key_function get_key, int construct_type,
                           ntype::operations* ops);
@@ -110,12 +108,6 @@ private:
         return *static_cast<Key*>(key_data1) == *static_cast<Key*>(key_data2);
     };
 
-    static constexpr auto update_value = [](void* item_data, void* value_data)
-    {
-        static_cast<item_type*>(item_data)->second =
-            static_cast<item_type*>(value_data)->second;
-    };
-
 public:
     nhash_map();
     nhash_map(const nhash_map& other);
@@ -132,10 +124,13 @@ public:
     NTR_INLINE bool remove(const iterator& it);
     NTR_INLINE bool contains(const Key& key) const;
     NTR_INLINE bool contains(Key&& key) const;
+    NTR_INLINE void clear();
     NTR_INLINE iterator find(const Key& key) const;
     NTR_INLINE iterator find(Key&& key) const;
     NTR_INLINE iterator begin() const;
     NTR_INLINE iterator end() const;
+    NTR_INLINE Value& at(const Key& key);
+    NTR_INLINE const Value& at(const Key& key) const;
     NTR_INLINE Value& operator[](const Key& key);
     NTR_INLINE const Value& operator[](const Key& key) const;
 };

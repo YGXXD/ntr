@@ -11,9 +11,17 @@ file(GLOB_RECURSE NTR_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 if(NTR_BUILD_TESTING)
     enable_testing()
-    add_executable(ntr_test test/ntr.cpp)
-    target_link_libraries(ntr_test PRIVATE ntr)
-    add_test(ntr_test ntr_test)
+    add_executable(table_test test/table_test.cpp)
+    target_link_libraries(table_test PRIVATE ntr)
+    add_test(table_test table_test)
+
+    add_executable(object_test test/object_test.cpp)
+    target_link_libraries(object_test PRIVATE ntr)
+    add_test(object_test object_test)
+
+    add_executable(reflect_test test/reflect_test.cpp)
+    target_link_libraries(reflect_test PRIVATE ntr)
+    add_test(reflect_test reflect_test)
 endif()
 
 if(NTR_BUILD_SHARED)

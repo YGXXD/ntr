@@ -126,14 +126,14 @@ template <class Key, class Value, class Hash>
 NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const item_type& item)
 {
     ntable::insert(const_cast<void*>(&item), item_size, hash, get_key, key_equal, 0,
-                   &ntype_ops_traits<item_type>::instance().ops, update_value);
+                   &ntype_ops_traits<item_type>::instance().ops);
 }
 
 template <class Key, class Value, class Hash>
 NTR_INLINE void nhash_map<Key, Value, Hash>::insert(item_type&& item)
 {
     ntable::insert(&item, item_size, hash, get_key, key_equal, 1,
-                   &ntype_ops_traits<item_type>::instance().ops, update_value);
+                   &ntype_ops_traits<item_type>::instance().ops);
 }
 
 template <class Key, class Value, class Hash>
@@ -147,9 +147,6 @@ NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, const Value&
         position = ntable::insert_force(&item, item_size, hash, get_key, 1,
                                         &ntype_ops_traits<item_type>::instance().ops);
     }
-    else
-        reinterpret_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)))
-            ->second = value;
 }
 
 template <class Key, class Value, class Hash>
@@ -163,9 +160,6 @@ NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, Value&& valu
         position = ntable::insert_force(&item, item_size, hash, get_key, 1,
                                         &ntype_ops_traits<item_type>::instance().ops);
     }
-    else
-        static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)))
-            ->second = std::move(value);
 }
 
 template <class Key, class Value, class Hash>
@@ -202,6 +196,12 @@ NTR_INLINE bool nhash_map<Key, Value, Hash>::contains(Key&& key) const
 }
 
 template <class Key, class Value, class Hash>
+NTR_INLINE void nhash_map<Key, Value, Hash>::clear()
+{
+    return ntable::clear(item_size, &ntype_ops_traits<item_type>::instance().ops);
+}
+
+template <class Key, class Value, class Hash>
 NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
 nhash_map<Key, Value, Hash>::find(const Key& key) const
 {
@@ -233,13 +233,37 @@ nhash_map<Key, Value, Hash>::end() const
 }
 
 template <class Key, class Value, class Hash>
+NTR_INLINE Value& nhash_map<Key, Value, Hash>::at(const Key& key)
+{
+    uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
+                                              get_key, key_equal);
+    if (position == _capacity)
+        throw std::out_of_range("nhash_map<Key, Value, Hash>::at : invalid key");
+    return static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)))
+        ->second;
+}
+
+template <class Key, class Value, class Hash>
+NTR_INLINE const Value& nhash_map<Key, Value, Hash>::at(const Key& key) const
+{
+    uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
+                                              get_key, key_equal);
+    if (position == _capacity)
+        throw std::out_of_range("nhash_map<Key, Value, Hash>::at : invalid key");
+    return static_cast<const item_type*>(
+               get_item(get_bucket(_buckets, position, item_size)))
+        ->second;
+}
+
+template <class Key, class Value, class Hash>
 NTR_INLINE Value& nhash_map<Key, Value, Hash>::operator[](const Key& key)
 {
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
                                               get_key, key_equal);
     if (position == _capacity)
-        throw std::out_of_range("nhash_map<Key, Value, Hash>::operator[] : invalid key");
-    return *static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)));
+        insert({ key, Value() });
+    return static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)))
+        ->second;
 }
 
 template <class Key, class Value, class Hash>
@@ -248,9 +272,10 @@ NTR_INLINE const Value& nhash_map<Key, Value, Hash>::operator[](const Key& key) 
     uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
                                               get_key, key_equal);
     if (position == _capacity)
-        throw std::out_of_range("nhash_map<Key, Value, Hash>::operator[] : invalid key");
-    return *static_cast<const item_type*>(
-        get_item(get_bucket(_buckets, position, item_size)));
+        insert({ key, Value() });
+    return static_cast<const item_type*>(
+               get_item(get_bucket(_buckets, position, item_size)))
+        ->second;
 }
 
 } // namespace ntr

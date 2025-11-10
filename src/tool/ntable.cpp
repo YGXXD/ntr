@@ -89,18 +89,13 @@ void ntable::reserve(uint32_t new_capacity, size_t item_size, hash_function hash
 
 void ntable::insert(void* item_data, size_t item_size, hash_function hash,
                     get_key_function get_key, key_equal_function key_equal,
-                    int construct_type, ntype::operations* ops,
-                    update_value_function update_value)
+                    int construct_type, ntype::operations* ops)
 {
     uint32_t position =
         find_position(get_key(item_data), item_size, hash, get_key, key_equal);
     if (position == _capacity)
     {
         insert_force(item_data, item_size, hash, get_key, construct_type, ops);
-    }
-    else if (update_value)
-    {
-        update_value(get_item(get_bucket(_buckets, position, item_size)), item_data);
     }
 }
 
