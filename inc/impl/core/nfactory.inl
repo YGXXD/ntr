@@ -24,10 +24,6 @@ ntype nfactory<ntype::etype::eunknown, T>::_type(ntype::etype::eunknown,
                                                  &ntype_ops_traits<T>::instance().ops,
                                                  "");
 
-template <>
-ntype nfactory<ntype::etype::eunknown, void>::_type(
-    ntype::etype::eunknown, 0, 0, &ntype_ops_traits<void>::instance().ops, "");
-
 // ntype::etype::enumeric impl
 template <typename T>
 nnumeric nfactory<ntype::etype::enumeric, T>::_type(make_enumeric<T>(),
@@ -106,7 +102,7 @@ nfactory<ntype::etype::eclass, T>::function(std::string_view name,
 template <typename T>
 template <typename U>
 NTR_INLINE nfactory<ntype::etype::eclass, T>&
-nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::*member))
+nfactory<ntype::etype::eclass, T>::property(std::string_view name, U(T::* member))
 {
     _type.add_property(std::make_unique<nproperty>(&_type, name, member));
     return *this;

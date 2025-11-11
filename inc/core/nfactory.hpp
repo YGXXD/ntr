@@ -20,6 +20,20 @@ namespace ntr
 template <ntype::etype E, typename T>
 class nfactory;
 
+template <>
+class NTR_API nfactory<ntype::etype::eunknown, void>
+{
+public:
+    friend class nregistrar;
+    NTR_SINGLETON_IMPL(nfactory<ntype::etype::eunknown, void>)
+
+private:
+    nfactory() = default;
+    ~nfactory() = default;
+
+    static ntype _type;
+};
+
 template <typename T>
 class nfactory<ntype::etype::eunknown, T>
 {
@@ -55,8 +69,9 @@ private:
 template <typename T>
 class nfactory<ntype::etype::eenum, T>
 {
-    static_assert(is_etype_enum<T>(),
-                  "ntype::etype::eenum factory template parameter \"T\" must be enum type");
+    static_assert(
+        is_etype_enum<T>(),
+        "ntype::etype::eenum factory template parameter \"T\" must be enum type");
 
 public:
     friend class nregistrar;
@@ -75,9 +90,8 @@ private:
 template <typename T>
 class nfactory<ntype::etype::eclass, T>
 {
-    static_assert(
-        is_etype_class<T>(),
-        "ntype::etype::eclass factory template parameter \"T\" must be struct or class type");
+    static_assert(is_etype_class<T>(), "ntype::etype::eclass factory template parameter "
+                                       "\"T\" must be struct or class type");
 
 public:
     friend class nregistrar;
