@@ -11,7 +11,9 @@ namespace ntr
 {
 
 // ntype::etype::eunknown void impl
-ntype nfactory<ntype::etype::eunknown, void>::_type(
-    ntype::etype::eunknown, 0, 0, &ntype_ops_traits<void>::instance().ops, "");
+nfactory<ntype::etype::eunknown, void>::nfactory()
+    : _type(ntype::etype::eunknown, 0, 0, &ntype_ops_traits<void>::instance().ops, "")
+{
+}
 
 } // namespace ntr
