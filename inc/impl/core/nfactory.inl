@@ -18,25 +18,27 @@ namespace ntr
 
 // ntype::etype::eunknown impl
 template <typename T>
-ntype nfactory<ntype::etype::eunknown, T>::_type(ntype::etype::eunknown,
-                                                 static_cast<uint32_t>(sizeof(T)),
-                                                 static_cast<uint32_t>(alignof(T)),
-                                                 &ntype_ops_traits<T>::instance().ops,
-                                                 "");
+nfactory<ntype::etype::eunknown, T>::nfactory()
+    : _type(ntype::etype::eunknown, static_cast<uint32_t>(sizeof(T)),
+            static_cast<uint32_t>(alignof(T)), &ntype_ops_traits<T>::instance().ops, "")
+{
+}
 
 // ntype::etype::enumeric impl
 template <typename T>
-nnumeric nfactory<ntype::etype::enumeric, T>::_type(make_enumeric<T>(),
-                                                    static_cast<uint32_t>(sizeof(T)),
-                                                    static_cast<uint32_t>(alignof(T)),
-                                                    &ntype_ops_traits<T>::instance().ops,
-                                                    "");
+nfactory<ntype::etype::enumeric, T>::nfactory()
+    : _type(make_enumeric<T>(), static_cast<uint32_t>(sizeof(T)),
+            static_cast<uint32_t>(alignof(T)), &ntype_ops_traits<T>::instance().ops, "")
+{
+}
 
 // ntype::etype::eenum impl
 template <typename T>
-nenum nfactory<ntype::etype::eenum, T>::_type(static_cast<uint32_t>(sizeof(T)),
-                                              static_cast<uint32_t>(alignof(T)),
-                                              &ntype_ops_traits<T>::instance().ops, "");
+nfactory<ntype::etype::eenum, T>::nfactory()
+    : _type(static_cast<uint32_t>(sizeof(T)), static_cast<uint32_t>(alignof(T)),
+            &ntype_ops_traits<T>::instance().ops, "")
+{
+}
 
 template <typename T>
 NTR_INLINE nfactory<ntype::etype::eenum, T>&
@@ -56,9 +58,11 @@ nfactory<ntype::etype::eenum, T>::remove(std::string_view name)
 
 // ntype::etype::eclass impl
 template <typename T>
-nclass nfactory<ntype::etype::eclass, T>::_type(static_cast<uint32_t>(sizeof(T)),
-                                                static_cast<uint32_t>(alignof(T)),
-                                                &ntype_ops_traits<T>::instance().ops, "");
+nfactory<ntype::etype::eclass, T>::nfactory()
+    : _type(static_cast<uint32_t>(sizeof(T)), static_cast<uint32_t>(alignof(T)),
+            &ntype_ops_traits<T>::instance().ops, "")
+{
+}
 
 template <typename T>
 template <typename U, typename>
@@ -127,9 +131,11 @@ nfactory<ntype::etype::eclass, T>::remove(std::string_view name)
 
 // ntype::etype::epointer impl
 template <typename T>
-npointer nfactory<ntype::etype::epointer, T>::_type(
-    make_pointer_depth<T>(), std::is_const_v<std::remove_pointer_t<T>>,
-    nregistrar::get_type<std::remove_pointer_t<T>>(),
-    &ntype_ops_traits<T>::instance().ops, "");
+nfactory<ntype::etype::epointer, T>::nfactory()
+    : _type(make_pointer_depth<T>(), std::is_const_v<std::remove_pointer_t<T>>,
+            nregistrar::get_type<std::remove_pointer_t<T>>(),
+            &ntype_ops_traits<T>::instance().ops, "")
+{
+}
 
 } // namespace ntr

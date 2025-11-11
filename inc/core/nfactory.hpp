@@ -28,10 +28,10 @@ public:
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::eunknown, void>)
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    static ntype _type;
+    ntype _type;
 };
 
 template <typename T>
@@ -42,10 +42,10 @@ public:
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::eunknown, T>)
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    static ntype _type;
+    ntype _type;
 };
 
 template <typename T>
@@ -60,10 +60,10 @@ public:
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::enumeric, T>)
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    static nnumeric _type;
+    nnumeric _type;
 };
 
 template <typename T>
@@ -81,10 +81,10 @@ public:
     NTR_INLINE nfactory& remove(std::string_view name);
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    static nenum _type;
+    nenum _type;
 };
 
 template <typename T>
@@ -116,10 +116,10 @@ public:
     NTR_INLINE nfactory& remove(std::string_view name);
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    static nclass _type;
+    nclass _type;
 };
 
 template <typename T>
@@ -134,10 +134,10 @@ public:
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::epointer, T>)
 
 private:
-    nfactory() = default;
+    nfactory();
     ~nfactory() = default;
 
-    static npointer _type;
+    npointer _type;
 };
 
 } // namespace ntr
