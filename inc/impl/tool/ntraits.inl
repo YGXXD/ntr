@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "../type/ntype.hpp"
-#include "../type/nnumeric.hpp"
+#include "../../tool/ntraits.hpp"
 
 namespace ntr
 {
@@ -77,8 +76,7 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
 {
     static_assert(is_etype_numeric<T>(),
                   "make_enumeric : template parameter \"T\" is not valid numeric type");
-    return std::apply(
-        [](auto&&... args)
+    return std::apply([](auto&&... args)
     {
         size_t index = 0;
         size_t result = static_cast<size_t>(-1);
@@ -86,8 +84,7 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
                                                           : (++index, 0)),
          ...);
         return static_cast<nnumeric::enumeric>(result);
-    },
-        nnumeric::numeric_types {});
+    }, nnumeric::numeric_types {});
 }
 
 template <typename T>
@@ -100,44 +97,36 @@ NTR_INLINE constexpr uint8_t make_pointer_depth()
 }
 
 template <typename T>
-struct ntype_ops_traits
+ntype_ops_traits<T>::ntype_ops_traits() : ops()
 {
-private:
-    ntype_ops_traits() : ops()
+    if constexpr (std::is_default_constructible_v<T>)
     {
-        if constexpr (std::is_default_constructible_v<T>)
+        ops.default_construct = [](void* self_data) -> void
         {
-            ops.default_construct = [](void* self_data) -> void
-            {
-                new (self_data) T();
-            };
-        }
-        if constexpr (std::is_copy_constructible_v<T>)
-        {
-            ops.copy_construct = [](void* self_data, const void* const other_data) -> void
-            {
-                new (self_data) T(*static_cast<const T*>(other_data));
-            };
-        }
-        if constexpr (std::is_move_constructible_v<T>)
-        {
-            ops.move_construct = [](void* self_data, void* other_data) -> void
-            {
-                new (self_data) T(std::move(*static_cast<T*>(other_data)));
-            };
-        }
-        if constexpr (std::is_destructible_v<T>)
-        {
-            ops.destruct = [](void* self_data) -> void
-            {
-                static_cast<T*>(self_data)->~T();
-            };
-        }
+            new (self_data) T();
+        };
     }
-
-public:
-    NTR_SINGLETON_IMPL(ntype_ops_traits<T>)
-    ntype::operations ops;
-};
+    if constexpr (std::is_copy_constructible_v<T>)
+    {
+        ops.copy_construct = [](void* self_data, const void* const other_data) -> void
+        {
+            new (self_data) T(*static_cast<const T*>(other_data));
+        };
+    }
+    if constexpr (std::is_move_constructible_v<T>)
+    {
+        ops.move_construct = [](void* self_data, void* other_data) -> void
+        {
+            new (self_data) T(std::move(*static_cast<T*>(other_data)));
+        };
+    }
+    if constexpr (std::is_destructible_v<T>)
+    {
+        ops.destruct = [](void* self_data) -> void
+        {
+            static_cast<T*>(self_data)->~T();
+        };
+    }
+}
 
 } // namespace ntr

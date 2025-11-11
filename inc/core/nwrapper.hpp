@@ -19,11 +19,11 @@ public:
               typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, nwrapper>>>
     nwrapper(T&& value);
     nwrapper(const class ntype* type, const void* data);
-    nwrapper(const nwrapper& other) = default;
-    nwrapper(nwrapper&& other) = default;
-    nwrapper& operator=(const nwrapper& other) = default;
-    nwrapper& operator=(nwrapper&& other) = default;
-    ~nwrapper() = default;
+    nwrapper(const nwrapper& other);
+    nwrapper(nwrapper&& other);
+    nwrapper& operator=(const nwrapper& other);
+    nwrapper& operator=(nwrapper&& other);
+    ~nwrapper();
 
     template <typename T>
     NTR_INLINE T& ref() const;

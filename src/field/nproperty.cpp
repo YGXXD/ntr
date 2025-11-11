@@ -20,6 +20,8 @@ nproperty::nproperty(const ntype* parent_type, std::string_view name,
             "nproperty::nproperty : parent type is not class type");
 }
 
+nproperty::~nproperty() = default;
+
 nobject nproperty::get(const nwrapper& instance) const
 {
     return _getter(instance);

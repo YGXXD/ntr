@@ -8,6 +8,7 @@
 #pragma once
 
 #include "nfactory.hpp"
+#include "../tool/ntable.hpp"
 
 namespace ntr
 {
@@ -34,7 +35,7 @@ private:
     nregistrar() = default;
     ~nregistrar() = default;
 
-    std::unordered_map<std::string_view, const ntype*> _type_map;
+    nhash_map<std::string_view, const ntype*> _type_map;
 };
 
 } // namespace ntr

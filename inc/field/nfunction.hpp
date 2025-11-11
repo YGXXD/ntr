@@ -25,6 +25,8 @@ public:
     template <typename Ret, typename ClassT, typename... Args>
     nfunction(const ntype* parent_type, std::string_view name,
               Ret (ClassT::*fun)(Args...) const);
+    NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nfunction)
+    ~nfunction();
 
     nobject call(const std::vector<nwrapper>& arg_arr) const;
 
@@ -48,3 +50,5 @@ private:
 };
 
 } // namespace ntr
+
+#include "../impl/field/nfunction.inl"

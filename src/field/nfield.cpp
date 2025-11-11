@@ -15,4 +15,6 @@ nfield::nfield(const class ntype* parent_type, efield kind, std::string_view nam
 {
 }
 
+nfield::~nfield() = default;
+
 } // namespace ntr

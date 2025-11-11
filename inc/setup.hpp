@@ -14,15 +14,21 @@
         return _instance;                     \
     }
 
+#define NTR_DELETE_COPY_MOVE_CONSTRUCTORS(class_name)  \
+    class_name(const class_name&) = delete;            \
+    class_name(class_name&&) = delete;                 \
+    class_name& operator=(const class_name&) = delete; \
+    class_name& operator=(class_name&&) = delete;
+
 #include <type_traits>
 #include <cstdint>
 #include <cstddef>
 #include <stdexcept>
 #include <memory>
+#include <cstring>
 #include <string>
 #include <string_view>
 #include <array>
-#include <unordered_map>
 #include <functional>
 #include <utility>
 #include <algorithm>

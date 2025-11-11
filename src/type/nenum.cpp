@@ -6,6 +6,7 @@
 //
 
 #include "type/nenum.hpp"
+#include "field/neitem.hpp"
 
 namespace ntr
 {
@@ -53,10 +54,12 @@ void nenum::set_value(nobject& enum_, enum_integer_type value)
         break;
     }
 }
-nenum::nenum(std::string_view name, uint32_t size, uint32_t align, operations* ops)
+nenum::nenum(uint32_t size, uint32_t align, operations* ops, std::string_view name)
     : ntype(etype::eenum, size, align, ops, name)
 {
 }
+
+nenum::~nenum() = default;
 
 void nenum::add_eitem(std::unique_ptr<neitem>&& item)
 {
@@ -70,38 +73,36 @@ void nenum::add_eitem(std::unique_ptr<neitem>&& item)
 
 void nenum::remove_eitem(std::string_view name)
 {
-    if (_str_field_map.find(name) != _str_field_map.end())
+    auto it = _str_field_map.find(name);
+    if (it != _str_field_map.end())
     {
-        auto item = _str_field_map.at(name);
-        _str_field_map.erase(item->name());
-        _enum_field_map.erase(item->value());
-        _items.erase(std::find_if(_items.begin(), _items.end(),
-                                  [item](const auto& it) { return it.get() == item; }));
+        _str_field_map.remove(it->second->name());
+        _enum_field_map.remove(it->second->value());
+        _items.erase(std::find_if(_items.begin(), _items.end(), [&it](const auto& item)
+        { return item.get() == it->second; }));
     }
 }
 
 const neitem* nenum::get_eitem(enum_integer_type value) const
 {
-    if (_enum_field_map.find(value) == _enum_field_map.end())
-        return nullptr;
-    return _enum_field_map.at(value);
+    auto it = _enum_field_map.find(value);
+    return it == _enum_field_map.end() ? nullptr : it->second;
 }
 
 const neitem* nenum::get_eitem(std::string_view name) const
 {
-    if (_str_field_map.find(name) == _str_field_map.end())
-        return nullptr;
-    return _str_field_map.at(std::string_view(name));
+    auto it = _str_field_map.find(name);
+    return it == _str_field_map.end() ? nullptr : it->second;
 }
 
 bool nenum::has_eitem(std::string_view name) const
 {
-    return _str_field_map.find(name) != _str_field_map.end();
+    return _str_field_map.contains(name);
 }
 
 bool nenum::has_eitem(enum_integer_type value) const
 {
-    return _enum_field_map.find(value) != _enum_field_map.end();
+    return _enum_field_map.contains(value);
 }
 
 } // namespace ntr

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "../field/neitem.hpp"
+#include "../tool/ntable.hpp"
 
 namespace ntr
 {
@@ -21,13 +21,11 @@ public:
     static enum_integer_type get_value(const class nobject& enum_);
     static void set_value(nobject& enum_, enum_integer_type value);
 
-    nenum(std::string_view name, uint32_t size, uint32_t align, operations* ops);
-    nenum(const nenum&) = delete;
-    nenum(nenum&&) = delete;
-    nenum& operator=(const nenum&) = delete;
-    nenum& operator=(nenum&&) = delete;
+    nenum(uint32_t size, uint32_t align, operations* ops, std::string_view name);
+    NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nenum)
+    ~nenum();
 
-    void add_eitem(std::unique_ptr<neitem>&& item);
+    void add_eitem(std::unique_ptr<class neitem>&& item);
     void remove_eitem(std::string_view name);
 
     NTR_INLINE auto eitem_begin() const { return _items.begin(); }
@@ -39,8 +37,8 @@ public:
 
 private:
     std::vector<std::unique_ptr<neitem>> _items;
-    std::unordered_map<std::string_view, neitem*> _str_field_map;
-    std::unordered_map<enum_integer_type, neitem*> _enum_field_map;
+    nhash_map<std::string_view, neitem*> _str_field_map;
+    nhash_map<enum_integer_type, neitem*> _enum_field_map;
 };
 
 } // namespace ntr

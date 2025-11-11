@@ -7,7 +7,12 @@
 
 #pragma once
 
-#include "../type/ntraits.hpp"
+#include "../type/ntype.hpp"
+#include "../type/nnumeric.hpp"
+#include "../type/nenum.hpp"
+#include "../type/nclass.hpp"
+#include "../type/npointer.hpp"
+#include "../tool/ntraits.hpp"
 
 namespace ntr
 {
@@ -23,10 +28,10 @@ public:
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::eunknown, T>)
 
 private:
-    nfactory();
+    nfactory() = default;
     ~nfactory() = default;
 
-    std::unique_ptr<class ntype> _type;
+    static ntype _type;
 };
 
 template <typename T>
@@ -41,10 +46,10 @@ public:
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::enumeric, T>)
 
 private:
-    nfactory();
+    nfactory() = default;
     ~nfactory() = default;
 
-    std::unique_ptr<class nnumeric> _type;
+    static nnumeric _type;
 };
 
 template <typename T>
@@ -61,10 +66,10 @@ public:
     NTR_INLINE nfactory& remove(std::string_view name);
 
 private:
-    nfactory();
+    nfactory() = default;
     ~nfactory() = default;
 
-    std::unique_ptr<class nenum> _type;
+    static nenum _type;
 };
 
 template <typename T>
@@ -97,10 +102,10 @@ public:
     NTR_INLINE nfactory& remove(std::string_view name);
 
 private:
-    nfactory();
+    nfactory() = default;
     ~nfactory() = default;
 
-    std::unique_ptr<class nclass> _type;
+    static nclass _type;
 };
 
 template <typename T>
@@ -115,10 +120,10 @@ public:
     NTR_SINGLETON_IMPL(nfactory<ntype::etype::epointer, T>)
 
 private:
-    nfactory();
+    nfactory() = default;
     ~nfactory() = default;
 
-    std::unique_ptr<class npointer> _type;
+    static npointer _type;
 };
 
 } // namespace ntr
