@@ -17,16 +17,15 @@ namespace ntr
 {
 
 // ntype::etype::eunknown impl
+ntype nfactory<ntype::etype::eunknown, void>::_type(
+    ntype::etype::eunknown, 0, 0, &ntype_ops_traits<void>::instance().ops, "");
+
 template <typename T>
 ntype nfactory<ntype::etype::eunknown, T>::_type(ntype::etype::eunknown,
                                                  static_cast<uint32_t>(sizeof(T)),
                                                  static_cast<uint32_t>(alignof(T)),
                                                  &ntype_ops_traits<T>::instance().ops,
                                                  "");
-
-template <>
-ntype nfactory<ntype::etype::eunknown, void>::_type(
-    ntype::etype::eunknown, 0, 0, &ntype_ops_traits<void>::instance().ops, "");
 
 // ntype::etype::enumeric impl
 template <typename T>
