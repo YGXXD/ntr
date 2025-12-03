@@ -8,10 +8,6 @@
 #pragma once
 
 #include "core/nregistrar.hpp"
-#include "impl/core/nobject.inl"
-#include "impl/core/nwrapper.inl"
-#include "impl/core/nfactory.inl"
-#include "impl/core/nregistrar.inl"
 
 namespace ntr
 {

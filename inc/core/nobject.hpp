@@ -22,13 +22,6 @@ public:
         eref
     };
 
-    template <typename T>
-    static NTR_INLINE nobject make_obtain();
-    template <typename T>
-    static NTR_INLINE nobject make_obtain(T&& value);
-    template <typename T>
-    static NTR_INLINE nobject make_ref(T&& value);
-
     nobject(nobject&& other);
     nobject& operator=(nobject&& other);
     ~nobject();

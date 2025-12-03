@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../../core/nregistrar.hpp"
+#include "../../core/nfactory.hpp"
 
 namespace ntr
 {
@@ -36,3 +37,7 @@ NTR_INLINE auto& nregistrar::regist_type(std::string_view name)
 }
 
 } // namespace ntr
+
+#include "nwrapper.inl"
+#include "nobject.inl"
+#include "nfactory.inl"

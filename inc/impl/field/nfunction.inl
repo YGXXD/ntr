@@ -19,16 +19,17 @@ NTR_INLINE nobject nfunction::wrapper_call(OP op,
 {
     if constexpr (std::is_reference_v<Ret>)
     {
-        return nobject::make_ref(op((it++)->unwrap<Args>()...));
+        return nregistrar::get_type<Ret>()->new_reference(op((it++)->unwrap<Args>()...));
     }
     else if constexpr (!std::is_same_v<Ret, void>)
     {
-        return nobject::make_obtain(op((it++)->unwrap<Args>()...));
+        return nregistrar::get_type<Ret>()->new_instance_rv(
+            op((it++)->unwrap<Args>()...));
     }
     else
     {
         op((it++)->unwrap<Args>()...);
-        return nobject::make_obtain<void>();
+        return nregistrar::get_type<Ret>()->new_instance();
     }
 }
 
@@ -55,9 +56,9 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
-            [instance = arg_arr.begin(), fun](Args... args) -> Ret {
-            return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...);
-        }, arg_arr.begin() + 1);
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret
+        { return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...); },
+            arg_arr.begin() + 1);
     };
 }
 
@@ -73,9 +74,9 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
     _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
-            [instance = arg_arr.begin(), fun](Args... args) -> Ret {
-            return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...);
-        }, arg_arr.begin() + 1);
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret
+        { return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...); },
+            arg_arr.begin() + 1);
     };
 }
 
