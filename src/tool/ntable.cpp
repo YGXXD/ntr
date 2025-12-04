@@ -10,6 +10,11 @@
 namespace ntr
 {
 
+NTR_INLINE uint32_t ntable_growth_capacity(uint32_t capacity)
+{
+    return capacity == 0 ? 32 : capacity * 2;
+}
+
 ntable::ntable() : _size(0), _capacity(0), _buckets(nullptr)
 {
 }
@@ -109,7 +114,7 @@ uint32_t ntable::insert_force(void* item_data, size_t item_size, hash_function h
                               bool is_move)
 {
     if (_size >= _capacity * 4 / 5)
-        reserve((_capacity == 0 ? 32 : _capacity * 2), item_size, hash, get_key, ops);
+        reserve(ntable_growth_capacity(_capacity), item_size, hash, get_key, ops);
     uint32_t position = hash(get_key(item_data)) % _capacity;
     uint16_t distance = 0;
     constexpr size_t item_stack_buffer_max_size = 128;
