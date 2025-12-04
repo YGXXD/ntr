@@ -26,10 +26,8 @@ public:
     void add_base_type(const nclass* _base_type, ptrdiff_t offset);
     void remove_field(std::string_view name);
 
-    NTR_INLINE auto function_begin() const { return _functions.begin(); }
-    NTR_INLINE auto function_end() const { return _functions.end(); }
-    NTR_INLINE auto property_begin() const { return _properties.begin(); }
-    NTR_INLINE auto property_end() const { return _properties.end(); }
+    NTR_INLINE const auto& functions() const { return _functions; }
+    NTR_INLINE const auto& propertys() const { return _properties; }
     const nfunction* get_function(std::string_view name) const;
     const nproperty* get_property(std::string_view name) const;
     void* cast_to(const nclass* type, void* pointer) const;

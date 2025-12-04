@@ -27,12 +27,12 @@ public:
     template <typename T>
     NTR_INLINE auto& regist_type(std::string_view name);
 
-    const ntype* get_type(std::string_view name);
-    void regist_type(std::string_view name, ntype* type);
+    const ntype* get_type(std::string_view name) const;
 
 private:
     nregistrar() = default;
     ~nregistrar() = default;
+    void regist_type(std::string_view name, ntype* type);
 
     nhash_map<std::string_view, const ntype*> _type_map;
 };

@@ -28,11 +28,12 @@ public:
 
     NTR_INLINE const ntype* parent_type() const { return _parent_type; }
     NTR_INLINE efield kind() const { return _kind; }
-    NTR_INLINE std::string_view name() const { return _name; }
+    NTR_INLINE std::string_view name() const { return { _name, _name_size }; }
 
 private:
     efield _kind;
-    std::string _name;
+    uint16_t _name_size;
+    char* _name;
     const ntype* _parent_type;
 };
 

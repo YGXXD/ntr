@@ -20,13 +20,12 @@
     class_name& operator=(const class_name&) = delete; \
     class_name& operator=(class_name&&) = delete;
 
-#include <type_traits>
 #include <cstdint>
 #include <cstddef>
+#include <cstring>
+#include <type_traits>
 #include <stdexcept>
 #include <memory>
-#include <cstring>
-#include <string>
 #include <string_view>
 #include <array>
 #include <functional>

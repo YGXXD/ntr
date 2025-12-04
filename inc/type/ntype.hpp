@@ -44,7 +44,7 @@ public:
     NTR_INLINE uint32_t align() const { return _align; }
     NTR_INLINE uint32_t size() const { return _size; }
     NTR_INLINE const operations* ops() const { return _ops; }
-    NTR_INLINE std::string_view name() const { return _name; }
+    NTR_INLINE std::string_view name() const { return { _name, _name_size }; }
 
     NTR_INLINE bool is_unknown() const { return _kind == etype::eunknown; }
     NTR_INLINE bool is_numeric() const { return _kind == etype::enumeric; }
@@ -52,7 +52,6 @@ public:
     NTR_INLINE bool is_class() const { return _kind == etype::eclass; }
     NTR_INLINE bool is_pointer() const { return _kind == etype::epointer; }
 
-    void set_name(std::string_view name);
     const class nnumeric* as_numeric() const;
     const class nenum* as_enum() const;
     const class nclass* as_class() const;
@@ -64,12 +63,16 @@ public:
     nobject new_reference(const nwrapper& wrapper) const;
 
 private:
+    friend class nregistrar;
+    void regist(std::string_view name);
+
     etype _kind;
     bool _is_registered;
-    uint32_t _size;
-    uint32_t _align;
+    uint16_t _size;
+    uint16_t _align;
+    uint16_t _name_size;
+    char* _name;
     operations* _ops;
-    std::string _name;
 };
 
 } // namespace ntr
