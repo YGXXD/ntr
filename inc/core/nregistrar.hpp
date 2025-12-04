@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "nfactory.hpp"
 #include "../tool/ntable.hpp"
 
 namespace ntr
@@ -39,3 +38,5 @@ private:
 };
 
 } // namespace ntr
+
+#include "../impl/core/nregistrar.inl"

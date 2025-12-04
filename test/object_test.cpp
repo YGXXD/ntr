@@ -32,7 +32,7 @@ int main()
     {
         // test object
         int integer = 2048;
-        nobject obj = nobject::make_obtain(integer);
+        nobject obj = nregistrar::get_type<int>()->new_instance(integer);
         obj.as<int>() = 1024;
         NTR_TEST_ASSERT(obj.type() == nregistrar::get_type<int>());
         NTR_TEST_ASSERT(obj.kind() == nobject::eobject::eobtain);
@@ -46,7 +46,7 @@ int main()
         NTR_TEST_ASSERT(obj_new.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(obj_new.as<int>() == integer);
 
-        obj = nobject::make_ref(integer);
+        obj = nregistrar::get_type<int>()->new_reference(integer);
         obj.as<int>() = 1024;
         NTR_TEST_ASSERT(obj.type() == nregistrar::get_type<int>());
         NTR_TEST_ASSERT(obj.kind() == nobject::eobject::eref);
@@ -61,7 +61,7 @@ int main()
         NTR_TEST_ASSERT(obj.as<int>() == integer);
 
         kutori s_kutori {};
-        nobject kutori_obj = nobject::make_obtain(std::move(s_kutori));
+        nobject kutori_obj = nregistrar::get_type<kutori>()->new_instance_rv(s_kutori);
         NTR_TEST_ASSERT(s_kutori.get_value() == nullptr);
         NTR_TEST_ASSERT(kutori_obj.type() == nregistrar::get_type<kutori>());
         NTR_TEST_ASSERT(kutori_obj.kind() == nobject::eobject::eobtain);

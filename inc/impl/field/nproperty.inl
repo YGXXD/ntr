@@ -14,7 +14,7 @@ namespace ntr
 {
 
 template <typename T, typename ClassT>
-nproperty::nproperty(const ntype* parent_type, std::string_view name, T(ClassT::*member))
+nproperty::nproperty(const ntype* parent_type, std::string_view name, T(ClassT::* member))
     : nproperty(parent_type, name, nregistrar::get_type<T>())
 {
     if (parent_type != nregistrar::get_type<ClassT>())
@@ -22,7 +22,7 @@ nproperty::nproperty(const ntype* parent_type, std::string_view name, T(ClassT::
             "nproperty::nproperty : parent type is not property's class type");
     _getter = [member](const nwrapper& instance) -> nobject
     {
-        return nobject::make_ref(instance.cref<ClassT>().*member);
+        return nregistrar::get_type<T>()->new_reference(instance.cref<ClassT>().*member);
     };
     _setter = [member](const nwrapper& instance, const nwrapper& value)
     {
@@ -40,7 +40,8 @@ nproperty::nproperty(const ntype* parent_type, std::string_view name,
             "nproperty::nproperty : parent type is not property's class type");
     _getter = [getter](const nwrapper& instance) -> nobject
     {
-        return nobject::make_ref((instance.cref<ClassT>().*getter)());
+        return nregistrar::get_type<T>()->new_reference(
+            (instance.cref<ClassT>().*getter)());
     };
     _setter = [setter](const nwrapper& instance, const nwrapper& value)
     {
