@@ -37,73 +37,67 @@ int main()
     try
     {
         // test object
-        nhash_map<std::string, kutori> kutori_map;
+        nvector<kutori> kutori_vector;
         // operator[]
-        kutori_map["chen"] = kutori("duqiu");
-        kutori_map["chen"] = kutori("qiudu");
-        NTR_TEST_ASSERT(kutori_map.at("chen").get_name() == "qiudu");
-        // insert key value
-        kutori_map.insert("du", kutori("qiuchen"));
-        NTR_TEST_ASSERT(kutori_map.at("du").get_name() == "qiuchen");
-        kutori_map.insert("du", kutori("qiudu"));
-        NTR_TEST_ASSERT(kutori_map.at("du").get_name() == "qiuchen");
-        // insert pair
-        kutori_map.insert({ "chen", kutori("chenchen") });
-        NTR_TEST_ASSERT(kutori_map.at("chen").get_name() == "qiudu");
-        // size
-        NTR_TEST_ASSERT(kutori_map.size() == 2);
-        // remove
-        kutori_map.remove("du");
-        kutori_map.remove("chen");
-        NTR_TEST_ASSERT(kutori_map.empty());
-        NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
-                            kutori_move_construct ==
-                        kutori_destroy);
-        // clear
-        int curr_copy_construct = kutori_copy_construct;
-        kutori_map["nota"] = kutori("nota");
-        kutori_map["123"] = kutori("123");
-        kutori_map.insert({ "kfs", kutori("kfs") });
-        kutori_map.insert({ "ssp", kutori("ssp") });
-        kutori_map.clear();
-        NTR_TEST_ASSERT(curr_copy_construct == kutori_copy_construct);
-        NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
-                            kutori_move_construct ==
-                        kutori_destroy);
-
-        // hash conflict
-        nhash_map<int, kutori> kutori_imap;
-        kutori_imap[1] = kutori("1");
-        kutori_imap[2] = kutori("2");
-        kutori_imap[3] = kutori("3");
-        kutori_imap[33] = kutori("33");
-        kutori_imap[65] = kutori("65");
+        kutori_vector.push_back(kutori("qiudu"));
+        kutori_vector.push_back(kutori("chen"));
+        kutori_vector.insert(kutori("duqiu"), 1);
+        kutori_vector.insert(kutori("cqd cqd"), 2);
+        NTR_TEST_ASSERT(kutori_vector[1].get_name() == "duqiu");
+        NTR_TEST_ASSERT(kutori_vector[3].get_name() == "chen");
         // reserve
-        kutori_imap.reserve(65);
-        NTR_TEST_ASSERT(kutori_imap.size() == 5);
-        kutori_imap.clear();
+        kutori_vector.reserve(20);
+        NTR_TEST_ASSERT(kutori_vector.size() == 4);
+        int curr_copy_construct = kutori_copy_construct;
+        for (int i = 0; i < 20; i++)
+            kutori_vector.insert(kutori("kutori"), 0);
+        NTR_TEST_ASSERT(curr_copy_construct == kutori_copy_construct);
+        NTR_TEST_ASSERT(kutori_vector.size() == 24);
+        NTR_TEST_ASSERT(kutori_vector[0].get_name() == "kutori");
+        NTR_TEST_ASSERT(kutori_vector[10].get_name() == "kutori");
+        NTR_TEST_ASSERT(kutori_vector[19].get_name() == "kutori");
+        NTR_TEST_ASSERT(kutori_vector[20].get_name() == "qiudu");
+        // pop clear
+        for (int i = 0; i < 10; i++)
+            kutori_vector.pop_back();
+        NTR_TEST_ASSERT(kutori_vector.size() == 14);
+        kutori_vector.clear();
+        NTR_TEST_ASSERT(kutori_vector.empty());
         NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
                             kutori_move_construct ==
                         kutori_destroy);
+        // copy construct
+        kutori instance("copy kutori");
+        kutori_vector.push_back(instance);
+        kutori_vector.insert(instance, 0);
+        NTR_TEST_ASSERT(kutori_copy_construct == 2);
+        kutori_vector.clear();
+        NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
+                            kutori_move_construct ==
+                        kutori_destroy + 1);
 
         // performance test
         auto t1 = std::chrono::high_resolution_clock::now();
-        nhash_map<int, kutori> test1;
-        test1.reserve(10000);
-        for (int i = 0; i < 1000000; ++i)
+        nvector<kutori> test1;
+        test1.reserve(100);
+        for (int i = 0; i < 9000; ++i)
         {
             std::string key = std::to_string(i);
-            test1.insert({ i, kutori(key) });
+            test1.insert(kutori(key), 0);
         }
-        for (int i = 200000; i < 800000; ++i)
+        for (int i = 0; i < 10000; ++i)
         {
             std::string key = std::to_string(i);
-            test1.remove(i);
+            test1.push_back(kutori(key));
+        }
+        for (int i = 2000; i < 8000; ++i)
+        {
+            test1.remove(2000);
         }
         int v1 = 0;
-        for (auto& [key, value] : test1)
+        for (auto& value : test1)
         {
-            v1 += key;
+            v1 += 1;
         }
         std::cout << "Time: "
                   << std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -113,22 +107,26 @@ int main()
         std::cout << test1.size() << v1 << "\n";
 
         auto t2 = std::chrono::high_resolution_clock::now();
-        std::unordered_map<int, kutori> test2;
-        test2.reserve(10000);
-        for (int i = 0; i < 1000000; ++i)
+        std::vector<kutori> test2;
+        test2.reserve(100);
+        for (int i = 0; i < 9000; ++i)
         {
             std::string key = std::to_string(i);
-            test2.insert({ i, kutori(key) });
+            test2.insert(test2.begin(), kutori(key));
         }
-        for (int i = 200000; i < 800000; ++i)
+        for (int i = 0; i < 10000; ++i)
         {
             std::string key = std::to_string(i);
-            test2.erase(i);
+            test2.push_back(kutori(key));
+        }
+        for (int i = 2000; i < 8000; ++i)
+        {
+            test2.erase(test2.begin() + 2000);
         }
         int v2 = 0;
-        for (auto& [key, value] : test2)
+        for (auto& value : test1)
         {
-            v2 += key;
+            v2 += 1;
         }
         std::cout << "Time: "
                   << std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -136,6 +134,7 @@ int main()
                          .count()
                   << "ms\n";
         std::cout << test2.size() << v2 << "\n";
+
         return 0;
     }
     catch (const std::exception& e)
