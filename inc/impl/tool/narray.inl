@@ -19,7 +19,7 @@ array_iterator<T>::array_iterator(void* item) : _item(item) {};
 template <typename T>
 NTR_INLINE array_iterator<T>& array_iterator<T>::operator++()
 {
-    _item = static_cast<char*>(_item) + sizeof(T);
+    _item = static_cast<value_type*>(_item) + 1;
     return *this;
 }
 
@@ -29,6 +29,54 @@ NTR_INLINE array_iterator<T> array_iterator<T>::operator++(int)
     array_iterator temp = *this;
     ++*this;
     return temp;
+}
+
+template <typename T>
+NTR_INLINE array_iterator<T>& array_iterator<T>::operator--()
+{
+    _item = static_cast<value_type*>(_item) - 1;
+    return *this;
+}
+
+template <typename T>
+NTR_INLINE array_iterator<T> array_iterator<T>::operator--(int)
+{
+    array_iterator temp = *this;
+    --*this;
+    return temp;
+}
+
+template <typename T>
+NTR_INLINE array_iterator<T> array_iterator<T>::operator+(difference_type offset) const
+{
+    return array_iterator(static_cast<value_type*>(_item) + offset);
+}
+
+template <typename T>
+NTR_INLINE array_iterator<T>& array_iterator<T>::operator+=(difference_type offset)
+{
+    _item = static_cast<value_type*>(_item) + offset;
+    return *this;
+}
+
+template <typename T>
+NTR_INLINE array_iterator<T> array_iterator<T>::operator-(difference_type offset) const
+{
+    return array_iterator(static_cast<value_type*>(_item) - offset);
+}
+
+template <typename T>
+NTR_INLINE typename array_iterator<T>::difference_type
+array_iterator<T>::operator-(const array_iterator& other) const
+{
+    return static_cast<value_type*>(_item) - static_cast<value_type*>(other._item);
+}
+
+template <typename T>
+NTR_INLINE array_iterator<T>& array_iterator<T>::operator-=(difference_type offset)
+{
+    _item = static_cast<value_type*>(_item) - offset;
+    return *this;
 }
 
 template <typename T>
@@ -44,27 +92,15 @@ NTR_INLINE bool array_iterator<T>::operator!=(const array_iterator& other) const
 }
 
 template <typename T>
-NTR_INLINE T& array_iterator<T>::operator*()
+NTR_INLINE typename array_iterator<T>::reference array_iterator<T>::operator*() const
 {
     return *static_cast<T*>(_item);
 }
 
 template <typename T>
-NTR_INLINE const T& array_iterator<T>::operator*() const
-{
-    return *static_cast<const T*>(_item);
-}
-
-template <typename T>
-NTR_INLINE T* array_iterator<T>::operator->()
+NTR_INLINE typename array_iterator<T>::pointer array_iterator<T>::operator->() const
 {
     return static_cast<T*>(_item);
-}
-
-template <typename T>
-NTR_INLINE const T* array_iterator<T>::operator->() const
-{
-    return static_cast<const T*>(_item);
 }
 
 template <class Value>
@@ -173,7 +209,7 @@ NTR_INLINE Value& nvector<Value>::at(uint32_t index)
 {
     if (index >= _size)
         throw std::out_of_range("nvector<Value>::at : invalid index");
-    return *reinterpret_cast<Value*>(static_cast<char*>(_datas) + item_size * index);
+    return *(static_cast<Value*>(_datas) + index);
 }
 
 template <class Value>
@@ -181,21 +217,19 @@ NTR_INLINE const Value& nvector<Value>::at(uint32_t index) const
 {
     if (index >= _size)
         throw std::out_of_range("nvector<Value>::at : invalid index");
-    return *reinterpret_cast<const Value*>(static_cast<const char*>(_datas) +
-                                           item_size * index);
+    return *(static_cast<const Value*>(_datas) + index);
 }
 
 template <class Value>
 NTR_INLINE Value& nvector<Value>::operator[](uint32_t index)
 {
-    return *reinterpret_cast<Value*>(static_cast<char*>(_datas) + item_size * index);
+    return *(static_cast<Value*>(_datas) + index);
 }
 
 template <class Value>
 NTR_INLINE const Value& nvector<Value>::operator[](uint32_t index) const
 {
-    return *reinterpret_cast<const Value*>(static_cast<const char*>(_datas) +
-                                           item_size * index);
+    return *(static_cast<const Value*>(_datas) + index);
 }
 
 } // namespace ntr

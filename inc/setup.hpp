@@ -26,8 +26,9 @@
 #include <stdexcept>
 #include <array>
 #include <initializer_list>
-#include <memory>
+#include <string>
 #include <string_view>
+#include <memory>
 #include <utility>
 #include <algorithm>
 #include <functional>

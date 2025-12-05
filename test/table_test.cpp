@@ -6,6 +6,7 @@
 //
 
 #include "ntr_test.hpp"
+#include <chrono>
 
 using namespace ntr;
 
@@ -36,7 +37,27 @@ int main()
 {
     try
     {
-        // test object
+        // test hash set
+        nhash_set<int> number_set;
+        number_set.insert(1);
+        number_set.insert(2);
+        number_set.insert(3);
+        number_set.insert(1);
+        NTR_TEST_ASSERT(number_set.size() == 3);
+        NTR_TEST_ASSERT(number_set.find(1) != number_set.end());
+        NTR_TEST_ASSERT(number_set.find(4) == number_set.end());
+        number_set.remove(1);
+        NTR_TEST_ASSERT(number_set.size() == 2);
+        NTR_TEST_ASSERT(number_set.remove(3));
+        number_set.insert(1);
+        number_set.insert(2);
+        number_set.insert(3);
+        number_set.insert(33);
+        number_set.insert(65);
+        for (auto& value : number_set)
+            NTR_TEST_ASSERT(number_set.find(value) != number_set.end());
+
+        // test hash map
         nhash_map<std::string, kutori> kutori_map;
         // operator[]
         kutori_map["chen"] = kutori("duqiu");

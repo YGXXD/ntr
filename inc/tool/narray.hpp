@@ -49,15 +49,26 @@ protected:
 template <class T>
 struct array_iterator
 {
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T*;
+    using reference = T&;
+
     array_iterator(void* _item);
     NTR_INLINE array_iterator& operator++();
     NTR_INLINE array_iterator operator++(int);
+    NTR_INLINE array_iterator& operator--();
+    NTR_INLINE array_iterator operator--(int);
+    NTR_INLINE array_iterator operator+(difference_type offset) const;
+    NTR_INLINE array_iterator& operator+=(difference_type offset);
+    NTR_INLINE array_iterator operator-(difference_type offset) const;
+    NTR_INLINE array_iterator& operator-=(difference_type offset);
+    NTR_INLINE difference_type operator-(const array_iterator& other) const;
     NTR_INLINE bool operator==(const array_iterator& other) const;
     NTR_INLINE bool operator!=(const array_iterator& other) const;
-    NTR_INLINE T& operator*();
-    NTR_INLINE const T& operator*() const;
-    NTR_INLINE T* operator->();
-    NTR_INLINE const T* operator->() const;
+    NTR_INLINE reference operator*() const;
+    NTR_INLINE pointer operator->() const;
 
 private:
     void* _item;
