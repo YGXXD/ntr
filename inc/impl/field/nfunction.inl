@@ -14,8 +14,7 @@ namespace ntr
 {
 
 template <typename Ret, typename... Args, typename OP>
-NTR_INLINE nobject nfunction::wrapper_call(OP op,
-                                           std::vector<nwrapper>::const_iterator it)
+NTR_INLINE nobject nfunction::wrapper_call(OP op, nvector<nwrapper>::iterator it)
 {
     if constexpr (std::is_reference_v<Ret>)
     {
@@ -38,7 +37,7 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name, Ret (*fun)
     : nfunction(parent_type, name, true)
 {
     init_function_types<Ret, Args...>();
-    _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
+    _function = [fun](const nvector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(fun, arg_arr.begin());
     };
@@ -53,12 +52,12 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
         throw std::invalid_argument(
             "nfunction::nfunction : parent type is not function's class type");
     init_function_types<Ret, ClassT&, Args...>();
-    _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
+    _function = [fun](const nvector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
             [instance = arg_arr.begin(), fun](Args... args) -> Ret
         { return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...); },
-            arg_arr.begin() + 1);
+            ++arg_arr.begin());
     };
 }
 
@@ -71,12 +70,12 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name,
         throw std::invalid_argument(
             "nfunction::nfunction : parent type is not function's class type");
     init_function_types<Ret, const ClassT&, Args...>();
-    _function = [fun](const std::vector<nwrapper>& arg_arr) -> nobject
+    _function = [fun](const nvector<nwrapper>& arg_arr) -> nobject
     {
         return wrapper_call<Ret, Args...>(
             [instance = arg_arr.begin(), fun](Args... args) -> Ret
         { return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...); },
-            arg_arr.begin() + 1);
+            ++arg_arr.begin());
     };
 }
 

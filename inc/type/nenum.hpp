@@ -9,6 +9,7 @@
 
 #include "ntype.hpp"
 #include "../tool/ntable.hpp"
+#include "../tool/narray.hpp"
 #include "../tool/ntraits.hpp"
 
 namespace ntr
@@ -34,7 +35,7 @@ public:
     bool has_eitem(enum_integer_type value) const;
 
 private:
-    std::vector<std::unique_ptr<neitem>> _eitems;
+    nvector<std::unique_ptr<neitem>> _eitems;
     nhash_map<std::string_view, neitem*> _str_field_map;
     nhash_map<enum_integer_type, neitem*> _enum_field_map;
 };

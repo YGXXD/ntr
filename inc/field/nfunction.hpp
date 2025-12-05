@@ -8,6 +8,7 @@
 #pragma once
 
 #include "nfield.hpp"
+#include "../tool/narray.hpp"
 #include "../core/nobject.hpp"
 
 namespace ntr
@@ -28,7 +29,7 @@ public:
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nfunction)
     ~nfunction();
 
-    nobject call(const std::vector<nwrapper>& arg_arr) const;
+    nobject call(const nvector<nwrapper>& arg_arr) const;
 
     const class nclass* class_type() const;
     NTR_INLINE bool is_static() const { return _is_static; }
@@ -37,16 +38,15 @@ public:
 
 private:
     template <typename Ret, typename... Args, typename OP>
-    static NTR_INLINE nobject wrapper_call(OP op,
-                                           std::vector<nwrapper>::const_iterator it);
+    static NTR_INLINE nobject wrapper_call(OP op, nvector<nwrapper>::iterator it);
 
     template <typename Ret, typename... Args>
     NTR_INLINE void init_function_types();
 
     bool _is_static;
     const ntype* _return_type;
-    std::vector<const ntype*> _argument_types;
-    std::function<nobject(const std::vector<nwrapper>&)> _function;
+    nvector<const ntype*> _argument_types;
+    std::function<nobject(const nvector<nwrapper>&)> _function;
 };
 
 } // namespace ntr

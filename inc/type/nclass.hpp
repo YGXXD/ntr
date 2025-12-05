@@ -9,6 +9,7 @@
 
 #include "ntype.hpp"
 #include "../tool/ntable.hpp"
+#include "../tool/narray.hpp"
 #include "../core/nobject.hpp"
 
 namespace ntr
@@ -35,7 +36,7 @@ public:
     bool has_function(std::string_view name) const;
     bool has_property(std::string_view name) const;
 
-    nobject call(std::string_view name, const std::vector<nwrapper>& args) const;
+    nobject call(std::string_view name, const nvector<nwrapper>& args) const;
     nobject get(std::string_view name, const nwrapper& instance) const;
     void set(std::string_view name, const nwrapper& instance,
              const nwrapper& value) const;
@@ -43,9 +44,9 @@ public:
 private:
     bool check_base_type(const nclass* type, ptrdiff_t* out_offset) const;
 
-    std::vector<std::pair<const nclass*, ptrdiff_t>> _base_type_pairs;
-    std::vector<std::unique_ptr<nfunction>> _functions;
-    std::vector<std::unique_ptr<nproperty>> _properties;
+    nvector<std::pair<const nclass*, ptrdiff_t>> _base_type_pairs;
+    nvector<std::unique_ptr<nfunction>> _functions;
+    nvector<std::unique_ptr<nproperty>> _properties;
     nhash_map<std::string_view, std::pair<nfunction*, nproperty*>> _field_map;
 };
 

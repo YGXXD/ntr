@@ -23,14 +23,15 @@
 #include <cstdint>
 #include <cstddef>
 #include <cstring>
-#include <type_traits>
 #include <stdexcept>
+#include <array>
+#include <initializer_list>
 #include <memory>
 #include <string_view>
-#include <array>
-#include <functional>
 #include <utility>
 #include <algorithm>
+#include <functional>
+#include <type_traits>
 
 #if defined(_WIN32)
 #    define _ntr_align_alloc(size, alignment) \

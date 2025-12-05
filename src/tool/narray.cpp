@@ -122,7 +122,7 @@ void narray::insert(void* item_data, size_t item_size, uint32_t index,
                 ops->destruct(item);
             }
         }
-        void* insert_item = static_cast<char*>(_datas) + _size * item_size;
+        void* insert_item = static_cast<char*>(_datas) + index * item_size;
         if (is_move)
             ops->move_construct(insert_item, item_data);
         else

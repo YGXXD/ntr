@@ -51,12 +51,12 @@ void nclass::remove_field(std::string_view name)
     if (it != _field_map.end())
     {
         if (it->second.first != nullptr)
-            _functions.erase(std::find_if(_functions.begin(), _functions.end(),
-                                          [&it](const auto& function)
+            _functions.remove(std::find_if(_functions.begin(), _functions.end(),
+                                           [&it](const auto& function)
             { return it->second.first == function.get(); }));
         else
-            _properties.erase(std::find_if(_properties.begin(), _properties.end(),
-                                           [&it](const auto& property)
+            _properties.remove(std::find_if(_properties.begin(), _properties.end(),
+                                            [&it](const auto& property)
             { return it->second.second == property.get(); }));
         _field_map.remove(it);
     }
@@ -128,7 +128,7 @@ bool nclass::has_property(std::string_view name) const
     return field_it->second.second != nullptr;
 }
 
-nobject nclass::call(std::string_view name, const std::vector<nwrapper>& args) const
+nobject nclass::call(std::string_view name, const nvector<nwrapper>& args) const
 {
     return get_function(name)->call(args);
 }

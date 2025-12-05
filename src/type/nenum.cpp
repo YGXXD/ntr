@@ -78,7 +78,8 @@ void nenum::remove_eitem(std::string_view name)
     {
         _str_field_map.remove(it->second->name());
         _enum_field_map.remove(it->second->value());
-        _eitems.erase(std::find_if(_eitems.begin(), _eitems.end(), [&it](const auto& item)
+        _eitems.remove(std::find_if(_eitems.begin(), _eitems.end(),
+                                    [&it](const auto& item)
         { return item.get() == it->second; }));
     }
 }
