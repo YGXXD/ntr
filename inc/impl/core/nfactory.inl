@@ -134,7 +134,7 @@ template <typename T>
 nfactory<ntype::etype::epointer, T>::nfactory()
     : _type(make_pointer_depth<T>(), std::is_const_v<std::remove_pointer_t<T>>,
             nregistrar::get_type<std::remove_pointer_t<T>>(),
-            &ntype_ops_traits<void*>::instance().ops, "")
+            &ntype_ops_traits<T>::instance().ops, "")
 {
 }
 

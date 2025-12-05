@@ -51,6 +51,30 @@ public:
     ntype::operations ops;
 };
 
+template <typename T>
+struct ntype_ops_traits<T*>
+{
+private:
+    ntype_ops_traits();
+    ~ntype_ops_traits() = default;
+
+public:
+    NTR_SINGLETON_IMPL(ntype_ops_traits<T*>)
+    ntype::operations& ops;
+};
+
+template <>
+struct NTR_API ntype_ops_traits<void*>
+{
+private:
+    ntype_ops_traits();
+    ~ntype_ops_traits() = default;
+
+public:
+    NTR_SINGLETON_IMPL(ntype_ops_traits<void*>)
+    ntype::operations ops;
+};
+
 } // namespace ntr
 
 #include "../impl/tool/ntraits.inl"
