@@ -70,78 +70,138 @@ NTR_INLINE bool table_iterator<T>::operator!=(const table_iterator& other) const
 }
 
 template <typename T>
-NTR_INLINE T& table_iterator<T>::operator*()
+NTR_INLINE typename table_iterator<T>::reference table_iterator<T>::operator*() const
 {
     return *static_cast<T*>(get_item(_bucket));
 }
 
 template <typename T>
-NTR_INLINE const T& table_iterator<T>::operator*() const
-{
-    return *static_cast<const T*>(get_item(_bucket));
-}
-
-template <typename T>
-NTR_INLINE T* table_iterator<T>::operator->()
+NTR_INLINE typename table_iterator<T>::pointer table_iterator<T>::operator->() const
 {
     return static_cast<T*>(get_item(_bucket));
 }
 
-template <typename T>
-NTR_INLINE const T* table_iterator<T>::operator->() const
-{
-    return static_cast<const T*>(get_item(_bucket));
-}
-
-template <class Key, class Value, class Hash>
-nhash_map<Key, Value, Hash>::nhash_map() : ntable()
+template <class TableTraits, class Hash>
+nhash_table<TableTraits, Hash>::nhash_table() : ntable()
 {
 }
 
-template <class Key, class Value, class Hash>
-nhash_map<Key, Value, Hash>::nhash_map(const nhash_map& other)
+template <class TableTraits, class Hash>
+nhash_table<TableTraits, Hash>::nhash_table(const nhash_table& other)
 {
     copy_init(other, item_size, &ntype_ops_traits<item_type>::instance().ops);
 }
 
-template <class Key, class Value, class Hash>
-nhash_map<Key, Value, Hash>::nhash_map(nhash_map&& other)
+template <class TableTraits, class Hash>
+nhash_table<TableTraits, Hash>::nhash_table(nhash_table&& other)
 {
     move_init(std::move(other));
 }
 
-template <class Key, class Value, class Hash>
-nhash_map<Key, Value, Hash>::~nhash_map()
+template <class TableTraits, class Hash>
+nhash_table<TableTraits, Hash>::~nhash_table()
 {
     destruct(item_size, &ntype_ops_traits<item_type>::instance().ops);
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE void nhash_map<Key, Value, Hash>::reserve(uint32_t new_capacity)
+template <class TableTraits, class Hash>
+NTR_INLINE void nhash_table<TableTraits, Hash>::reserve(uint32_t new_capacity)
 {
     ntable::reserve(new_capacity, item_size, hash, get_key,
                     &ntype_ops_traits<item_type>::instance().ops);
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const item_type& item)
+template <class TableTraits, class Hash>
+NTR_INLINE void nhash_table<TableTraits, Hash>::insert(const item_type& item)
 {
     ntable::insert(const_cast<void*>(&item), item_size, hash, get_key, key_equal,
                    &ntype_ops_traits<item_type>::instance().ops, false);
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE void nhash_map<Key, Value, Hash>::insert(item_type&& item)
+template <class TableTraits, class Hash>
+NTR_INLINE void nhash_table<TableTraits, Hash>::insert(item_type&& item)
 {
     ntable::insert(&item, item_size, hash, get_key, key_equal,
                    &ntype_ops_traits<item_type>::instance().ops, true);
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, const Value& value)
+template <class TableTraits, class Hash>
+NTR_INLINE bool nhash_table<TableTraits, Hash>::remove(const key_type& key)
 {
-    uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
-                                              get_key, key_equal);
+    return ntable::remove(const_cast<key_type*>(&key), item_size, hash, get_key,
+                          key_equal, &ntype_ops_traits<item_type>::instance().ops);
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE bool nhash_table<TableTraits, Hash>::remove(key_type&& key)
+{
+    return ntable::remove(&key, item_size, hash, get_key, key_equal,
+                          &ntype_ops_traits<item_type>::instance().ops);
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE bool nhash_table<TableTraits, Hash>::remove(const iterator& it)
+{
+    return ntable::remove(const_cast<key_type*>(&it->first), item_size, hash, get_key,
+                          key_equal, &ntype_ops_traits<item_type>::instance().ops);
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE bool nhash_table<TableTraits, Hash>::contains(const key_type& key) const
+{
+    return ntable::contains(const_cast<key_type*>(&key), item_size, hash, get_key,
+                            key_equal);
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE bool nhash_table<TableTraits, Hash>::contains(key_type&& key) const
+{
+    return ntable::contains(&key, item_size, hash, get_key, key_equal);
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE void nhash_table<TableTraits, Hash>::clear()
+{
+    return ntable::clear(item_size, &ntype_ops_traits<item_type>::instance().ops);
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE typename nhash_table<TableTraits, Hash>::iterator
+nhash_table<TableTraits, Hash>::find(const key_type& key) const
+{
+    return iterator(
+        ntable::find(const_cast<key_type*>(&key), item_size, hash, get_key, key_equal),
+        ntable::end(item_size));
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE typename nhash_table<TableTraits, Hash>::iterator
+nhash_table<TableTraits, Hash>::find(key_type&& key) const
+{
+    return iterator(ntable::find(&key, item_size, hash, get_key, key_equal),
+                    ntable::end(item_size));
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE typename nhash_table<TableTraits, Hash>::iterator
+nhash_table<TableTraits, Hash>::begin() const
+{
+    return iterator(ntable::begin(item_size), ntable::end(item_size));
+}
+
+template <class TableTraits, class Hash>
+NTR_INLINE typename nhash_table<TableTraits, Hash>::iterator
+nhash_table<TableTraits, Hash>::end() const
+{
+    return iterator(ntable::end(item_size), ntable::end(item_size));
+}
+
+template <class Key, class Value, class Hash>
+NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const key_type& key,
+                                                    const value_type& value)
+{
+    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
+                                              hash, get_key, key_equal);
     if (position == _capacity)
     {
         item_type item = { key, value };
@@ -151,10 +211,11 @@ NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, const Value&
 }
 
 template <class Key, class Value, class Hash>
-NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, Value&& value)
+NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const key_type& key,
+                                                    value_type&& value)
 {
-    uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
-                                              get_key, key_equal);
+    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
+                                              hash, get_key, key_equal);
     if (position == _capacity)
     {
         item_type item = { key, std::move(value) };
@@ -164,80 +225,11 @@ NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const Key& key, Value&& valu
 }
 
 template <class Key, class Value, class Hash>
-NTR_INLINE bool nhash_map<Key, Value, Hash>::remove(const Key& key)
+NTR_INLINE typename nhash_map<Key, Value, Hash>::value_type&
+nhash_map<Key, Value, Hash>::at(const key_type& key)
 {
-    return ntable::remove(const_cast<Key*>(&key), item_size, hash, get_key, key_equal,
-                          &ntype_ops_traits<item_type>::instance().ops);
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE bool nhash_map<Key, Value, Hash>::remove(Key&& key)
-{
-    return ntable::remove(&key, item_size, hash, get_key, key_equal,
-                          &ntype_ops_traits<item_type>::instance().ops);
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE bool nhash_map<Key, Value, Hash>::remove(const iterator& it)
-{
-    return ntable::remove(const_cast<Key*>(&it->first), item_size, hash, get_key,
-                          key_equal, &ntype_ops_traits<item_type>::instance().ops);
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE bool nhash_map<Key, Value, Hash>::contains(const Key& key) const
-{
-    return ntable::contains(const_cast<Key*>(&key), item_size, hash, get_key, key_equal);
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE bool nhash_map<Key, Value, Hash>::contains(Key&& key) const
-{
-    return ntable::contains(&key, item_size, hash, get_key, key_equal);
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE void nhash_map<Key, Value, Hash>::clear()
-{
-    return ntable::clear(item_size, &ntype_ops_traits<item_type>::instance().ops);
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
-nhash_map<Key, Value, Hash>::find(const Key& key) const
-{
-    return iterator(
-        ntable::find(const_cast<Key*>(&key), item_size, hash, get_key, key_equal),
-        ntable::end(item_size));
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
-nhash_map<Key, Value, Hash>::find(Key&& key) const
-{
-    return iterator(ntable::find(&key, item_size, hash, get_key, key_equal),
-                    ntable::end(item_size));
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
-nhash_map<Key, Value, Hash>::begin() const
-{
-    return iterator(ntable::begin(item_size), ntable::end(item_size));
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE typename nhash_map<Key, Value, Hash>::iterator
-nhash_map<Key, Value, Hash>::end() const
-{
-    return iterator(ntable::end(item_size), ntable::end(item_size));
-}
-
-template <class Key, class Value, class Hash>
-NTR_INLINE Value& nhash_map<Key, Value, Hash>::at(const Key& key)
-{
-    uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
-                                              get_key, key_equal);
+    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
+                                              hash, get_key, key_equal);
     if (position == _capacity)
         throw std::out_of_range("nhash_map<Key, Value, Hash>::at : invalid key");
     return static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)))
@@ -245,10 +237,11 @@ NTR_INLINE Value& nhash_map<Key, Value, Hash>::at(const Key& key)
 }
 
 template <class Key, class Value, class Hash>
-NTR_INLINE const Value& nhash_map<Key, Value, Hash>::at(const Key& key) const
+NTR_INLINE const typename nhash_map<Key, Value, Hash>::value_type&
+nhash_map<Key, Value, Hash>::at(const key_type& key) const
 {
-    uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
-                                              get_key, key_equal);
+    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
+                                              hash, get_key, key_equal);
     if (position == _capacity)
         throw std::out_of_range("nhash_map<Key, Value, Hash>::at : invalid key");
     return static_cast<const item_type*>(
@@ -257,10 +250,11 @@ NTR_INLINE const Value& nhash_map<Key, Value, Hash>::at(const Key& key) const
 }
 
 template <class Key, class Value, class Hash>
-NTR_INLINE Value& nhash_map<Key, Value, Hash>::operator[](const Key& key)
+NTR_INLINE typename nhash_map<Key, Value, Hash>::value_type&
+nhash_map<Key, Value, Hash>::operator[](const key_type& key)
 {
-    uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
-                                              get_key, key_equal);
+    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
+                                              hash, get_key, key_equal);
     if (position == _capacity)
     {
         item_type item = { key, Value() };
@@ -273,10 +267,11 @@ NTR_INLINE Value& nhash_map<Key, Value, Hash>::operator[](const Key& key)
 }
 
 template <class Key, class Value, class Hash>
-NTR_INLINE const Value& nhash_map<Key, Value, Hash>::operator[](const Key& key) const
+NTR_INLINE const typename nhash_map<Key, Value, Hash>::value_type&
+nhash_map<Key, Value, Hash>::operator[](const key_type& key) const
 {
-    uint32_t position = ntable::find_position(const_cast<Key*>(&key), item_size, hash,
-                                              get_key, key_equal);
+    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
+                                              hash, get_key, key_equal);
     if (position == _capacity)
     {
         item_type item = { key, Value() };

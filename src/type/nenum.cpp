@@ -11,7 +11,7 @@
 namespace ntr
 {
 
-nenum::enum_integer_type nenum::get_value(const nobject& enum_)
+enum_integer_type nenum::get_value(const nobject& enum_)
 {
     if (!enum_.type()->is_enum())
         throw std::invalid_argument("nenum::get_value : enum_'s type is not enum type");
@@ -67,7 +67,7 @@ void nenum::add_eitem(std::unique_ptr<neitem>&& item)
     {
         _str_field_map.insert({ item->name(), item.get() });
         _enum_field_map.insert({ item->value(), item.get() });
-        _items.push_back(std::move(item));
+        _eitems.push_back(std::move(item));
     }
 }
 
@@ -78,7 +78,8 @@ void nenum::remove_eitem(std::string_view name)
     {
         _str_field_map.remove(it->second->name());
         _enum_field_map.remove(it->second->value());
-        _items.erase(std::find_if(_items.begin(), _items.end(), [&it](const auto& item)
+        _eitems.remove(std::find_if(_eitems.begin(), _eitems.end(),
+                                    [&it](const auto& item)
         { return item.get() == it->second; }));
     }
 }

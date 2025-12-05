@@ -13,6 +13,8 @@
 namespace ntr
 {
 
+using enum_integer_type = long;
+
 template <typename T>
 NTR_INLINE constexpr bool is_etype_type();
 

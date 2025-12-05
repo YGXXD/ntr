@@ -11,6 +11,10 @@ file(GLOB_RECURSE NTR_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 if(NTR_BUILD_TESTING)
     enable_testing()
+    add_executable(array_test test/array_test.cpp)
+    target_link_libraries(array_test PRIVATE ntr)
+    add_test(array_test array_test)
+
     add_executable(table_test test/table_test.cpp)
     target_link_libraries(table_test PRIVATE ntr)
     add_test(table_test table_test)

@@ -21,7 +21,7 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name, bool is_st
 
 nfunction::~nfunction() = default;
 
-nobject nfunction::call(const std::vector<nwrapper>& arg_arr) const
+nobject nfunction::call(const nvector<nwrapper>& arg_arr) const
 {
     if (arg_arr.size() != _argument_types.size())
         throw std::invalid_argument("nfunction::call : argument size is wrong, need " +

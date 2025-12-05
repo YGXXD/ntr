@@ -8,6 +8,7 @@
 #pragma once
 
 #include "nfield.hpp"
+#include "../tool/ntraits.hpp"
 
 namespace ntr
 {
@@ -15,7 +16,7 @@ namespace ntr
 class NTR_API neitem : public nfield
 {
 public:
-    neitem(ntype* parent_type, std::string_view name, long value);
+    neitem(ntype* parent_type, std::string_view name, enum_integer_type value);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(neitem)
     ~neitem();
 
@@ -23,7 +24,7 @@ public:
     NTR_INLINE long value() const { return _value; }
 
 private:
-    long _value;
+    enum_integer_type _value;
 };
 
 } // namespace ntr

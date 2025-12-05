@@ -10,7 +10,7 @@
 namespace ntr
 {
 
-neitem::neitem(ntype* parent_type, std::string_view name, long value)
+neitem::neitem(ntype* parent_type, std::string_view name, enum_integer_type value)
     : nfield(parent_type, efield::eeitem, name), _value(value)
 {
     if (parent_type->kind() != ntype::etype::eenum)

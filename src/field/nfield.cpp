@@ -11,10 +11,16 @@ namespace ntr
 {
 
 nfield::nfield(const class ntype* parent_type, efield kind, std::string_view name)
-    : _kind(kind), _name(name), _parent_type(parent_type)
+    : _kind(kind), _name_size(name.size()), _name(new char[_name_size + 1]),
+      _parent_type(parent_type)
 {
+    std::memcpy(_name, name.data(), _name_size);
+    _name[_name_size] = '\0';
 }
 
-nfield::~nfield() = default;
+nfield::~nfield()
+{
+    delete[] _name;
+};
 
 } // namespace ntr

@@ -9,6 +9,8 @@
 
 #include "ntype.hpp"
 #include "../tool/ntable.hpp"
+#include "../tool/narray.hpp"
+#include "../tool/ntraits.hpp"
 
 namespace ntr
 {
@@ -16,8 +18,6 @@ namespace ntr
 class NTR_API nenum : public ntype
 {
 public:
-    using enum_integer_type = long;
-
     static enum_integer_type get_value(const class nobject& enum_);
     static void set_value(nobject& enum_, enum_integer_type value);
 
@@ -28,15 +28,14 @@ public:
     void add_eitem(std::unique_ptr<class neitem>&& item);
     void remove_eitem(std::string_view name);
 
-    NTR_INLINE auto eitem_begin() const { return _items.begin(); }
-    NTR_INLINE auto eitem_end() const { return _items.end(); }
+    NTR_INLINE const auto& eitems() const { return _eitems; }
     const neitem* get_eitem(enum_integer_type value) const;
     const neitem* get_eitem(std::string_view name) const;
     bool has_eitem(std::string_view name) const;
     bool has_eitem(enum_integer_type value) const;
 
 private:
-    std::vector<std::unique_ptr<neitem>> _items;
+    nvector<std::unique_ptr<neitem>> _eitems;
     nhash_map<std::string_view, neitem*> _str_field_map;
     nhash_map<enum_integer_type, neitem*> _enum_field_map;
 };

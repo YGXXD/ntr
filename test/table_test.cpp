@@ -6,6 +6,7 @@
 //
 
 #include "ntr_test.hpp"
+#include <chrono>
 
 using namespace ntr;
 
@@ -19,8 +20,8 @@ class kutori
 public:
     kutori() : _name() { ++kutori_construct; };
     kutori(const std::string& name) : _name(name) { ++kutori_construct; }
-    kutori(const kutori& other) : _name(other._name) { ++kutori_construct; }
-    kutori(kutori&& other) : _name(std::move(other._name)) { ++kutori_construct; }
+    kutori(const kutori& other) : _name(other._name) { ++kutori_copy_construct; }
+    kutori(kutori&& other) : _name(std::move(other._name)) { ++kutori_move_construct; }
     ~kutori() { ++kutori_destroy; }
 
     kutori& operator=(const kutori& other) = default;
@@ -36,7 +37,27 @@ int main()
 {
     try
     {
-        // test object
+        // test hash set
+        nhash_set<int> number_set;
+        number_set.insert(1);
+        number_set.insert(2);
+        number_set.insert(3);
+        number_set.insert(1);
+        NTR_TEST_ASSERT(number_set.size() == 3);
+        NTR_TEST_ASSERT(number_set.find(1) != number_set.end());
+        NTR_TEST_ASSERT(number_set.find(4) == number_set.end());
+        number_set.remove(1);
+        NTR_TEST_ASSERT(number_set.size() == 2);
+        NTR_TEST_ASSERT(number_set.remove(3));
+        number_set.insert(1);
+        number_set.insert(2);
+        number_set.insert(3);
+        number_set.insert(33);
+        number_set.insert(65);
+        for (auto& value : number_set)
+            NTR_TEST_ASSERT(number_set.find(value) != number_set.end());
+
+        // test hash map
         nhash_map<std::string, kutori> kutori_map;
         // operator[]
         kutori_map["chen"] = kutori("duqiu");
@@ -85,6 +106,57 @@ int main()
         NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
                             kutori_move_construct ==
                         kutori_destroy);
+
+        // performance test
+        auto t1 = std::chrono::high_resolution_clock::now();
+        nhash_map<int, kutori> test1;
+        test1.reserve(10000);
+        for (int i = 0; i < 1000000; ++i)
+        {
+            std::string key = std::to_string(i);
+            test1.insert({ i, kutori(key) });
+        }
+        for (int i = 200000; i < 800000; ++i)
+        {
+            std::string key = std::to_string(i);
+            test1.remove(i);
+        }
+        int v1 = 0;
+        for (auto& [key, value] : test1)
+        {
+            v1 += key;
+        }
+        std::cout << "Time: "
+                  << std::chrono::duration_cast<std::chrono::milliseconds>(
+                         std::chrono::high_resolution_clock::now() - t1)
+                         .count()
+                  << "ms\n";
+        std::cout << test1.size() << v1 << "\n";
+
+        auto t2 = std::chrono::high_resolution_clock::now();
+        std::unordered_map<int, kutori> test2;
+        test2.reserve(10000);
+        for (int i = 0; i < 1000000; ++i)
+        {
+            std::string key = std::to_string(i);
+            test2.insert({ i, kutori(key) });
+        }
+        for (int i = 200000; i < 800000; ++i)
+        {
+            std::string key = std::to_string(i);
+            test2.erase(i);
+        }
+        int v2 = 0;
+        for (auto& [key, value] : test2)
+        {
+            v2 += key;
+        }
+        std::cout << "Time: "
+                  << std::chrono::duration_cast<std::chrono::milliseconds>(
+                         std::chrono::high_resolution_clock::now() - t2)
+                         .count()
+                  << "ms\n";
+        std::cout << test2.size() << v2 << "\n";
         return 0;
     }
     catch (const std::exception& e)

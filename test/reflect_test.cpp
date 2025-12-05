@@ -165,7 +165,7 @@ int main()
                   << std::endl;
         std::cout << "kutori's weight is: " << nnumeric::get_value(weight) << "kg"
                   << std::endl;
-        std::cout << "kutori's age is: " << nnumeric::get_value(age) << "years old"
+        std::cout << "kutori's age is: " << nnumeric::get_value(age) << " years old"
                   << std::endl;
         std::cout << "kutori's value target is: "
                   << npointer::get_target(value).as<double>() << std::endl;

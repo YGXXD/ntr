@@ -17,19 +17,15 @@ namespace ntr
 ntype::ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
              std::string_view name)
     : _kind(kind), _is_registered(false), _size(size), _align(align), _ops(ops),
-      _name(name)
+      _name_size(), _name(nullptr)
 {
 }
 
-ntype::~ntype() = default;
-
-void ntype::set_name(std::string_view name)
+ntype::~ntype()
 {
-    if (is_registered())
-        throw std::logic_error("ntype::set_name : type is already registered");
-    _name = name;
-    _is_registered = true;
-}
+    if (_name)
+        delete[] _name;
+};
 
 const nnumeric* ntype::as_numeric() const
 {
@@ -78,6 +74,17 @@ nobject ntype::new_reference(const nwrapper& wrapper) const
         throw std::invalid_argument(
             "ntype::new_reference : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eref).hold_ref(wrapper));
+}
+
+void ntype::regist(std::string_view name)
+{
+    if (is_registered())
+        throw std::logic_error("ntype::set_name : type is already registered");
+    _name_size = name.size();
+    _name = new char[_name_size + 1];
+    memcpy(_name, name.data(), _name_size);
+    _name[_name_size] = '\0';
+    _is_registered = true;
 }
 
 } // namespace ntr
