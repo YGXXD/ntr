@@ -129,4 +129,9 @@ ntype_ops_traits<T>::ntype_ops_traits() : ops()
     }
 }
 
+template <typename T>
+ntype_ops_traits<T*>::ntype_ops_traits() : ops(ntype_ops_traits<void*>::instance().ops)
+{
+}
+
 } // namespace ntr
