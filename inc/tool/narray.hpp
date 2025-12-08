@@ -31,9 +31,9 @@ protected:
                    bool is_move);
     void pop_back(size_t item_size, ntype::operations* ops);
 
-    void insert(void* item_data, size_t item_size, uint32_t index, ntype::operations* ops,
+    void insert(uint32_t index, void* item_data, size_t item_size, ntype::operations* ops,
                 bool is_move);
-    void remove(size_t item_size, uint32_t index, ntype::operations* ops);
+    void remove(uint32_t index, size_t item_size, ntype::operations* ops);
     void clear(size_t item_size, ntype::operations* ops);
     NTR_INLINE void* begin() const { return _datas; }
     NTR_INLINE void* end(size_t item_size) const

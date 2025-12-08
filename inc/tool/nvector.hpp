@@ -59,17 +59,17 @@ public:
     NTR_INLINE void push_back(const item_type& item);
     NTR_INLINE void push_back(item_type&& item);
     NTR_INLINE void pop_back();
-    NTR_INLINE void insert(const item_type& item, uint32_t index);
-    NTR_INLINE void insert(item_type&& item, uint32_t index);
+    NTR_INLINE void insert(uint32_t index, const item_type& item);
+    NTR_INLINE void insert(uint32_t index, item_type&& item);
     NTR_INLINE void remove(uint32_t index);
     NTR_INLINE void remove(const iterator& it);
     NTR_INLINE void clear();
     NTR_INLINE iterator begin() const;
     NTR_INLINE iterator end() const;
-    NTR_INLINE Value& at(uint32_t index);
-    NTR_INLINE const Value& at(uint32_t index) const;
-    NTR_INLINE Value& operator[](uint32_t index);
-    NTR_INLINE const Value& operator[](uint32_t index) const;
+    NTR_INLINE item_type& at(uint32_t index);
+    NTR_INLINE const item_type& at(uint32_t index) const;
+    NTR_INLINE item_type& operator[](uint32_t index);
+    NTR_INLINE const item_type& operator[](uint32_t index) const;
 };
 
 } // namespace ntr

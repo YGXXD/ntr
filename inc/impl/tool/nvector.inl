@@ -163,28 +163,28 @@ NTR_INLINE void nvector<Value>::pop_back()
 }
 
 template <class Value>
-NTR_INLINE void nvector<Value>::insert(const item_type& item, uint32_t index)
+NTR_INLINE void nvector<Value>::insert(uint32_t index, const item_type& item)
 {
-    narray::insert(const_cast<item_type*>(&item), item_size, index,
+    narray::insert(index, const_cast<item_type*>(&item), item_size,
                    &ntype_ops_traits<item_type>::instance().ops, false);
 }
 template <class Value>
-NTR_INLINE void nvector<Value>::insert(item_type&& item, uint32_t index)
+NTR_INLINE void nvector<Value>::insert(uint32_t index, item_type&& item)
 {
-    narray::insert(&item, item_size, index, &ntype_ops_traits<item_type>::instance().ops,
+    narray::insert(index, &item, item_size, &ntype_ops_traits<item_type>::instance().ops,
                    true);
 }
 
 template <class Value>
 NTR_INLINE void nvector<Value>::remove(uint32_t index)
 {
-    narray::remove(item_size, index, &ntype_ops_traits<item_type>::instance().ops);
+    narray::remove(index, item_size, &ntype_ops_traits<item_type>::instance().ops);
 }
 
 template <class Value>
 NTR_INLINE void nvector<Value>::remove(const iterator& it)
 {
-    narray::remove(item_size, &(*it) - static_cast<Value*>(_datas),
+    narray::remove(&(*it) - static_cast<Value*>(_datas), item_size,
                    &ntype_ops_traits<item_type>::instance().ops);
 }
 
@@ -207,7 +207,7 @@ NTR_INLINE typename nvector<Value>::iterator nvector<Value>::end() const
 }
 
 template <class Value>
-NTR_INLINE Value& nvector<Value>::at(uint32_t index)
+NTR_INLINE typename nvector<Value>::item_type& nvector<Value>::at(uint32_t index)
 {
     if (index >= _size)
         throw std::out_of_range("nvector<Value>::at : invalid index");
@@ -215,7 +215,8 @@ NTR_INLINE Value& nvector<Value>::at(uint32_t index)
 }
 
 template <class Value>
-NTR_INLINE const Value& nvector<Value>::at(uint32_t index) const
+NTR_INLINE const typename nvector<Value>::item_type&
+nvector<Value>::at(uint32_t index) const
 {
     if (index >= _size)
         throw std::out_of_range("nvector<Value>::at : invalid index");
@@ -223,13 +224,14 @@ NTR_INLINE const Value& nvector<Value>::at(uint32_t index) const
 }
 
 template <class Value>
-NTR_INLINE Value& nvector<Value>::operator[](uint32_t index)
+NTR_INLINE typename nvector<Value>::item_type& nvector<Value>::operator[](uint32_t index)
 {
     return *(static_cast<Value*>(_datas) + index);
 }
 
 template <class Value>
-NTR_INLINE const Value& nvector<Value>::operator[](uint32_t index) const
+NTR_INLINE const typename nvector<Value>::item_type&
+nvector<Value>::operator[](uint32_t index) const
 {
     return *(static_cast<const Value*>(_datas) + index);
 }

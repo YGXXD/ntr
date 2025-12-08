@@ -98,7 +98,7 @@ NTR_INLINE void nhash_table<TableTraits, Hash>::reserve(uint32_t new_capacity)
 template <class TableTraits, class Hash>
 NTR_INLINE void nhash_table<TableTraits, Hash>::insert(const item_type& item)
 {
-    ntable::insert(const_cast<void*>(&item), item_size, hash, get_key, key_equal,
+    ntable::insert(const_cast<item_type*>(&item), item_size, hash, get_key, key_equal,
                    &ntype_ops_traits<item_type>::instance().ops, false);
 }
 

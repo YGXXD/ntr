@@ -102,7 +102,7 @@ void narray::pop_back(size_t item_size, ntype::operations* ops)
     --_size;
 }
 
-void narray::insert(void* item_data, size_t item_size, uint32_t index,
+void narray::insert(uint32_t index, void* item_data, size_t item_size,
                     ntype::operations* ops, bool is_move)
 {
     if (index >= _size)
@@ -131,7 +131,7 @@ void narray::insert(void* item_data, size_t item_size, uint32_t index,
     }
 }
 
-void narray::remove(size_t item_size, uint32_t index, ntype::operations* ops)
+void narray::remove(uint32_t index, size_t item_size, ntype::operations* ops)
 {
     if (index < _size)
     {

@@ -46,11 +46,6 @@ NTR_INLINE constexpr bool is_etype_pointer()
 }
 
 template <typename T>
-using make_type_t =
-    std::enable_if_t<!std::is_array_v<std::remove_cv_t<std::remove_reference_t<T>>>,
-                     std::remove_cv_t<std::remove_reference_t<T>>>;
-
-template <typename T>
 NTR_INLINE constexpr ntype::etype make_etype()
 {
     static_assert(is_etype_type<T>(),
@@ -66,10 +61,6 @@ NTR_INLINE constexpr ntype::etype make_etype()
     else
         return ntype::etype::eunknown;
 }
-
-template <nnumeric::enumeric numeric_kind>
-using make_numeric_type_t =
-    std::tuple_element_t<static_cast<size_t>(numeric_kind), nnumeric::numeric_types>;
 
 template <typename T>
 NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
