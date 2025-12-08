@@ -7,98 +7,100 @@
 
 #pragma once
 
-#include "../../tool/narray.hpp"
+#include "../../tool/nvector.hpp"
 #include "../../tool/ntraits.hpp"
 
 namespace ntr
 {
 
 template <typename T>
-array_iterator<T>::array_iterator(void* item) : _item(item) {};
+nvector_iterator<T>::nvector_iterator(void* item) : _item(item) {};
 
 template <typename T>
-NTR_INLINE array_iterator<T>& array_iterator<T>::operator++()
+NTR_INLINE nvector_iterator<T>& nvector_iterator<T>::operator++()
 {
     _item = static_cast<value_type*>(_item) + 1;
     return *this;
 }
 
 template <typename T>
-NTR_INLINE array_iterator<T> array_iterator<T>::operator++(int)
+NTR_INLINE nvector_iterator<T> nvector_iterator<T>::operator++(int)
 {
-    array_iterator temp = *this;
+    nvector_iterator temp = *this;
     ++*this;
     return temp;
 }
 
 template <typename T>
-NTR_INLINE array_iterator<T>& array_iterator<T>::operator--()
+NTR_INLINE nvector_iterator<T>& nvector_iterator<T>::operator--()
 {
     _item = static_cast<value_type*>(_item) - 1;
     return *this;
 }
 
 template <typename T>
-NTR_INLINE array_iterator<T> array_iterator<T>::operator--(int)
+NTR_INLINE nvector_iterator<T> nvector_iterator<T>::operator--(int)
 {
-    array_iterator temp = *this;
+    nvector_iterator temp = *this;
     --*this;
     return temp;
 }
 
 template <typename T>
-NTR_INLINE array_iterator<T> array_iterator<T>::operator+(difference_type offset) const
+NTR_INLINE nvector_iterator<T>
+nvector_iterator<T>::operator+(difference_type offset) const
 {
-    return array_iterator(static_cast<value_type*>(_item) + offset);
+    return nvector_iterator(static_cast<value_type*>(_item) + offset);
 }
 
 template <typename T>
-NTR_INLINE array_iterator<T>& array_iterator<T>::operator+=(difference_type offset)
+NTR_INLINE nvector_iterator<T>& nvector_iterator<T>::operator+=(difference_type offset)
 {
     _item = static_cast<value_type*>(_item) + offset;
     return *this;
 }
 
 template <typename T>
-NTR_INLINE array_iterator<T> array_iterator<T>::operator-(difference_type offset) const
+NTR_INLINE nvector_iterator<T>
+nvector_iterator<T>::operator-(difference_type offset) const
 {
-    return array_iterator(static_cast<value_type*>(_item) - offset);
+    return nvector_iterator(static_cast<value_type*>(_item) - offset);
 }
 
 template <typename T>
-NTR_INLINE typename array_iterator<T>::difference_type
-array_iterator<T>::operator-(const array_iterator& other) const
+NTR_INLINE typename nvector_iterator<T>::difference_type
+nvector_iterator<T>::operator-(const nvector_iterator& other) const
 {
     return static_cast<value_type*>(_item) - static_cast<value_type*>(other._item);
 }
 
 template <typename T>
-NTR_INLINE array_iterator<T>& array_iterator<T>::operator-=(difference_type offset)
+NTR_INLINE nvector_iterator<T>& nvector_iterator<T>::operator-=(difference_type offset)
 {
     _item = static_cast<value_type*>(_item) - offset;
     return *this;
 }
 
 template <typename T>
-NTR_INLINE bool array_iterator<T>::operator==(const array_iterator& other) const
+NTR_INLINE bool nvector_iterator<T>::operator==(const nvector_iterator& other) const
 {
     return _item == other._item;
 }
 
 template <typename T>
-NTR_INLINE bool array_iterator<T>::operator!=(const array_iterator& other) const
+NTR_INLINE bool nvector_iterator<T>::operator!=(const nvector_iterator& other) const
 {
     return _item != other._item;
 }
 
 template <typename T>
-NTR_INLINE typename array_iterator<T>::reference array_iterator<T>::operator*() const
+NTR_INLINE typename nvector_iterator<T>::reference nvector_iterator<T>::operator*() const
 {
     return *static_cast<T*>(_item);
 }
 
 template <typename T>
-NTR_INLINE typename array_iterator<T>::pointer array_iterator<T>::operator->() const
+NTR_INLINE typename nvector_iterator<T>::pointer nvector_iterator<T>::operator->() const
 {
     return static_cast<T*>(_item);
 }
