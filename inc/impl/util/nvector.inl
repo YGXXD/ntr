@@ -160,11 +160,10 @@ nvector<Value, Allocator>::~nvector()
 }
 
 template <class Value, class Allocator>
-NTR_INLINE void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
+void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
 {
     if (new_capacity <= _capacity)
         return;
-
     Allocator allocator {};
     value_type* new_datas = allocator.allocate(new_capacity);
     if (_datas)
@@ -185,7 +184,7 @@ NTR_INLINE void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
 template <class Value, class Allocator>
 NTR_INLINE void nvector<Value, Allocator>::push_back(const value_type& value)
 {
-    push_back(value_type(value));
+    push_back(std::move(value_type(value)));
 }
 
 template <class Value, class Allocator>
@@ -214,11 +213,11 @@ NTR_INLINE void nvector<Value, Allocator>::pop_back()
 template <class Value, class Allocator>
 NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index, const value_type& value)
 {
-    insert(index, value_type(value));
+    insert(index, std::move(value_type(value)));
 }
 
 template <class Value, class Allocator>
-NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index, value_type&& value)
+void nvector<Value, Allocator>::insert(uint32_t index, value_type&& value)
 {
     if (index >= _size)
     {
@@ -244,11 +243,10 @@ NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index, value_type&& v
 }
 
 template <class Value, class Allocator>
-NTR_INLINE void nvector<Value, Allocator>::remove(uint32_t index)
+void nvector<Value, Allocator>::remove(uint32_t index)
 {
     if (index >= _size)
         return;
-
     _datas[index].~value_type();
     if constexpr (std::is_trivially_copyable_v<value_type>)
     {

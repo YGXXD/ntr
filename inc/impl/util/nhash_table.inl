@@ -121,11 +121,10 @@ nhash_table<TableTraits, Hash, Allocator>::~nhash_table()
 }
 
 template <class TableTraits, class Hash, class Allocator>
-NTR_INLINE void nhash_table<TableTraits, Hash, Allocator>::reserve(uint32_t new_capacity)
+void nhash_table<TableTraits, Hash, Allocator>::reserve(uint32_t new_capacity)
 {
     if (new_capacity <= _capacity)
         return;
-
     Allocator allocator {};
     bucket_type* old_buckets = _buckets;
     uint32_t old_capacity = _capacity;
@@ -153,7 +152,7 @@ template <class TableTraits, class Hash, class Allocator>
 NTR_INLINE void
 nhash_table<TableTraits, Hash, Allocator>::insert(const element_type& element)
 {
-    insert(element_type(element));
+    insert(std::move(element_type(element)));
 }
 
 template <class TableTraits, class Hash, class Allocator>
@@ -165,7 +164,7 @@ NTR_INLINE void nhash_table<TableTraits, Hash, Allocator>::insert(element_type&&
 }
 
 template <class TableTraits, class Hash, class Allocator>
-NTR_INLINE bool nhash_table<TableTraits, Hash, Allocator>::remove(const key_type& key)
+bool nhash_table<TableTraits, Hash, Allocator>::remove(const key_type& key)
 {
     uint32_t position = find_position(key);
     if (position != _capacity)
@@ -203,7 +202,7 @@ nhash_table<TableTraits, Hash, Allocator>::contains(const key_type& key) const
 }
 
 template <class TableTraits, class Hash, class Allocator>
-NTR_INLINE void nhash_table<TableTraits, Hash, Allocator>::clear()
+void nhash_table<TableTraits, Hash, Allocator>::clear()
 {
     if (_size > 0)
     {
@@ -263,32 +262,31 @@ nhash_table<TableTraits, Hash, Allocator>::end() const
 }
 
 template <class TableTraits, class Hash, class Allocator>
-NTR_INLINE uint32_t
-nhash_table<TableTraits, Hash, Allocator>::insert_force(element_type&& insert_element)
+uint32_t nhash_table<TableTraits, Hash, Allocator>::insert_force(element_type&& element)
 {
     if (_size >= _capacity * 4 / 5)
         reserve(nhash_table_growth_capacity(_capacity));
 
+    element_type insert_element(std::move(element));
     uint32_t position = Hash()(get_key(insert_element)) % _capacity;
     uint16_t distance = 0;
     while (true)
     {
-        bucket_type& bucket = _buckets[position];
-        if (!bucket.valid)
+        if (!_buckets[position].valid)
         {
             if (std::is_trivially_copyable_v<element_type>)
-                bucket.element = std::move(insert_element);
+                _buckets[position].element = std::move(insert_element);
             else
-                new (&bucket.element) element_type(std::move(insert_element));
-            bucket.valid = 1;
-            bucket.distance = distance;
+                new (&_buckets[position].element) element_type(std::move(insert_element));
+            _buckets[position].valid = 1;
+            _buckets[position].distance = distance;
             ++_size;
             return position;
         }
-        if (distance > bucket.distance)
+        if (distance > _buckets[position].distance)
         {
-            std::swap(bucket.element, insert_element);
-            std::swap(bucket.distance, distance);
+            std::swap(_buckets[position].element, insert_element);
+            std::swap(_buckets[position].distance, distance);
         }
         position = (position + 1) % _capacity;
         ++distance;
@@ -296,13 +294,13 @@ nhash_table<TableTraits, Hash, Allocator>::insert_force(element_type&& insert_el
 }
 
 template <class TableTraits, class Hash, class Allocator>
-NTR_INLINE uint32_t
+uint32_t
 nhash_table<TableTraits, Hash, Allocator>::find_position(const key_type& key) const
 {
     if (_size == 0)
         return _capacity;
     uint32_t position = Hash()(key) % _capacity;
-    uint32_t distance = 0;
+    uint16_t distance = 0;
     while (_buckets[position].valid)
     {
         if (get_key(_buckets[position].element) == key)

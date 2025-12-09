@@ -53,13 +53,13 @@ public:
     nvector(std::initializer_list<Value> list);
     ~nvector();
 
-    NTR_INLINE void reserve(uint32_t new_capacity);
+    void reserve(uint32_t new_capacity);
     NTR_INLINE void push_back(const value_type& value);
     NTR_INLINE void push_back(value_type&& value);
     NTR_INLINE void pop_back();
     NTR_INLINE void insert(uint32_t index, const value_type& value);
-    NTR_INLINE void insert(uint32_t index, value_type&& value);
-    NTR_INLINE void remove(uint32_t index);
+    void insert(uint32_t index, value_type&& value);
+    void remove(uint32_t index);
     NTR_INLINE void remove(const iterator& it);
     NTR_INLINE void clear();
     NTR_INLINE uint32_t size() const;

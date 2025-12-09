@@ -62,13 +62,13 @@ public:
     nhash_table(nhash_table&& other);
     ~nhash_table();
 
-    NTR_INLINE void reserve(uint32_t new_capacity);
+    void reserve(uint32_t new_capacity);
     NTR_INLINE void insert(const element_type& element);
     NTR_INLINE void insert(element_type&& element);
-    NTR_INLINE bool remove(const key_type& key);
+    bool remove(const key_type& key);
     NTR_INLINE bool remove(const iterator& it);
     NTR_INLINE bool contains(const key_type& key) const;
-    NTR_INLINE void clear();
+    void clear();
     NTR_INLINE uint32_t size() const;;
     NTR_INLINE bool empty() const;;
     NTR_INLINE iterator find(const key_type& key) const;
@@ -76,8 +76,8 @@ public:
     NTR_INLINE iterator end() const;
 
 protected:
-    NTR_INLINE uint32_t insert_force(element_type&& insert_element);
-    NTR_INLINE uint32_t find_position(const key_type& key) const;
+    uint32_t insert_force(element_type&& element);
+    uint32_t find_position(const key_type& key) const;
 
     uint32_t _size;
     uint32_t _capacity;
