@@ -8,7 +8,6 @@
 #pragma once
 
 #include "../setup.hpp"
-#include "narray.hpp"
 
 namespace ntr
 {
@@ -22,7 +21,7 @@ struct nvector_iterator
     using pointer = T*;
     using reference = T&;
 
-    nvector_iterator(void* _item);
+    nvector_iterator(value_type* value);
     NTR_INLINE nvector_iterator& operator++();
     NTR_INLINE nvector_iterator operator++(int);
     NTR_INLINE nvector_iterator& operator--();
@@ -38,16 +37,15 @@ struct nvector_iterator
     NTR_INLINE pointer operator->() const;
 
 private:
-    void* _item;
+    value_type* _value;
 };
 
-template <class Value>
-class nvector : public narray
+template <class Value, class Allocator = std::allocator<Value>>
+class nvector
 {
 public:
-    using item_type = Value;
-    using iterator = nvector_iterator<item_type>;
-    static constexpr size_t item_size = sizeof(item_type);
+    using value_type = Value;
+    using iterator = nvector_iterator<value_type>;
 
     nvector();
     nvector(const nvector& other);
@@ -56,20 +54,29 @@ public:
     ~nvector();
 
     NTR_INLINE void reserve(uint32_t new_capacity);
-    NTR_INLINE void push_back(const item_type& item);
-    NTR_INLINE void push_back(item_type&& item);
+    NTR_INLINE void push_back(const value_type& value);
+    NTR_INLINE void push_back(value_type&& value);
     NTR_INLINE void pop_back();
-    NTR_INLINE void insert(uint32_t index, const item_type& item);
-    NTR_INLINE void insert(uint32_t index, item_type&& item);
+    NTR_INLINE void insert(uint32_t index, const value_type& value);
+    NTR_INLINE void insert(uint32_t index, value_type&& value);
     NTR_INLINE void remove(uint32_t index);
     NTR_INLINE void remove(const iterator& it);
     NTR_INLINE void clear();
+    NTR_INLINE uint32_t size() const;
+    NTR_INLINE bool empty() const;
+    NTR_INLINE value_type* data();
+    NTR_INLINE const value_type* data() const;
+    NTR_INLINE value_type& at(uint32_t index);
+    NTR_INLINE const value_type& at(uint32_t index) const;
+    NTR_INLINE value_type& operator[](uint32_t index);
+    NTR_INLINE const value_type& operator[](uint32_t index) const;
     NTR_INLINE iterator begin() const;
     NTR_INLINE iterator end() const;
-    NTR_INLINE item_type& at(uint32_t index);
-    NTR_INLINE const item_type& at(uint32_t index) const;
-    NTR_INLINE item_type& operator[](uint32_t index);
-    NTR_INLINE const item_type& operator[](uint32_t index) const;
+
+private:
+    uint32_t _size;
+    uint32_t _capacity;
+    value_type* _datas;
 };
 
 } // namespace ntr

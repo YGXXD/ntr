@@ -13,20 +13,20 @@ namespace ntr
 {
 
 template <class Value>
-struct table_set_traits
+struct nhash_set_table_traits
 {
     using key_type = Value;
     using value_type = Value;
-    using item_type = Value;
-    static constexpr auto get_key = [](void* item_data) -> void*
-    {
-        return static_cast<key_type*>(item_data);
-    };
+    using element_type = Value;
+    NTR_INLINE static const key_type& get_key(const element_type& element);
 };
 
-template <class Value, class Hash = std::hash<Value>>
-class nhash_set : public nhash_table<table_set_traits<Value>, Hash>
+template <class Value, class Hash = std::hash<Value>,
+          class Allocator = std::allocator<nhash_table_bucket<Value>>>
+class nhash_set : public nhash_table<nhash_set_table_traits<Value>, Hash, Allocator>
 {
 };
 
 } // namespace ntr
+
+#include "../impl/tool/nhash_set.inl"

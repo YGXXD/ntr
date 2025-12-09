@@ -8,18 +8,17 @@
 #pragma once
 
 #include "../../tool/nvector.hpp"
-#include "../../tool/ntraits.hpp"
 
 namespace ntr
 {
 
 template <typename T>
-nvector_iterator<T>::nvector_iterator(void* item) : _item(item) {};
+nvector_iterator<T>::nvector_iterator(value_type* value) : _value(value) {};
 
 template <typename T>
 NTR_INLINE nvector_iterator<T>& nvector_iterator<T>::operator++()
 {
-    _item = static_cast<value_type*>(_item) + 1;
+    _value = static_cast<value_type*>(_value) + 1;
     return *this;
 }
 
@@ -34,7 +33,7 @@ NTR_INLINE nvector_iterator<T> nvector_iterator<T>::operator++(int)
 template <typename T>
 NTR_INLINE nvector_iterator<T>& nvector_iterator<T>::operator--()
 {
-    _item = static_cast<value_type*>(_item) - 1;
+    _value = static_cast<value_type*>(_value) - 1;
     return *this;
 }
 
@@ -50,13 +49,13 @@ template <typename T>
 NTR_INLINE nvector_iterator<T>
 nvector_iterator<T>::operator+(difference_type offset) const
 {
-    return nvector_iterator(static_cast<value_type*>(_item) + offset);
+    return nvector_iterator(static_cast<value_type*>(_value) + offset);
 }
 
 template <typename T>
 NTR_INLINE nvector_iterator<T>& nvector_iterator<T>::operator+=(difference_type offset)
 {
-    _item = static_cast<value_type*>(_item) + offset;
+    _value = static_cast<value_type*>(_value) + offset;
     return *this;
 }
 
@@ -64,176 +63,295 @@ template <typename T>
 NTR_INLINE nvector_iterator<T>
 nvector_iterator<T>::operator-(difference_type offset) const
 {
-    return nvector_iterator(static_cast<value_type*>(_item) - offset);
+    return nvector_iterator(static_cast<value_type*>(_value) - offset);
 }
 
 template <typename T>
 NTR_INLINE typename nvector_iterator<T>::difference_type
 nvector_iterator<T>::operator-(const nvector_iterator& other) const
 {
-    return static_cast<value_type*>(_item) - static_cast<value_type*>(other._item);
+    return static_cast<value_type*>(_value) - static_cast<value_type*>(other._value);
 }
 
 template <typename T>
 NTR_INLINE nvector_iterator<T>& nvector_iterator<T>::operator-=(difference_type offset)
 {
-    _item = static_cast<value_type*>(_item) - offset;
+    _value = static_cast<value_type*>(_value) - offset;
     return *this;
 }
 
 template <typename T>
 NTR_INLINE bool nvector_iterator<T>::operator==(const nvector_iterator& other) const
 {
-    return _item == other._item;
+    return _value == other._value;
 }
 
 template <typename T>
 NTR_INLINE bool nvector_iterator<T>::operator!=(const nvector_iterator& other) const
 {
-    return _item != other._item;
+    return _value != other._value;
 }
 
 template <typename T>
 NTR_INLINE typename nvector_iterator<T>::reference nvector_iterator<T>::operator*() const
 {
-    return *static_cast<T*>(_item);
+    return *static_cast<T*>(_value);
 }
 
 template <typename T>
 NTR_INLINE typename nvector_iterator<T>::pointer nvector_iterator<T>::operator->() const
 {
-    return static_cast<T*>(_item);
+    return static_cast<T*>(_value);
 }
 
-template <class Value>
-nvector<Value>::nvector() : narray()
+NTR_INLINE uint32_t nvector_growth_capacity(uint32_t capacity)
+{
+    if (capacity == 0)
+        return 16;
+    if (capacity < 1024)
+        return capacity * 2;
+    return capacity + capacity / 2;
+}
+
+template <class Value, class Allocator>
+nvector<Value, Allocator>::nvector() : _size(0), _capacity(0), _datas(nullptr)
 {
 }
 
-template <class Value>
-nvector<Value>::nvector(const nvector& other)
+template <class Value, class Allocator>
+nvector<Value, Allocator>::nvector(const nvector& other)
+    : _size(other._size), _capacity(other._capacity), _datas(nullptr)
 {
-    copy_init(other, item_size, &ntype_ops_traits<item_type>::instance().ops);
+    if (_capacity > 0)
+        _datas = Allocator().allocate(_capacity);
+    if (_size > 0)
+    {
+        if constexpr (std::is_trivially_copyable_v<value_type>)
+            std::memcpy(_datas, other._datas, _size * sizeof(value_type));
+        else
+            std::uninitialized_copy_n(other._datas, _size, _datas);
+    }
 }
 
-template <class Value>
-nvector<Value>::nvector(nvector&& other)
+template <class Value, class Allocator>
+nvector<Value, Allocator>::nvector(nvector&& other)
+    : _size(other._size), _capacity(other._capacity), _datas(other._datas)
 {
-    move_init(std::move(other));
+    other._size = 0;
+    other._capacity = 0;
+    other._datas = nullptr;
 }
 
-template <class Value>
-nvector<Value>::nvector(std::initializer_list<Value> list)
+template <class Value, class Allocator>
+nvector<Value, Allocator>::nvector(std::initializer_list<Value> list)
+    : _size(0), _capacity(0), _datas(nullptr)
 {
     reserve(list.size());
-    for (auto& item : list)
-        push_back(item);
+    for (auto& value : list)
+        push_back(value);
 }
 
-template <class Value>
-nvector<Value>::~nvector()
+template <class Value, class Allocator>
+nvector<Value, Allocator>::~nvector()
 {
-    destruct(item_size, &ntype_ops_traits<item_type>::instance().ops);
+    clear();
+    if (_datas)
+        Allocator().deallocate(_datas, _capacity);
 }
 
-template <class Value>
-NTR_INLINE void nvector<Value>::reserve(uint32_t new_capacity)
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
 {
-    narray::reserve(new_capacity, item_size,
-                    &ntype_ops_traits<item_type>::instance().ops);
+    if (new_capacity <= _capacity)
+        return;
+
+    Allocator allocator {};
+    value_type* new_datas = allocator.allocate(new_capacity);
+    if (_datas)
+    {
+        if constexpr (std::is_trivially_copyable_v<value_type>)
+            std::memcpy(new_datas, _datas, _size * sizeof(value_type));
+        else
+        {
+            std::uninitialized_move_n(_datas, _size, new_datas);
+            std::destroy_n(_datas, _size);
+        }
+        allocator.deallocate(_datas, _capacity);
+    }
+    _datas = new_datas;
+    _capacity = new_capacity;
 }
 
-template <class Value>
-NTR_INLINE void nvector<Value>::push_back(const item_type& item)
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::push_back(const value_type& value)
 {
-    narray::push_back(const_cast<item_type*>(&item), item_size,
-                      &ntype_ops_traits<item_type>::instance().ops, false);
-}
-template <class Value>
-NTR_INLINE void nvector<Value>::push_back(item_type&& item)
-{
-    narray::push_back(&item, item_size, &ntype_ops_traits<item_type>::instance().ops,
-                      true);
+    push_back(value_type(value));
 }
 
-template <class Value>
-NTR_INLINE void nvector<Value>::pop_back()
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::push_back(value_type&& value)
 {
-    narray::pop_back(item_size, &ntype_ops_traits<item_type>::instance().ops);
+    if (_size >= _capacity)
+        reserve(nvector_growth_capacity(_capacity));
+    if constexpr (std::is_trivially_copyable_v<value_type>)
+        _datas[_size++] = std::move(value);
+    else
+        new (&_datas[_size++]) value_type(std::move(value));
 }
 
-template <class Value>
-NTR_INLINE void nvector<Value>::insert(uint32_t index, const item_type& item)
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::pop_back()
 {
-    narray::insert(index, const_cast<item_type*>(&item), item_size,
-                   &ntype_ops_traits<item_type>::instance().ops, false);
-}
-template <class Value>
-NTR_INLINE void nvector<Value>::insert(uint32_t index, item_type&& item)
-{
-    narray::insert(index, &item, item_size, &ntype_ops_traits<item_type>::instance().ops,
-                   true);
-}
-
-template <class Value>
-NTR_INLINE void nvector<Value>::remove(uint32_t index)
-{
-    narray::remove(index, item_size, &ntype_ops_traits<item_type>::instance().ops);
+    if (_size > 0)
+    {
+        if constexpr (std::is_trivially_copyable_v<value_type>)
+            --_size;
+        else
+            _datas[--_size].~value_type();
+    }
 }
 
-template <class Value>
-NTR_INLINE void nvector<Value>::remove(const iterator& it)
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index, const value_type& value)
 {
-    narray::remove(&(*it) - static_cast<Value*>(_datas), item_size,
-                   &ntype_ops_traits<item_type>::instance().ops);
+    insert(index, value_type(value));
 }
 
-template <class Value>
-NTR_INLINE void nvector<Value>::clear()
-{
-    narray::clear(item_size, &ntype_ops_traits<item_type>::instance().ops);
-}
-
-template <class Value>
-NTR_INLINE typename nvector<Value>::iterator nvector<Value>::begin() const
-{
-    return iterator(narray::begin());
-}
-
-template <class Value>
-NTR_INLINE typename nvector<Value>::iterator nvector<Value>::end() const
-{
-    return iterator(narray::end(item_size));
-}
-
-template <class Value>
-NTR_INLINE typename nvector<Value>::item_type& nvector<Value>::at(uint32_t index)
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index, value_type&& value)
 {
     if (index >= _size)
-        throw std::out_of_range("nvector<Value>::at : invalid index");
-    return *(static_cast<Value*>(_datas) + index);
+    {
+        push_back(std::move(value));
+        return;
+    }
+    if (_size >= _capacity)
+        reserve(nvector_growth_capacity(_capacity));
+    if constexpr (std::is_trivially_copyable_v<value_type>)
+    {
+        std::memmove(_datas + index + 1, _datas + index,
+                     (_size - index) * sizeof(value_type));
+        _datas[index] = std::move(value);
+    }
+    else
+    {
+        new (&_datas[_size]) value_type(std::move(_datas[_size - 1]));
+        std::move_backward(_datas + index, _datas + _size - 1, _datas + _size);
+        _datas[index].~value_type();
+        new (&_datas[index]) value_type(std::move(value));
+    }
+    ++_size;
 }
 
-template <class Value>
-NTR_INLINE const typename nvector<Value>::item_type&
-nvector<Value>::at(uint32_t index) const
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::remove(uint32_t index)
 {
     if (index >= _size)
-        throw std::out_of_range("nvector<Value>::at : invalid index");
-    return *(static_cast<const Value*>(_datas) + index);
+        return;
+
+    _datas[index].~value_type();
+    if constexpr (std::is_trivially_copyable_v<value_type>)
+    {
+        if (index < _size - 1)
+            std::memmove(_datas + index, _datas + index + 1,
+                         (_size - index - 1) * sizeof(value_type));
+    }
+    else
+    {
+        if (index < _size - 1)
+            std::move(_datas + index + 1, _datas + _size, _datas + index);
+        _datas[_size - 1].~value_type();
+    }
+    --_size;
 }
 
-template <class Value>
-NTR_INLINE typename nvector<Value>::item_type& nvector<Value>::operator[](uint32_t index)
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::remove(const iterator& it)
 {
-    return *(static_cast<Value*>(_datas) + index);
+    remove(&(*it) - _datas);
 }
 
-template <class Value>
-NTR_INLINE const typename nvector<Value>::item_type&
-nvector<Value>::operator[](uint32_t index) const
+template <class Value, class Allocator>
+NTR_INLINE void nvector<Value, Allocator>::clear()
 {
-    return *(static_cast<const Value*>(_datas) + index);
+    if (_size > 0)
+    {
+        if constexpr (!std::is_trivially_copyable_v<value_type>)
+            std::destroy_n(_datas, _size);
+        _size = 0;
+    }
+}
+
+template <class Value, class Allocator>
+NTR_INLINE uint32_t nvector<Value, Allocator>::size() const
+{
+    return _size;
+}
+
+template <class Value, class Allocator>
+NTR_INLINE bool nvector<Value, Allocator>::empty() const
+{
+    return _size == 0;
+}
+
+template <class Value, class Allocator>
+NTR_INLINE typename nvector<Value, Allocator>::value_type*
+nvector<Value, Allocator>::data()
+{
+    return _datas;
+}
+
+template <class Value, class Allocator>
+NTR_INLINE const typename nvector<Value, Allocator>::value_type*
+nvector<Value, Allocator>::data() const
+{
+    return _datas;
+}
+
+template <class Value, class Allocator>
+NTR_INLINE typename nvector<Value, Allocator>::value_type&
+nvector<Value, Allocator>::at(uint32_t index)
+{
+    if (index >= _size)
+        throw std::out_of_range("nvector<Value, Allocator>::at : invalid index");
+    return _datas[index];
+}
+
+template <class Value, class Allocator>
+NTR_INLINE const typename nvector<Value, Allocator>::value_type&
+nvector<Value, Allocator>::at(uint32_t index) const
+{
+    if (index >= _size)
+        throw std::out_of_range("nvector<Value, Allocator>::at : invalid index");
+    return _datas[index];
+}
+
+template <class Value, class Allocator>
+NTR_INLINE typename nvector<Value, Allocator>::value_type&
+nvector<Value, Allocator>::operator[](uint32_t index)
+{
+    return _datas[index];
+}
+
+template <class Value, class Allocator>
+NTR_INLINE const typename nvector<Value, Allocator>::value_type&
+nvector<Value, Allocator>::operator[](uint32_t index) const
+{
+    return _datas[index];
+}
+
+template <class Value, class Allocator>
+NTR_INLINE typename nvector<Value, Allocator>::iterator
+nvector<Value, Allocator>::begin() const
+{
+    return iterator(_datas);
+}
+
+template <class Value, class Allocator>
+NTR_INLINE typename nvector<Value, Allocator>::iterator
+nvector<Value, Allocator>::end() const
+{
+    return iterator(_datas + _size);
 }
 
 } // namespace ntr

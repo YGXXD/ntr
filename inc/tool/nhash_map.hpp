@@ -14,35 +14,31 @@ namespace ntr
 {
 
 template <class Key, class Value>
-struct table_map_traits
+struct nhash_map_table_traits
 {
     using key_type = Key;
     using value_type = Value;
-    using item_type = std::pair<Key, Value>;
-    static constexpr auto get_key = [](void* item_data) -> void*
-    {
-        return &static_cast<item_type*>(item_data)->first;
-    };
+    using element_type = std::pair<Key, Value>;
+    NTR_INLINE static const key_type& get_key(const element_type& element);
 };
 
-template <class Key, class Value, class Hash = std::hash<Key>>
-class nhash_map : public nhash_table<table_map_traits<Key, Value>, Hash>
+template <class Key, class Value, class Hash = std::hash<Key>,
+          class Allocator = std::allocator<nhash_table_bucket<std::pair<Key, Value>>>>
+class nhash_map : public nhash_table<nhash_map_table_traits<Key, Value>, Hash, Allocator>
 {
-    using hash_table_type = nhash_table<table_map_traits<Key, Value>, Hash>;
+    using hash_table_type =
+        nhash_table<nhash_map_table_traits<Key, Value>, Hash, Allocator>;
     using hash_table_type::hash_table_type;
-    using typename hash_table_type::item_type;
+    using typename hash_table_type::element_type;
     using typename hash_table_type::key_type;
     using typename hash_table_type::value_type;
-    static constexpr size_t item_size = sizeof(item_type);
+    static constexpr size_t item_size = sizeof(element_type);
 
     static_assert(std::is_same_v<Key, key_type>);
     static_assert(std::is_same_v<Value, value_type>);
 
     using hash_table_type::_buckets;
     using hash_table_type::_capacity;
-    using hash_table_type::get_key;
-    using hash_table_type::hash;
-    using hash_table_type::key_equal;
 
 public:
     using hash_table_type::insert;

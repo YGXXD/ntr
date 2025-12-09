@@ -8,97 +8,73 @@
 #pragma once
 
 #include "../../tool/nhash_map.hpp"
-#include "../../tool/ntraits.hpp"
 
 namespace ntr
 {
 
-template <class Key, class Value, class Hash>
-NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const key_type& key,
-                                                    const value_type& value)
+template <class Key, class Value>
+const typename nhash_map_table_traits<Key, Value>::key_type&
+nhash_map_table_traits<Key, Value>::get_key(const element_type& element)
 {
-    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
-                                              hash, get_key, key_equal);
-    if (position == _capacity)
-    {
-        item_type item = { key, value };
-        ntable::insert_force(&item, item_size, hash, get_key,
-                             &ntype_ops_traits<item_type>::instance().ops, true);
-    }
+    return element.first;
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE void nhash_map<Key, Value, Hash>::insert(const key_type& key,
-                                                    value_type&& value)
+template <class Key, class Value, class Hash, class Allocator>
+NTR_INLINE void nhash_map<Key, Value, Hash, Allocator>::insert(const key_type& key,
+                                                               const value_type& value)
 {
-    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
-                                              hash, get_key, key_equal);
-    if (position == _capacity)
-    {
-        item_type item = { key, std::move(value) };
-        ntable::insert_force(&item, item_size, hash, get_key,
-                             &ntype_ops_traits<item_type>::instance().ops, true);
-    }
+    insert(key, value_type(value));
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE typename nhash_map<Key, Value, Hash>::value_type&
-nhash_map<Key, Value, Hash>::at(const key_type& key)
+template <class Key, class Value, class Hash, class Allocator>
+NTR_INLINE void nhash_map<Key, Value, Hash, Allocator>::insert(const key_type& key,
+                                                               value_type&& value)
 {
-    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
-                                              hash, get_key, key_equal);
+    uint32_t position = hash_table_type::find_position(key);
     if (position == _capacity)
-        throw std::out_of_range("nhash_map<Key, Value, Hash>::at : invalid key");
-    return static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)))
-        ->second;
+        hash_table_type::insert_force(element_type(key, std::move(value)));
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE const typename nhash_map<Key, Value, Hash>::value_type&
-nhash_map<Key, Value, Hash>::at(const key_type& key) const
+template <class Key, class Value, class Hash, class Allocator>
+NTR_INLINE typename nhash_map<Key, Value, Hash, Allocator>::value_type&
+nhash_map<Key, Value, Hash, Allocator>::at(const key_type& key)
 {
-    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
-                                              hash, get_key, key_equal);
+    uint32_t position = hash_table_type::find_position(key);
     if (position == _capacity)
-        throw std::out_of_range("nhash_map<Key, Value, Hash>::at : invalid key");
-    return static_cast<const item_type*>(
-               get_item(get_bucket(_buckets, position, item_size)))
-        ->second;
+        throw std::out_of_range(
+            "nhash_map<Key, Value, Hash, Allocator>::at : invalid key");
+    return _buckets[position].element.second;
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE typename nhash_map<Key, Value, Hash>::value_type&
-nhash_map<Key, Value, Hash>::operator[](const key_type& key)
+template <class Key, class Value, class Hash, class Allocator>
+NTR_INLINE const typename nhash_map<Key, Value, Hash, Allocator>::value_type&
+nhash_map<Key, Value, Hash, Allocator>::at(const key_type& key) const
 {
-    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
-                                              hash, get_key, key_equal);
+    uint32_t position = hash_table_type::find_position(key);
     if (position == _capacity)
-    {
-        item_type item = { key, Value() };
-        position =
-            ntable::insert_force(&item, item_size, hash, get_key,
-                                 &ntype_ops_traits<item_type>::instance().ops, true);
-    }
-    return static_cast<item_type*>(get_item(get_bucket(_buckets, position, item_size)))
-        ->second;
+        throw std::out_of_range(
+            "nhash_map<Key, Value, Hash, Allocator>::at : invalid key");
+    return _buckets[position].element.second;
 }
 
-template <class Key, class Value, class Hash>
-NTR_INLINE const typename nhash_map<Key, Value, Hash>::value_type&
-nhash_map<Key, Value, Hash>::operator[](const key_type& key) const
+template <class Key, class Value, class Hash, class Allocator>
+NTR_INLINE typename nhash_map<Key, Value, Hash, Allocator>::value_type&
+nhash_map<Key, Value, Hash, Allocator>::operator[](const key_type& key)
 {
-    uint32_t position = ntable::find_position(const_cast<key_type*>(&key), item_size,
-                                              hash, get_key, key_equal);
+    uint32_t position = hash_table_type::find_position(key);
     if (position == _capacity)
-    {
-        item_type item = { key, Value() };
-        position =
-            ntable::insert_force(&item, item_size, hash, get_key,
-                                 &ntype_ops_traits<item_type>::instance().ops, true);
-    }
-    return static_cast<const item_type*>(
-               get_item(get_bucket(_buckets, position, item_size)))
-        ->second;
+        position = hash_table_type::insert_force(element_type(key, value_type()));
+    return _buckets[position].element.second;
+}
+
+template <class Key, class Value, class Hash, class Allocator>
+NTR_INLINE const typename nhash_map<Key, Value, Hash, Allocator>::value_type&
+nhash_map<Key, Value, Hash, Allocator>::operator[](const key_type& key) const
+{
+    uint32_t position = hash_table_type::find_position(key);
+    if (position == _capacity)
+        position = hash_table_type::insert_force(element_type(key, value_type()));
+    return _buckets[position].element.second;
 }
 
 } // namespace ntr
