@@ -52,4 +52,4 @@ public:
 
 } // namespace ntr
 
-#include "../impl/tool/nhash_map.inl"
+#include "../impl/util/nhash_map.inl"

@@ -12,7 +12,7 @@
 #include "../type/nenum.hpp"
 #include "../type/nclass.hpp"
 #include "../type/npointer.hpp"
-#include "../tool/ntraits.hpp"
+#include "../util/ntype_traits.hpp"
 
 namespace ntr
 {

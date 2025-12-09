@@ -86,4 +86,4 @@ public:
 
 } // namespace ntr
 
-#include "../impl/tool/ntraits.inl"
+#include "../impl/util/ntype_traits.inl"

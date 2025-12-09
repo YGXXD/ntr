@@ -8,8 +8,8 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "../tool/nhash_map.hpp"
-#include "../tool/nvector.hpp"
+#include "../util/nhash_map.hpp"
+#include "../util/nvector.hpp"
 
 namespace ntr
 {

@@ -29,4 +29,4 @@ class nhash_set : public nhash_table<nhash_set_table_traits<Value>, Hash, Alloca
 
 } // namespace ntr
 
-#include "../impl/tool/nhash_set.inl"
+#include "../impl/util/nhash_set.inl"

@@ -86,4 +86,4 @@ protected:
 
 } // namespace ntr
 
-#include "../impl/tool/nhash_table.inl"
+#include "../impl/util/nhash_table.inl"

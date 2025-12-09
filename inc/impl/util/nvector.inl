@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../../tool/nvector.hpp"
+#include "../../util/nvector.hpp"
 
 namespace ntr
 {

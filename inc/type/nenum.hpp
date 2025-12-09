@@ -8,9 +8,9 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "../tool/nhash_map.hpp"
-#include "../tool/nvector.hpp"
-#include "../tool/ntraits.hpp"
+#include "../util/nhash_map.hpp"
+#include "../util/nvector.hpp"
+#include "../util/ntype_traits.hpp"
 
 namespace ntr
 {

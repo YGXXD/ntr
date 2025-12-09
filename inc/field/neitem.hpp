@@ -8,7 +8,7 @@
 #pragma once
 
 #include "nfield.hpp"
-#include "../tool/ntraits.hpp"
+#include "../util/ntype_traits.hpp"
 
 namespace ntr
 {

@@ -6,7 +6,7 @@
 //
 
 #include "ntr_test.hpp"
-#include "tool/nhash_set.hpp"
+#include "util/nhash_set.hpp"
 #include <unordered_set>
 #include <unordered_map>
 #include <chrono>

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../../tool/nhash_set.hpp"
+#include "../../util/nhash_set.hpp"
 
 namespace ntr
 {

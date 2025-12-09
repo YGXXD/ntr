@@ -81,4 +81,4 @@ private:
 
 } // namespace ntr
 
-#include "../impl/tool/nvector.inl"
+#include "../impl/util/nvector.inl"

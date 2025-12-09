@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../setup.hpp"
-#include "../tool/nhash_map.hpp"
+#include "../util/nhash_map.hpp"
 
 namespace ntr
 {

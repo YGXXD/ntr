@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../../tool/ntraits.hpp"
+#include "../../util/ntype_traits.hpp"
 
 namespace ntr
 {

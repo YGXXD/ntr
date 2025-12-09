@@ -5,7 +5,7 @@
 //  Created by 有个小小杜
 //
 
-#include "tool/ntraits.hpp"
+#include "util/ntype_traits.hpp"
 
 namespace ntr
 {
