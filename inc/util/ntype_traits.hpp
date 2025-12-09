@@ -48,42 +48,6 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric();
 template <typename T>
 NTR_INLINE constexpr uint8_t make_pointer_depth();
 
-template <typename T>
-struct ntype_ops_traits
-{
-private:
-    ntype_ops_traits();
-    ~ntype_ops_traits() = default;
-
-public:
-    NTR_SINGLETON_IMPL(ntype_ops_traits<T>)
-    ntype::operations ops;
-};
-
-template <typename T>
-struct ntype_ops_traits<T*>
-{
-private:
-    ntype_ops_traits();
-    ~ntype_ops_traits() = default;
-
-public:
-    NTR_SINGLETON_IMPL(ntype_ops_traits<T*>)
-    ntype::operations& ops;
-};
-
-template <>
-struct NTR_API ntype_ops_traits<void*>
-{
-private:
-    ntype_ops_traits();
-    ~ntype_ops_traits() = default;
-
-public:
-    NTR_SINGLETON_IMPL(ntype_ops_traits<void*>)
-    ntype::operations ops;
-};
-
 } // namespace ntr
 
 #include "../impl/util/ntype_traits.inl"

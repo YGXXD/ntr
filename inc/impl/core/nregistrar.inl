@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../../core/nregistrar.hpp"
-#include "../../core/nfactory.hpp"
+#include "../../core/ntype_factory.hpp"
 
 namespace ntr
 {
@@ -17,7 +17,7 @@ template <typename T>
 NTR_INLINE auto& nregistrar::factory_wrapper()
 {
     using mt = make_type_t<T>;
-    return nfactory<make_etype<mt>(), mt>::instance();
+    return ntype_factory<make_etype<mt>(), mt>::instance();
 }
 
 template <typename T>
@@ -40,4 +40,6 @@ NTR_INLINE auto& nregistrar::regist_type(std::string_view name)
 
 #include "nwrapper.inl"
 #include "nobject.inl"
-#include "nfactory.inl"
+#include "ntype_factory.inl"
+#include "ntype_ops_factory.inl"
+#include "nfield_factory.inl"

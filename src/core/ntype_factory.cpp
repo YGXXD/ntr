@@ -5,14 +5,14 @@
 //  Created by 有个小小杜
 //
 
-#include "core/nfactory.hpp"
+#include "core/ntype_factory.hpp"
 
 namespace ntr
 {
 
 // ntype::etype::eunknown void impl
-nfactory<ntype::etype::eunknown, void>::nfactory()
-    : _type(ntype::etype::eunknown, 0, 0, &ntype_ops_traits<void>::instance().ops, "")
+ntype_factory<ntype::etype::eunknown, void>::ntype_factory()
+    : _type(ntype::etype::eunknown, 0, 0, nullptr, "")
 {
 }
 
