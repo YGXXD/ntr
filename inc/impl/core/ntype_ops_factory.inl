@@ -45,9 +45,4 @@ ntype_ops_factory<T>::ntype_ops_factory() : ops()
     }
 }
 
-template <typename T>
-ntype_ops_factory<T*>::ntype_ops_factory() : ops(ntype_ops_factory<void*>::instance().ops)
-{
-}
-
 } // namespace ntr

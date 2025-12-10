@@ -136,9 +136,7 @@ ntype_factory<ntype::etype::eclass, T>::remove(std::string_view name)
 // ntype::etype::epointer impl
 template <typename T>
 ntype_factory<ntype::etype::epointer, T>::ntype_factory()
-    : _type(make_pointer_depth<T>(), std::is_const_v<std::remove_pointer_t<T>>,
-            nregistrar::get_type<std::remove_pointer_t<T>>(),
-            &ntype_ops_factory<T>::instance().ops, "")
+    : _type(nregistrar::get_type<std::remove_pointer_t<T>>(), "")
 {
 }
 

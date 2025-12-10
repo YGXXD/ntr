@@ -27,13 +27,7 @@ public:
 template <typename T>
 struct ntype_ops_factory<T*>
 {
-private:
-    ntype_ops_factory();
-    ~ntype_ops_factory() = default;
-
-public:
-    NTR_SINGLETON_IMPL(ntype_ops_factory<T*>)
-    ntype::operations& ops;
+    static_assert(false, "pointer type pos must use void*");
 };
 
 template <>

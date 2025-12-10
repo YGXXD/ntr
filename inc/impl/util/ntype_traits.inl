@@ -78,13 +78,4 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
     }, nnumeric::numeric_types {});
 }
 
-template <typename T>
-NTR_INLINE constexpr uint8_t make_pointer_depth()
-{
-    if constexpr (std::is_pointer_v<T>)
-        return 1 + make_pointer_depth<std::remove_pointer_t<T>>();
-    else
-        return 0;
-}
-
 } // namespace ntr

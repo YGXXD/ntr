@@ -86,6 +86,21 @@ int main()
 {
     try
     {
+        // test type
+        NTR_TEST_ASSERT(nephren::get<const kutori>() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(nephren::get<volatile kutori>() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(nephren::get<volatile const kutori>() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(nephren::get<const kutori*>() == nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<volatile kutori*>() == nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<volatile const kutori*>() ==
+                        nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<kutori* const>() == nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<kutori* volatile>() == nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<kutori* const volatile>() ==
+                        nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<const volatile kutori* volatile const>() ==
+                        nephren::get<kutori*>());
+
         // test type reflection
         nephren::type<sword>("sword").function("print_sword", &sword::print_sword);
         nephren::type<fairy>("fairy").function("print_fairy", &fairy::print_fairy);
@@ -167,8 +182,9 @@ int main()
                   << std::endl;
         std::cout << "kutori's age is: " << nnumeric::get_value(age) << " years old"
                   << std::endl;
-        std::cout << "kutori's value target is: "
-                  << npointer::get_target(value).as<double>() << std::endl;
+        std::cout << "kutori's value dereference is: "
+                  << value.type()->as_pointer()->dereference(value.wrapper()).as<double>()
+                  << std::endl;
         return 0;
     }
     catch (const std::exception& e)
