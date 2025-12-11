@@ -8,9 +8,35 @@
 #pragma once
 
 #include "../../util/ntype_traits.hpp"
+#include "../../util/nvector.hpp"
+#include "../../util/nhash_map.hpp"
+#include "../../util/nhash_set.hpp"
 
 namespace ntr
 {
+
+template <typename T>
+struct is_container : std::false_type
+{
+};
+
+template <typename... Args>
+struct is_container<nvector<Args...>> : std::true_type
+{
+};
+
+template <typename... Args>
+struct is_container<nhash_map<Args...>> : std::true_type
+{
+};
+
+template <typename... Args>
+struct is_container<nhash_set<Args...>> : std::true_type
+{
+};
+
+template <typename T>
+inline constexpr bool is_container_v = is_container<T>::value;
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_type()
@@ -36,13 +62,20 @@ NTR_INLINE constexpr bool is_etype_enum()
 template <typename T>
 NTR_INLINE constexpr bool is_etype_class()
 {
-    return std::is_class_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T>;
+    return std::is_class_v<T> && !is_container_v<T> && !std::is_const_v<T> &&
+           !std::is_volatile_v<T>;
 }
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_pointer()
 {
     return std::is_pointer_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T>;
+}
+
+template <typename T>
+NTR_INLINE constexpr bool is_etype_container()
+{
+    return is_container_v<T>;
 }
 
 template <typename T>
@@ -58,6 +91,8 @@ NTR_INLINE constexpr ntype::etype make_etype()
         return ntype::etype::eclass;
     else if constexpr (is_etype_pointer<T>())
         return ntype::etype::epointer;
+    else if constexpr (is_etype_container<T>())
+        return ntype::etype::econtainer;
     else
         return ntype::etype::eunknown;
 }

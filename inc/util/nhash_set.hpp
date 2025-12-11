@@ -25,6 +25,12 @@ template <class Value, class Hash = std::hash<Value>,
           class Allocator = std::allocator<nhash_table_bucket<Value>>>
 class nhash_set : public nhash_table<nhash_set_table_traits<Value>, Hash, Allocator>
 {
+    using hash_table_type = nhash_table<nhash_set_table_traits<Value>, Hash, Allocator>;
+    using hash_table_type::hash_table_type;
+
+public:
+    using typename hash_table_type::element_type;
+    using typename hash_table_type::iterator;
 };
 
 } // namespace ntr

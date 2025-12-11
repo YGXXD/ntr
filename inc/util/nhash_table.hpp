@@ -48,7 +48,7 @@ template <class TableTraits, class Hash = std::hash<typename TableTraits::key_ty
               std::allocator<nhash_table_bucket<typename TableTraits::elem_type>>>
 class nhash_table
 {
-public:
+protected:
     using key_type = typename TableTraits::key_type;
     using value_type = typename TableTraits::value_type;
     using element_type = typename TableTraits::element_type;
@@ -69,8 +69,10 @@ public:
     NTR_INLINE bool remove(const iterator& it);
     NTR_INLINE bool contains(const key_type& key) const;
     void clear();
-    NTR_INLINE uint32_t size() const;;
-    NTR_INLINE bool empty() const;;
+    NTR_INLINE uint32_t size() const;
+    ;
+    NTR_INLINE bool empty() const;
+    ;
     NTR_INLINE iterator find(const key_type& key) const;
     NTR_INLINE iterator begin() const;
     NTR_INLINE iterator end() const;

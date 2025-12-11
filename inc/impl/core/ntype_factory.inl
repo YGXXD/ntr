@@ -10,6 +10,7 @@
 #include "../../core/ntype_factory.hpp"
 #include "../../core/ntype_ops_factory.hpp"
 #include "../../core/nfield_factory.hpp"
+#include "../../core/ncontainer_ops_factory.hpp"
 #include "../../core/nregistrar.hpp"
 
 namespace ntr
@@ -137,6 +138,16 @@ ntype_factory<ntype::etype::eclass, T>::remove(std::string_view name)
 template <typename T>
 ntype_factory<ntype::etype::epointer, T>::ntype_factory()
     : _type(nregistrar::get_type<std::remove_pointer_t<T>>(), "")
+{
+}
+
+// ntype::etype::econtainer impl
+template <typename T>
+ntype_factory<ntype::etype::econtainer, T>::ntype_factory()
+    : _type(nregistrar::get_type<typename T::iterator>(),
+            nregistrar::get_type<typename T::element_type>(),
+            &ncontainer_ops_factory<T>::instance().ops, sizeof(T), alignof(T),
+            &ntype_ops_factory<T>::instance().ops, "")
 {
 }
 

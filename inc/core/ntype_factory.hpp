@@ -13,6 +13,7 @@
 #include "../type/nenum.hpp"
 #include "../type/nclass.hpp"
 #include "../type/npointer.hpp"
+#include "../type/ncontainer.hpp"
 
 namespace ntr
 {
@@ -140,6 +141,23 @@ private:
     ~ntype_factory() = default;
 
     npointer _type;
+};
+
+template <typename T>
+class ntype_factory<ntype::etype::econtainer, T>
+{
+    static_assert(is_etype_container<T>(), "ntype::etype::econtainer factory template "
+                                           "parameter \"T\" must be container type");
+
+public:
+    friend class nregistrar;
+    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::econtainer, T>)
+
+private:
+    ntype_factory();
+    ~ntype_factory() = default;
+
+    ncontainer _type;
 };
 
 } // namespace ntr

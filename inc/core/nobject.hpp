@@ -26,13 +26,6 @@ public:
     nobject& operator=(nobject&& other);
     ~nobject();
 
-    template <typename T>
-    NTR_INLINE T& as();
-    template <typename T>
-    NTR_INLINE const T& as() const;
-
-    NTR_INLINE const class ntype* type() const { return _type; }
-    NTR_INLINE eobject kind() const { return _kind; };
     bool is_valid() const;
     void* data();
     const void* data() const;
@@ -42,6 +35,14 @@ public:
     nobject refer() const;
     nwrapper wrapper() const;
 
+    NTR_INLINE const class ntype* type() const { return _type; }
+    NTR_INLINE eobject kind() const { return _kind; };
+
+    template <typename T>
+    NTR_INLINE T& as();
+    template <typename T>
+    NTR_INLINE const T& as() const;
+
 private:
     friend class ntype;
 
@@ -50,8 +51,8 @@ private:
     nobject& operator=(const nobject& other) = delete;
 
     nobject& alloc();
-    nobject& init();
-    nobject& init_copy(const class nwrapper& wrapper);
+    nobject& init_default();
+    nobject& init_copy(const nwrapper& wrapper);
     nobject& init_move(const nwrapper& wrapper);
     nobject& hold_ref(const nwrapper& wrapper);
 

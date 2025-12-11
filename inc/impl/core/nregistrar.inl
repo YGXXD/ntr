@@ -43,3 +43,4 @@ NTR_INLINE auto& nregistrar::regist_type(std::string_view name)
 #include "ntype_factory.inl"
 #include "ntype_ops_factory.inl"
 #include "nfield_factory.inl"
+#include "ncontainer_ops_factory.inl"

@@ -23,7 +23,7 @@ public:
     static void set_value(nobject& pointer, void* value);
 
     nobject dereference(const nwrapper& pointer) const;
-    NTR_INLINE const ntype* pointing_type() const { return _dereference_type; }
+    NTR_INLINE const ntype* dereference_type() const { return _dereference_type; }
 
 private:
     const ntype* _dereference_type;
