@@ -15,7 +15,7 @@ namespace ntr
 class NTR_API npointer : public ntype
 {
 public:
-    npointer(const ntype* dereference_type, std::string_view name);
+    npointer(const ntype* dereference_type);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(npointer)
     ~npointer();
 

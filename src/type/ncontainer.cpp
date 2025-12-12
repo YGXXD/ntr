@@ -14,10 +14,9 @@ namespace ntr
 
 ncontainer::ncontainer(const ntype* iterator_type, const ntype* element_type,
                        operations* container_ops, uint32_t size, uint32_t align,
-                       ntype::operations* ops, std::string_view name)
-    : ntype(ntype::etype::econtainer, size, align, ops, name),
-      _iterator_type(iterator_type), _element_type(element_type),
-      _container_ops(container_ops)
+                       ntype::operations* ops)
+    : ntype(ntype::etype::econtainer, size, align, ops), _iterator_type(iterator_type),
+      _element_type(element_type), _container_ops(container_ops)
 {
 }
 

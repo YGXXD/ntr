@@ -28,10 +28,10 @@ void npointer::set_value(nobject& pointer, void* value)
     *static_cast<void**>(pointer.data()) = value;
 }
 
-npointer::npointer(const ntype* dereference_type, std::string_view name)
+npointer::npointer(const ntype* dereference_type)
     : ntype(ntype::etype::epointer, static_cast<uint32_t>(sizeof(void*)),
             static_cast<uint32_t>(alignof(void*)),
-            &ntype_ops_factory<void*>::instance().ops, name),
+            &ntype_ops_factory<void*>::instance().ops),
       _dereference_type(dereference_type)
 {
 }

@@ -41,8 +41,7 @@ public:
     static double get_value(const nobject& numeric);
     static void set_value(nobject& numeric, double value);
 
-    nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops,
-             std::string_view name);
+    nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nnumeric)
     ~nnumeric();
 

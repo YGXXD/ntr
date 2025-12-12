@@ -54,8 +54,8 @@ void nenum::set_value(nobject& enum_, enum_integer_type value)
         break;
     }
 }
-nenum::nenum(uint32_t size, uint32_t align, operations* ops, std::string_view name)
-    : ntype(etype::eenum, size, align, ops, name)
+nenum::nenum(uint32_t size, uint32_t align, operations* ops)
+    : ntype(etype::eenum, size, align, ops)
 {
 }
 

@@ -35,8 +35,7 @@ public:
         void (*destruct)(void*);
     };
 
-    ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
-          std::string_view name);
+    ntype(etype kind, uint32_t size, uint32_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(ntype)
     ~ntype();
 

@@ -20,7 +20,7 @@ namespace ntr
 template <typename T>
 ntype_factory<ntype::etype::eunknown, T>::ntype_factory()
     : _type(ntype::etype::eunknown, static_cast<uint16_t>(sizeof(T)),
-            static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops, "")
+            static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
 {
 }
 
@@ -28,7 +28,7 @@ ntype_factory<ntype::etype::eunknown, T>::ntype_factory()
 template <typename T>
 ntype_factory<ntype::etype::enumeric, T>::ntype_factory()
     : _type(make_enumeric<T>(), static_cast<uint16_t>(sizeof(T)),
-            static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops, "")
+            static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
 {
 }
 
@@ -36,7 +36,7 @@ ntype_factory<ntype::etype::enumeric, T>::ntype_factory()
 template <typename T>
 ntype_factory<ntype::etype::eenum, T>::ntype_factory()
     : _type(static_cast<uint16_t>(sizeof(T)), static_cast<uint16_t>(alignof(T)),
-            &ntype_ops_factory<T>::instance().ops, "")
+            &ntype_ops_factory<T>::instance().ops)
 {
 }
 
@@ -60,7 +60,7 @@ ntype_factory<ntype::etype::eenum, T>::remove(std::string_view name)
 template <typename T>
 ntype_factory<ntype::etype::eclass, T>::ntype_factory()
     : _type(static_cast<uint16_t>(sizeof(T)), static_cast<uint16_t>(alignof(T)),
-            &ntype_ops_factory<T>::instance().ops, "")
+            &ntype_ops_factory<T>::instance().ops)
 {
 }
 
@@ -137,7 +137,7 @@ ntype_factory<ntype::etype::eclass, T>::remove(std::string_view name)
 // ntype::etype::epointer impl
 template <typename T>
 ntype_factory<ntype::etype::epointer, T>::ntype_factory()
-    : _type(nregistrar::get_type<std::remove_pointer_t<T>>(), "")
+    : _type(nregistrar::get_type<std::remove_pointer_t<T>>())
 {
 }
 
@@ -147,7 +147,7 @@ ntype_factory<ntype::etype::econtainer, T>::ntype_factory()
     : _type(nregistrar::get_type<typename T::iterator>(),
             nregistrar::get_type<typename T::element_type>(),
             &ncontainer_ops_factory<T>::instance().ops, sizeof(T), alignof(T),
-            &ntype_ops_factory<T>::instance().ops, "")
+            &ntype_ops_factory<T>::instance().ops)
 {
 }
 

@@ -17,7 +17,7 @@ namespace ntr
 class NTR_API nclass : public ntype
 {
 public:
-    nclass(uint32_t size, uint32_t align, operations* ops, std::string_view name);
+    nclass(uint32_t size, uint32_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nclass)
     ~nclass();
 

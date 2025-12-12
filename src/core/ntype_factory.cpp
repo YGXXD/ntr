@@ -12,7 +12,7 @@ namespace ntr
 
 // ntype::etype::eunknown void impl
 ntype_factory<ntype::etype::eunknown, void>::ntype_factory()
-    : _type(ntype::etype::eunknown, 0, 0, nullptr, "")
+    : _type(ntype::etype::eunknown, 0, 0, nullptr)
 {
 }
 

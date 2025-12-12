@@ -21,7 +21,7 @@ public:
     static enum_integer_type get_value(const nobject& enum_);
     static void set_value(nobject& enum_, enum_integer_type value);
 
-    nenum(uint32_t size, uint32_t align, operations* ops, std::string_view name);
+    nenum(uint32_t size, uint32_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nenum)
     ~nenum();
 

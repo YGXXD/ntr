@@ -15,8 +15,7 @@
 namespace ntr
 {
 
-ntype::ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
-             std::string_view name)
+ntype::ntype(etype kind, uint32_t size, uint32_t align, operations* ops)
     : _kind(kind), _is_registered(false), _size(size), _align(align), _ops(ops),
       _name_size(), _name(nullptr)
 {

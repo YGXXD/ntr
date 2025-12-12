@@ -139,9 +139,8 @@ void nnumeric::set_value(nobject& numeric, double value)
     }
 }
 
-nnumeric::nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops,
-                   std::string_view name)
-    : ntype(etype::enumeric, size, align, ops, name), _numeric_kind(numeric_kind)
+nnumeric::nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops)
+    : ntype(etype::enumeric, size, align, ops), _numeric_kind(numeric_kind)
 {
     switch (numeric_kind)
     {
