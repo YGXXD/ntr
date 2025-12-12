@@ -16,12 +16,9 @@ namespace ntr
 class NTR_API nproperty : public nfield
 {
 public:
-    nproperty(const ntype* parent_type, std::string_view name, const ntype* property_type);
-    template <typename T, typename ClassT>
-    nproperty(const ntype* parent_type, std::string_view name, T(ClassT::* member));
-    template <typename T, typename ClassT>
-    nproperty(const ntype* parent_type, std::string_view name, const T& (ClassT::*getter)() const,
-              void (ClassT::*setter)(const T&));
+    nproperty(const ntype* parent_type, std::string_view name, const ntype* property_type,
+              std::function<nobject(const nwrapper&)>&& getter,
+              std::function<void(const nwrapper&, const nwrapper&)>&& setter);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nproperty)
     ~nproperty();
 
@@ -38,5 +35,3 @@ private:
 };
 
 } // namespace ntr
-
-#include "../impl/field/nproperty.inl"

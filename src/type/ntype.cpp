@@ -10,12 +10,12 @@
 #include "type/nenum.hpp"
 #include "type/nclass.hpp"
 #include "type/npointer.hpp"
+#include "type/ncontainer.hpp"
 
 namespace ntr
 {
 
-ntype::ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
-             std::string_view name)
+ntype::ntype(etype kind, uint32_t size, uint32_t align, operations* ops)
     : _kind(kind), _is_registered(false), _size(size), _align(align), _ops(ops),
       _name_size(), _name(nullptr)
 {
@@ -47,9 +47,14 @@ const npointer* ntype::as_pointer() const
     return is_pointer() ? static_cast<const npointer*>(this) : nullptr;
 }
 
+const ncontainer* ntype::as_container() const
+{
+    return is_container() ? static_cast<const ncontainer*>(this) : nullptr;
+}
+
 nobject ntype::new_instance() const
 {
-    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init());
+    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_default());
 }
 
 nobject ntype::new_instance(const nwrapper& wrapper) const

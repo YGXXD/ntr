@@ -129,11 +129,11 @@ nobject& nobject::alloc()
     return *this;
 }
 
-nobject& nobject::init()
+nobject& nobject::init_default()
 {
     if (_kind == eobject::eref)
         throw std::runtime_error(
-            "nobject::init : object is reference, cannot initialize");
+            "nobject::init_default : object is reference, cannot initialize");
     if (obtain_status(_status) == eobtain_status::einitialized)
         throw std::runtime_error("nobject::init : object is already initialized");
     if (obtain_status(_status) == eobtain_status::eallocated)
@@ -145,7 +145,7 @@ nobject& nobject::init()
         }
         else
             throw std::runtime_error(
-                "nobject::init : default_construct operation not found");
+                "nobject::init_default : default_construct operation not found");
     }
     return *this;
 }

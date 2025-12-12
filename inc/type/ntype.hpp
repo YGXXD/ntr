@@ -24,6 +24,7 @@ public:
         eenum,
         eclass,
         epointer,
+        econtainer,
     };
 
     struct operations
@@ -34,8 +35,7 @@ public:
         void (*destruct)(void*);
     };
 
-    ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
-          std::string_view name);
+    ntype(etype kind, uint32_t size, uint32_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(ntype)
     ~ntype();
 
@@ -51,11 +51,13 @@ public:
     NTR_INLINE bool is_enum() const { return _kind == etype::eenum; }
     NTR_INLINE bool is_class() const { return _kind == etype::eclass; }
     NTR_INLINE bool is_pointer() const { return _kind == etype::epointer; }
+    NTR_INLINE bool is_container() const { return _kind == etype::econtainer; }
 
     const class nnumeric* as_numeric() const;
     const class nenum* as_enum() const;
     const class nclass* as_class() const;
     const class npointer* as_pointer() const;
+    const class ncontainer* as_container() const;
 
     nobject new_instance() const;
     nobject new_instance(const nwrapper& wrapper) const;

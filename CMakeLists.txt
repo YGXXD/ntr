@@ -23,6 +23,10 @@ if(NTR_BUILD_TESTING)
     target_link_libraries(object_test PRIVATE ntr)
     add_test(object_test object_test)
 
+    add_executable(container_test test/container_test.cpp)
+    target_link_libraries(container_test PRIVATE ntr)
+    add_test(container_test container_test)
+
     add_executable(reflect_test test/reflect_test.cpp)
     target_link_libraries(reflect_test PRIVATE ntr)
     add_test(reflect_test reflect_test)

@@ -7,10 +7,36 @@
 
 #pragma once
 
-#include "../../tool/ntraits.hpp"
+#include "../../util/ntype_traits.hpp"
+#include "../../util/nvector.hpp"
+#include "../../util/nhash_map.hpp"
+#include "../../util/nhash_set.hpp"
 
 namespace ntr
 {
+
+template <typename T>
+struct is_container : std::false_type
+{
+};
+
+template <typename... Args>
+struct is_container<nvector<Args...>> : std::true_type
+{
+};
+
+template <typename... Args>
+struct is_container<nhash_map<Args...>> : std::true_type
+{
+};
+
+template <typename... Args>
+struct is_container<nhash_set<Args...>> : std::true_type
+{
+};
+
+template <typename T>
+inline constexpr bool is_container_v = is_container<T>::value;
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_type()
@@ -36,7 +62,8 @@ NTR_INLINE constexpr bool is_etype_enum()
 template <typename T>
 NTR_INLINE constexpr bool is_etype_class()
 {
-    return std::is_class_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T>;
+    return std::is_class_v<T> && !is_container_v<T> && !std::is_const_v<T> &&
+           !std::is_volatile_v<T>;
 }
 
 template <typename T>
@@ -46,9 +73,10 @@ NTR_INLINE constexpr bool is_etype_pointer()
 }
 
 template <typename T>
-using make_type_t =
-    std::enable_if_t<!std::is_array_v<std::remove_cv_t<std::remove_reference_t<T>>>,
-                     std::remove_cv_t<std::remove_reference_t<T>>>;
+NTR_INLINE constexpr bool is_etype_container()
+{
+    return is_container_v<T>;
+}
 
 template <typename T>
 NTR_INLINE constexpr ntype::etype make_etype()
@@ -63,13 +91,11 @@ NTR_INLINE constexpr ntype::etype make_etype()
         return ntype::etype::eclass;
     else if constexpr (is_etype_pointer<T>())
         return ntype::etype::epointer;
+    else if constexpr (is_etype_container<T>())
+        return ntype::etype::econtainer;
     else
         return ntype::etype::eunknown;
 }
-
-template <nnumeric::enumeric numeric_kind>
-using make_numeric_type_t =
-    std::tuple_element_t<static_cast<size_t>(numeric_kind), nnumeric::numeric_types>;
 
 template <typename T>
 NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
@@ -85,53 +111,6 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
          ...);
         return static_cast<nnumeric::enumeric>(result);
     }, nnumeric::numeric_types {});
-}
-
-template <typename T>
-NTR_INLINE constexpr uint8_t make_pointer_depth()
-{
-    if constexpr (std::is_pointer_v<T>)
-        return 1 + make_pointer_depth<std::remove_pointer_t<T>>();
-    else
-        return 0;
-}
-
-template <typename T>
-ntype_ops_traits<T>::ntype_ops_traits() : ops()
-{
-    if constexpr (std::is_default_constructible_v<T>)
-    {
-        ops.default_construct = [](void* self_data) -> void
-        {
-            new (self_data) T();
-        };
-    }
-    if constexpr (std::is_copy_constructible_v<T>)
-    {
-        ops.copy_construct = [](void* self_data, const void* const other_data) -> void
-        {
-            new (self_data) T(*static_cast<const T*>(other_data));
-        };
-    }
-    if constexpr (std::is_move_constructible_v<T>)
-    {
-        ops.move_construct = [](void* self_data, void* other_data) -> void
-        {
-            new (self_data) T(std::move(*static_cast<T*>(other_data)));
-        };
-    }
-    if constexpr (std::is_destructible_v<T>)
-    {
-        ops.destruct = [](void* self_data) -> void
-        {
-            static_cast<T*>(self_data)->~T();
-        };
-    }
-}
-
-template <typename T>
-ntype_ops_traits<T*>::ntype_ops_traits() : ops(ntype_ops_traits<void*>::instance().ops)
-{
 }
 
 } // namespace ntr
