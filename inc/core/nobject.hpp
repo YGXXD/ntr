@@ -37,6 +37,7 @@ public:
 
     NTR_INLINE const class ntype* type() const { return _type; }
     NTR_INLINE eobject kind() const { return _kind; };
+    NTR_INLINE operator nwrapper() { return wrapper(); }
 
     template <typename T>
     NTR_INLINE T& as();

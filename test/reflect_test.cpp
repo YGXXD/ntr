@@ -169,12 +169,12 @@ int main()
         NTR_TEST_ASSERT(age.type()->is_numeric());
         nobject value = kutori_type_by_name->call("get_value", { kutori_wrapper });
         NTR_TEST_ASSERT(value.type()->is_pointer());
-        std::cout << "kutori's height is: " << nnumeric::get_value(height) << "cm"
-                  << std::endl;
-        std::cout << "kutori's weight is: " << nnumeric::get_value(weight) << "kg"
-                  << std::endl;
-        std::cout << "kutori's age is: " << nnumeric::get_value(age) << " years old"
-                  << std::endl;
+        std::cout << "kutori's height is: " << nnumeric::get_value(height.wrapper())
+                  << "cm" << std::endl;
+        std::cout << "kutori's weight is: " << nnumeric::get_value(weight.wrapper())
+                  << "kg" << std::endl;
+        std::cout << "kutori's age is: " << nnumeric::get_value(age.wrapper())
+                  << " years old" << std::endl;
         std::cout << "kutori's value dereference is: "
                   << value.type()->as_pointer()->dereference(value.wrapper()).as<double>()
                   << std::endl;

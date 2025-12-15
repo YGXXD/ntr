@@ -38,8 +38,8 @@ public:
         std::tuple<bool, char, wchar_t, char16_t, char32_t, int8_t, int16_t, int32_t,
                    int64_t, uint8_t, uint16_t, uint32_t, uint64_t, float, double>;
 
-    static double get_value(const nobject& numeric);
-    static void set_value(nobject& numeric, double value);
+    static double get_value(const nwrapper& numeric);
+    static void set_value(nwrapper& numeric, double value);
 
     nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nnumeric)

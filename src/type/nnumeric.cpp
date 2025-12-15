@@ -27,7 +27,7 @@ using u64 = make_numeric_type_t<nnumeric::enumeric::euint64>;
 using f32 = make_numeric_type_t<nnumeric::enumeric::efloat>;
 using f64 = make_numeric_type_t<nnumeric::enumeric::edouble>;
 
-double nnumeric::get_value(const nobject& numeric)
+double nnumeric::get_value(const nwrapper& numeric)
 {
     if (!numeric.type()->is_numeric())
         throw std::invalid_argument(
@@ -84,7 +84,7 @@ double nnumeric::get_value(const nobject& numeric)
     return value;
 }
 
-void nnumeric::set_value(nobject& numeric, double value)
+void nnumeric::set_value(nwrapper& numeric, double value)
 {
     if (!numeric.type()->is_numeric())
         throw std::invalid_argument(

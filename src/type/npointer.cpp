@@ -12,7 +12,7 @@
 namespace ntr
 {
 
-void* npointer::get_value(const nobject& pointer)
+void* npointer::get_value(const nwrapper& pointer)
 {
     if (!pointer.type()->is_pointer())
         throw std::invalid_argument(
@@ -20,7 +20,7 @@ void* npointer::get_value(const nobject& pointer)
     return *static_cast<void* const*>(pointer.data());
 }
 
-void npointer::set_value(nobject& pointer, void* value)
+void npointer::set_value(nwrapper& pointer, void* value)
 {
     if (!pointer.type()->is_pointer())
         throw std::invalid_argument(

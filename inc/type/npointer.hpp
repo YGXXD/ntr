@@ -19,8 +19,8 @@ public:
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(npointer)
     ~npointer();
 
-    static void* get_value(const nobject& pointer);
-    static void set_value(nobject& pointer, void* value);
+    static void* get_value(const nwrapper& pointer);
+    static void set_value(nwrapper& pointer, void* value);
 
     nobject dereference(const nwrapper& pointer) const;
     NTR_INLINE const ntype* dereference_type() const { return _dereference_type; }
