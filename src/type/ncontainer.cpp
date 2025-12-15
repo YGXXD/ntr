@@ -83,7 +83,7 @@ void ncontainer::next(const nwrapper& iterator) const
     if (iterator.type() != _iterator_type)
         throw std::invalid_argument(
             "nncontainer::next : iterator's type is not this iterator type");
-    return _container_ops->next(iterator.data());
+    _container_ops->next(iterator.data());
 }
 
 nobject ncontainer::end(const nwrapper& container) const

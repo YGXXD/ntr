@@ -24,7 +24,7 @@ nfield_factory::make_property(const ntype* parent_type, std::string_view name,
     std::function<nobject(const nwrapper&)> getter =
         [member](const nwrapper& instance) -> nobject
     {
-        return nregistrar::get_type<T>()->new_reference(instance.cref<ClassT>().*member);
+        return nregistrar::get_type<T>()->ref_instance(instance.cref<ClassT>().*member);
     };
     std::function<void(const nwrapper&, const nwrapper&)> setter =
         [member](const nwrapper& instance, const nwrapper& value)
@@ -47,7 +47,7 @@ nfield_factory::make_property(const ntype* parent_type, std::string_view name,
     std::function<nobject(const nwrapper&)> getter =
         [getter_fun](const nwrapper& instance) -> nobject
     {
-        return nregistrar::get_type<T>()->new_reference(
+        return nregistrar::get_type<T>()->ref_instance(
             (instance.cref<ClassT>().*getter_fun)());
     };
     std::function<void(const nwrapper&, const nwrapper&)> setter =
@@ -129,15 +129,12 @@ template <typename Ret, typename... Args, typename OP>
 NTR_INLINE nobject nfield_factory::function_call(OP op, nvector<nwrapper>::iterator it)
 {
     if constexpr (std::is_reference_v<Ret>)
-        return nregistrar::get_type<Ret>()->new_reference(op((it++)->unwrap<Args>()...));
+        return nregistrar::get_type<Ret>()->ref_instance(op((it++)->unwrap<Args>()...));
     else if constexpr (!std::is_same_v<Ret, void>)
-        return nregistrar::get_type<Ret>()->new_instance_rv(
-            op((it++)->unwrap<Args>()...));
+        return nregistrar::get_type<Ret>()->move_instance(op((it++)->unwrap<Args>()...));
     else
-    {
-        op((it++)->unwrap<Args>()...);
-        return nregistrar::get_type<Ret>()->new_instance();
-    }
+        return (op((it++)->unwrap<Args>()...),
+                nregistrar::get_type<Ret>()->new_instance());
 }
 
 } // namespace ntr

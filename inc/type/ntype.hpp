@@ -60,9 +60,9 @@ public:
     const class ncontainer* as_container() const;
 
     nobject new_instance() const;
-    nobject new_instance(const nwrapper& wrapper) const;
-    nobject new_instance_rv(const nwrapper& wrapper) const;
-    nobject new_reference(const nwrapper& wrapper) const;
+    nobject copy_instance(const nwrapper& wrapper) const;
+    nobject move_instance(const nwrapper& wrapper) const;
+    nobject ref_instance(const nwrapper& wrapper) const;
 
 private:
     friend class nregistrar;

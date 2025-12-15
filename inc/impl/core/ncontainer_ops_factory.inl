@@ -45,7 +45,7 @@ template <typename T>
 static nobject begin(void* container)
 {
     typename T::iterator it = static_cast<T*>(container)->begin();
-    return nregistrar::get_type<typename T::iterator>()->new_instance_rv(it);
+    return nregistrar::get_type<typename T::iterator>()->move_instance(it);
 }
 
 template <typename T>
@@ -58,7 +58,7 @@ template <typename T>
 static nobject end(void* container)
 {
     typename T::iterator it = static_cast<T*>(container)->end();
-    return nregistrar::get_type<typename T::iterator>()->new_instance_rv(it);
+    return nregistrar::get_type<typename T::iterator>()->move_instance(it);
 }
 
 template <typename T>
@@ -71,7 +71,7 @@ static bool equal(void* iterator1, void* iterator2)
 template <typename T>
 static nobject get(void* iterator)
 {
-    return nregistrar::get_type<typename T::element_type>()->new_reference(
+    return nregistrar::get_type<typename T::element_type>()->ref_instance(
         **static_cast<typename T::iterator*>(iterator));
 }
 

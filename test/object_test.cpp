@@ -32,7 +32,7 @@ int main()
     {
         // test object
         int integer = 2048;
-        nobject obj = nephren::get<int>()->new_instance(integer);
+        nobject obj = nephren::get<int>()->copy_instance(integer);
         obj.as<int>() = 1024;
         NTR_TEST_ASSERT(obj.type() == nephren::get<int>());
         NTR_TEST_ASSERT(obj.kind() == nobject::eobject::eobtain);
@@ -46,7 +46,7 @@ int main()
         NTR_TEST_ASSERT(obj_new.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(obj_new.as<int>() == integer);
 
-        obj = nephren::get<int>()->new_reference(integer);
+        obj = nephren::get<int>()->ref_instance(integer);
         obj.as<int>() = 1024;
         NTR_TEST_ASSERT(obj.type() == nephren::get<int>());
         NTR_TEST_ASSERT(obj.kind() == nobject::eobject::eref);
@@ -61,7 +61,7 @@ int main()
         NTR_TEST_ASSERT(obj.as<int>() == integer);
 
         kutori s_kutori {};
-        nobject kutori_obj = nephren::get<kutori>()->new_instance_rv(s_kutori);
+        nobject kutori_obj = nephren::get<kutori>()->move_instance(s_kutori);
         NTR_TEST_ASSERT(s_kutori.get_value() == nullptr);
         NTR_TEST_ASSERT(kutori_obj.type() == nephren::get<kutori>());
         NTR_TEST_ASSERT(kutori_obj.kind() == nobject::eobject::eobtain);

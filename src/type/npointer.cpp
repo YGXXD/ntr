@@ -51,7 +51,7 @@ nobject npointer::dereference(const nwrapper& pointer) const
     }
     if (!ptr_value)
         throw std::invalid_argument("npointer::dereference : pointer deference failed");
-    return _dereference_type->new_reference(nwrapper(_dereference_type, ptr_value));
+    return _dereference_type->ref_instance(nwrapper(_dereference_type, ptr_value));
 }
 
 npointer::~npointer() = default;

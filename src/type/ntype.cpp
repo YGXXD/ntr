@@ -57,27 +57,27 @@ nobject ntype::new_instance() const
     return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_default());
 }
 
-nobject ntype::new_instance(const nwrapper& wrapper) const
+nobject ntype::copy_instance(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_instance : wrapper's type is different from this");
+            "ntype::copy_instance : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_copy(wrapper));
 }
 
-nobject ntype::new_instance_rv(const nwrapper& wrapper) const
+nobject ntype::move_instance(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_instance_rv : wrapper's type is different from this");
+            "ntype::move_instance : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_move(wrapper));
 }
 
-nobject ntype::new_reference(const nwrapper& wrapper) const
+nobject ntype::ref_instance(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_reference : wrapper's type is different from this");
+            "ntype::ref_instance : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eref).hold_ref(wrapper));
 }
 

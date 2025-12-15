@@ -39,6 +39,24 @@ template <typename T>
 inline constexpr bool is_container_v = is_container<T>::value;
 
 template <typename T>
+struct is_container_iterator : std::false_type
+{
+};
+
+template <typename... Args>
+struct is_container_iterator<nvector_iterator<Args...>> : std::true_type
+{
+};
+
+template <typename... Args>
+struct is_container_iterator<nhash_table_iterator<Args...>> : std::true_type
+{
+};
+
+template <typename T>
+inline constexpr bool is_container_iterator_v = is_container_iterator<T>::value;
+
+template <typename T>
 NTR_INLINE constexpr bool is_etype_type()
 {
     return !std::is_array_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T> &&
@@ -62,8 +80,8 @@ NTR_INLINE constexpr bool is_etype_enum()
 template <typename T>
 NTR_INLINE constexpr bool is_etype_class()
 {
-    return std::is_class_v<T> && !is_container_v<T> && !std::is_const_v<T> &&
-           !std::is_volatile_v<T>;
+    return std::is_class_v<T> && !is_container_v<T> && !is_container_iterator_v<T> &&
+           !std::is_const_v<T> && !std::is_volatile_v<T>;
 }
 
 template <typename T>
