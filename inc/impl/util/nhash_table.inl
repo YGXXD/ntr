@@ -108,6 +108,16 @@ nhash_table<TableTraits, Hash, Allocator>::nhash_table(nhash_table&& other)
 }
 
 template <class TableTraits, class Hash, class Allocator>
+nhash_table<TableTraits, Hash, Allocator>::nhash_table(
+    std::initializer_list<element_type> list)
+    : _size(0), _capacity(0), _buckets(nullptr)
+{
+    reserve(list.size() * 2);
+    for (auto& element : list)
+        insert(element);
+}
+
+template <class TableTraits, class Hash, class Allocator>
 nhash_table<TableTraits, Hash, Allocator>::~nhash_table()
 {
     if constexpr (!std::is_trivially_copyable_v<element_type>)
@@ -118,6 +128,34 @@ nhash_table<TableTraits, Hash, Allocator>::~nhash_table()
     }
     if (_buckets)
         Allocator().deallocate(_buckets, _capacity);
+}
+
+template <class TableTraits, class Hash, class Allocator>
+nhash_table<TableTraits, Hash, Allocator>&
+nhash_table<TableTraits, Hash, Allocator>::operator=(const nhash_table& other)
+{
+    if (this != &other)
+    {
+        nhash_table temp(other);
+        std::swap(_size, temp._size);
+        std::swap(_capacity, temp._capacity);
+        std::swap(_buckets, temp._buckets);
+    }
+    return *this;
+}
+
+template <class TableTraits, class Hash, class Allocator>
+nhash_table<TableTraits, Hash, Allocator>&
+nhash_table<TableTraits, Hash, Allocator>::operator=(nhash_table&& other)
+{
+    if (this != &other)
+    {
+        nhash_table temp(std::move(other));
+        std::swap(_size, temp._size);
+        std::swap(_capacity, temp._capacity);
+        std::swap(_buckets, temp._buckets);
+    }
+    return *this;
 }
 
 template <class TableTraits, class Hash, class Allocator>

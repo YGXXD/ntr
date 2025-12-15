@@ -52,6 +52,8 @@ public:
     nvector(nvector&& other);
     nvector(std::initializer_list<element_type> list);
     ~nvector();
+    NTR_INLINE nvector& operator=(const nvector& other);
+    NTR_INLINE nvector& operator=(nvector&& other);
 
     void reserve(uint32_t new_capacity);
     NTR_INLINE void push_back(const element_type& value);

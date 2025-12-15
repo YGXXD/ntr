@@ -160,6 +160,34 @@ nvector<Value, Allocator>::~nvector()
 }
 
 template <class Value, class Allocator>
+NTR_INLINE nvector<Value, Allocator>&
+nvector<Value, Allocator>::operator=(const nvector& other)
+{
+    if (this != &other)
+    {
+        nvector temp(other);
+        std::swap(_size, temp._size);
+        std::swap(_capacity, temp._capacity);
+        std::swap(_datas, temp._datas);
+    }
+    return *this;
+}
+
+template <class Value, class Allocator>
+NTR_INLINE nvector<Value, Allocator>&
+nvector<Value, Allocator>::operator=(nvector&& other)
+{
+    if (this != &other)
+    {
+        nvector temp(std::move(other));
+        std::swap(_size, temp._size);
+        std::swap(_capacity, temp._capacity);
+        std::swap(_datas, temp._datas);
+    }
+    return *this;
+}
+
+template <class Value, class Allocator>
 void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
 {
     if (new_capacity <= _capacity)

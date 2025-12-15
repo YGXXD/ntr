@@ -60,7 +60,10 @@ public:
     nhash_table();
     nhash_table(const nhash_table& other);
     nhash_table(nhash_table&& other);
+    nhash_table(std::initializer_list<element_type> list);
     ~nhash_table();
+    NTR_INLINE nhash_table& operator=(const nhash_table& other);
+    NTR_INLINE nhash_table& operator=(nhash_table&& other);
 
     void reserve(uint32_t new_capacity);
     NTR_INLINE void insert(const element_type& element);
@@ -70,9 +73,7 @@ public:
     NTR_INLINE bool contains(const key_type& key) const;
     void clear();
     NTR_INLINE uint32_t size() const;
-    ;
     NTR_INLINE bool empty() const;
-    ;
     NTR_INLINE iterator find(const key_type& key) const;
     NTR_INLINE iterator begin() const;
     NTR_INLINE iterator end() const;
