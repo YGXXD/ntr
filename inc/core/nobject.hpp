@@ -63,11 +63,13 @@ private:
         struct
         {
             eobject _kind;
-            std::array<std::byte, 7> _status;
+            bool _is_heap;
+            uint8_t _obtain_status;
+            uint8_t _ref_status;
         };
-        std::array<std::byte, 8> _padding;
+        std::array<char, sizeof(void*)> _status;
     };
-    alignas(16) std::array<std::byte, 16> _bytes;
+    alignas(16) std::array<char, 16> _bytes;
 };
 
 } // namespace ntr

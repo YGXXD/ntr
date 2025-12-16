@@ -30,6 +30,10 @@ if(NTR_BUILD_TESTING)
     add_executable(reflect_test test/reflect_test.cpp)
     target_link_libraries(reflect_test PRIVATE ntr)
     add_test(reflect_test reflect_test)
+
+    add_executable(serializer_test test/serializer_test.cpp)
+    target_link_libraries(serializer_test PRIVATE ntr)
+    add_test(serializer_test serializer_test)
 endif()
 
 if(NTR_BUILD_SHARED)

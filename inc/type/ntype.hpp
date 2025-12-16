@@ -24,6 +24,7 @@ public:
         eenum,
         eclass,
         epointer,
+        estd_pair,
         econtainer,
     };
 
@@ -51,12 +52,14 @@ public:
     NTR_INLINE bool is_enum() const { return _kind == etype::eenum; }
     NTR_INLINE bool is_class() const { return _kind == etype::eclass; }
     NTR_INLINE bool is_pointer() const { return _kind == etype::epointer; }
+    NTR_INLINE bool is_std_pair() const { return _kind == etype::estd_pair; }
     NTR_INLINE bool is_container() const { return _kind == etype::econtainer; }
 
     const class nnumeric* as_numeric() const;
     const class nenum* as_enum() const;
     const class nclass* as_class() const;
     const class npointer* as_pointer() const;
+    const class nstd_pair* as_std_pair() const;
     const class ncontainer* as_container() const;
 
     nobject new_instance() const;

@@ -31,6 +31,9 @@ template <typename T>
 NTR_INLINE constexpr bool is_etype_pointer();
 
 template <typename T>
+NTR_INLINE constexpr bool is_etype_std_pair();
+
+template <typename T>
 NTR_INLINE constexpr bool is_etype_container();
 
 template <typename T>
