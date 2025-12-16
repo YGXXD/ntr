@@ -146,8 +146,8 @@ template <typename T>
 ntype_factory<ntype::etype::econtainer, T>::ntype_factory()
     : _type(nregistrar::get_type<typename T::iterator>(),
             nregistrar::get_type<typename T::element_type>(),
-            &ncontainer_ops_factory<T>::instance().ops, sizeof(T), alignof(T),
-            &ntype_ops_factory<T>::instance().ops)
+            &ncontainer_ops_factory<T>::instance().ops, static_cast<uint16_t>(sizeof(T)),
+            static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
 {
 }
 

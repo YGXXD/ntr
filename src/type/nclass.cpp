@@ -12,7 +12,7 @@
 namespace ntr
 {
 
-nclass::nclass(uint32_t size, uint32_t align, operations* ops)
+nclass::nclass(uint16_t size, uint16_t align, operations* ops)
     : ntype(etype::eclass, size, align, ops)
 {
 }

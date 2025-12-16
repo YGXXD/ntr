@@ -54,7 +54,7 @@ void nenum::set_value(nwrapper& enum_, enum_integer_type value)
         break;
     }
 }
-nenum::nenum(uint32_t size, uint32_t align, operations* ops)
+nenum::nenum(uint16_t size, uint16_t align, operations* ops)
     : ntype(etype::eenum, size, align, ops)
 {
 }

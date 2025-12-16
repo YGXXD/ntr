@@ -35,14 +35,14 @@ public:
         void (*destruct)(void*);
     };
 
-    ntype(etype kind, uint32_t size, uint32_t align, operations* ops);
+    ntype(etype kind, uint16_t size, uint16_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(ntype)
     ~ntype();
 
     NTR_INLINE etype kind() const { return _kind; }
     NTR_INLINE bool is_registered() const { return _is_registered; }
-    NTR_INLINE uint32_t align() const { return _align; }
-    NTR_INLINE uint32_t size() const { return _size; }
+    NTR_INLINE uint16_t align() const { return _align; }
+    NTR_INLINE uint16_t size() const { return _size; }
     NTR_INLINE const operations* ops() const { return _ops; }
     NTR_INLINE std::string_view name() const { return { _name, _name_size }; }
 

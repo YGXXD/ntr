@@ -41,7 +41,7 @@ public:
     static double get_value(const nwrapper& numeric);
     static void set_value(nwrapper& numeric, double value);
 
-    nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops);
+    nnumeric(enumeric numeric_kind, uint16_t size, uint16_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nnumeric)
     ~nnumeric();
 

@@ -29,7 +29,7 @@ public:
     };
 
     ncontainer(const ntype* iterator_type, const ntype* element_type,
-               operations* container_ops, uint32_t size, uint32_t align,
+               operations* container_ops, uint16_t size, uint16_t align,
                ntype::operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(ncontainer)
     ~ncontainer();

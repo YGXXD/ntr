@@ -139,7 +139,7 @@ void nnumeric::set_value(nwrapper& numeric, double value)
     }
 }
 
-nnumeric::nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops)
+nnumeric::nnumeric(enumeric numeric_kind, uint16_t size, uint16_t align, operations* ops)
     : ntype(etype::enumeric, size, align, ops), _numeric_kind(numeric_kind)
 {
     switch (numeric_kind)

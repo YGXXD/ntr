@@ -29,12 +29,14 @@ void npointer::set_value(nwrapper& pointer, void* value)
 }
 
 npointer::npointer(const ntype* dereference_type)
-    : ntype(ntype::etype::epointer, static_cast<uint32_t>(sizeof(void*)),
-            static_cast<uint32_t>(alignof(void*)),
+    : ntype(ntype::etype::epointer, static_cast<uint16_t>(sizeof(void*)),
+            static_cast<uint16_t>(alignof(void*)),
             &ntype_ops_factory<void*>::instance().ops),
       _dereference_type(dereference_type)
 {
 }
+
+npointer::~npointer() = default;
 
 nobject npointer::dereference(const nwrapper& pointer) const
 {
@@ -53,7 +55,5 @@ nobject npointer::dereference(const nwrapper& pointer) const
         throw std::invalid_argument("npointer::dereference : pointer deference failed");
     return _dereference_type->ref_instance(nwrapper(_dereference_type, ptr_value));
 }
-
-npointer::~npointer() = default;
 
 } // namespace ntr
