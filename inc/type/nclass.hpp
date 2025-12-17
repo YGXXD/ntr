@@ -8,9 +8,8 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "../tool/ntable.hpp"
-#include "../tool/narray.hpp"
-#include "../core/nobject.hpp"
+#include "../util/nhash_map.hpp"
+#include "../util/nvector.hpp"
 
 namespace ntr
 {
@@ -18,7 +17,7 @@ namespace ntr
 class NTR_API nclass : public ntype
 {
 public:
-    nclass(uint32_t size, uint32_t align, operations* ops, std::string_view name);
+    nclass(uint16_t size, uint16_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nclass)
     ~nclass();
 

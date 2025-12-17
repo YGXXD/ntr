@@ -5,12 +5,12 @@
 //  Created by 有个小小杜
 //
 
-#include "tool/ntraits.hpp"
+#include "core/ntype_ops_factory.hpp"
 
 namespace ntr
 {
 
-ntype_ops_traits<void*>::ntype_ops_traits() : ops({
+ntype_ops_factory<void*>::ntype_ops_factory() : ops({
     [](void* self_data) -> void { 
         *static_cast<void**>(self_data) = nullptr; 
     },

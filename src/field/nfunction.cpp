@@ -11,8 +11,12 @@
 namespace ntr
 {
 
-nfunction::nfunction(const ntype* parent_type, std::string_view name, bool is_static)
-    : nfield(parent_type, efield::eproperty, name), _is_static(is_static)
+nfunction::nfunction(const ntype* parent_type, std::string_view name, bool is_static,
+                     const ntype* return_type, nvector<const ntype*>&& argument_types,
+                     std::function<nobject(const nvector<nwrapper>&)>&& function)
+    : nfield(parent_type, efield::eproperty, name), _is_static(is_static),
+      _return_type(return_type), _argument_types(std::move(argument_types)),
+      _function(std::move(function))
 {
     if (parent_type->kind() != ntype::etype::eclass)
         throw std::invalid_argument(

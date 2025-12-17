@@ -8,9 +8,9 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "../tool/ntable.hpp"
-#include "../tool/narray.hpp"
-#include "../tool/ntraits.hpp"
+#include "../util/nhash_map.hpp"
+#include "../util/nvector.hpp"
+#include "../util/ntype_traits.hpp"
 
 namespace ntr
 {
@@ -18,10 +18,10 @@ namespace ntr
 class NTR_API nenum : public ntype
 {
 public:
-    static enum_integer_type get_value(const class nobject& enum_);
-    static void set_value(nobject& enum_, enum_integer_type value);
+    static enum_integer_type get_value(const nwrapper& enum_);
+    static void set_value(nwrapper& enum_, enum_integer_type value);
 
-    nenum(uint32_t size, uint32_t align, operations* ops, std::string_view name);
+    nenum(uint16_t size, uint16_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nenum)
     ~nenum();
 

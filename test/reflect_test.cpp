@@ -86,6 +86,21 @@ int main()
 {
     try
     {
+        // test type
+        NTR_TEST_ASSERT(nephren::get<const kutori>() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(nephren::get<volatile kutori>() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(nephren::get<volatile const kutori>() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(nephren::get<const kutori*>() == nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<volatile kutori*>() == nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<volatile const kutori*>() ==
+                        nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<kutori* const>() == nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<kutori* volatile>() == nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<kutori* const volatile>() ==
+                        nephren::get<kutori*>());
+        NTR_TEST_ASSERT(nephren::get<const volatile kutori* volatile const>() ==
+                        nephren::get<kutori*>());
+
         // test type reflection
         nephren::type<sword>("sword").function("print_sword", &sword::print_sword);
         nephren::type<fairy>("fairy").function("print_fairy", &fairy::print_fairy);
@@ -105,42 +120,35 @@ int main()
         NTR_TEST_ASSERT(kutori_type == kutori_type_by_name);
 
         const nfunction* kutori_print_fairy = kutori_type->get_function("print_fairy");
-        NTR_TEST_ASSERT(kutori_print_fairy->return_type() ==
-                        nregistrar::get_type<void>());
+        NTR_TEST_ASSERT(kutori_print_fairy->return_type() == nephren::get<void>());
         const nfunction* kutori_print_sword = kutori_type->get_function("print_sword");
-        NTR_TEST_ASSERT(kutori_print_sword->return_type() ==
-                        nregistrar::get_type<void>());
+        NTR_TEST_ASSERT(kutori_print_sword->return_type() == nephren::get<void>());
 
         const nfunction* kutori_update_info = kutori_type->get_function("update_info");
-        NTR_TEST_ASSERT(kutori_update_info->return_type() ==
-                        nregistrar::get_type<void>());
+        NTR_TEST_ASSERT(kutori_update_info->return_type() == nephren::get<void>());
         NTR_TEST_ASSERT(kutori_update_info->argument_types().size() == 3);
         NTR_TEST_ASSERT(kutori_update_info->argument_types()[0] ==
-                        nregistrar::get_type<kutori>());
-        NTR_TEST_ASSERT(kutori_update_info->argument_types()[1] ==
-                        nregistrar::get_type<float>());
-        NTR_TEST_ASSERT(kutori_update_info->argument_types()[2] ==
-                        nregistrar::get_type<float>());
+                        nephren::get<kutori>());
+        NTR_TEST_ASSERT(kutori_update_info->argument_types()[1] == nephren::get<float>());
+        NTR_TEST_ASSERT(kutori_update_info->argument_types()[2] == nephren::get<float>());
 
         const nfunction* kutori_get_value = kutori_type->get_function("get_value");
-        auto okoko = nregistrar::get_type<double*>();
-        NTR_TEST_ASSERT(kutori_get_value->return_type() ==
-                        nregistrar::get_type<const double*>());
+        auto okoko = nephren::get<double*>();
+        NTR_TEST_ASSERT(kutori_get_value->return_type() == nephren::get<const double*>());
         NTR_TEST_ASSERT(kutori_get_value->argument_types().size() == 1);
-        NTR_TEST_ASSERT(kutori_get_value->argument_types()[0] ==
-                        nregistrar::get_type<kutori>());
+        NTR_TEST_ASSERT(kutori_get_value->argument_types()[0] == nephren::get<kutori>());
 
         const nproperty* kutori_age = kutori_type->get_property("age");
-        NTR_TEST_ASSERT(kutori_age->parent_type() == nregistrar::get_type<kutori>());
-        NTR_TEST_ASSERT(kutori_age->property_type() == nregistrar::get_type<int>());
+        NTR_TEST_ASSERT(kutori_age->parent_type() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(kutori_age->property_type() == nephren::get<int>());
 
         const nproperty* kutori_height = kutori_type->get_property("height");
-        NTR_TEST_ASSERT(kutori_height->parent_type() == nregistrar::get_type<kutori>());
-        NTR_TEST_ASSERT(kutori_height->property_type() == nregistrar::get_type<float>());
+        NTR_TEST_ASSERT(kutori_height->parent_type() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(kutori_height->property_type() == nephren::get<float>());
 
         const nproperty* kutori_weight = kutori_type->get_property("weight");
-        NTR_TEST_ASSERT(kutori_weight->parent_type() == nregistrar::get_type<kutori>());
-        NTR_TEST_ASSERT(kutori_weight->property_type() == nregistrar::get_type<float>());
+        NTR_TEST_ASSERT(kutori_weight->parent_type() == nephren::get<kutori>());
+        NTR_TEST_ASSERT(kutori_weight->property_type() == nephren::get<float>());
 
         nobject kutori_obj = kutori_type->new_instance();
         nwrapper kutori_wrapper = kutori_obj.wrapper();
@@ -161,14 +169,15 @@ int main()
         NTR_TEST_ASSERT(age.type()->is_numeric());
         nobject value = kutori_type_by_name->call("get_value", { kutori_wrapper });
         NTR_TEST_ASSERT(value.type()->is_pointer());
-        std::cout << "kutori's height is: " << nnumeric::get_value(height) << "cm"
+        std::cout << "kutori's height is: " << nnumeric::get_value(height.wrapper())
+                  << "cm" << std::endl;
+        std::cout << "kutori's weight is: " << nnumeric::get_value(weight.wrapper())
+                  << "kg" << std::endl;
+        std::cout << "kutori's age is: " << nnumeric::get_value(age.wrapper())
+                  << " years old" << std::endl;
+        std::cout << "kutori's value dereference is: "
+                  << value.type()->as_pointer()->dereference(value.wrapper()).as<double>()
                   << std::endl;
-        std::cout << "kutori's weight is: " << nnumeric::get_value(weight) << "kg"
-                  << std::endl;
-        std::cout << "kutori's age is: " << nnumeric::get_value(age) << " years old"
-                  << std::endl;
-        std::cout << "kutori's value target is: "
-                  << npointer::get_target(value).as<double>() << std::endl;
         return 0;
     }
     catch (const std::exception& e)

@@ -6,7 +6,7 @@
 //
 
 #include "type/nnumeric.hpp"
-#include "tool/ntraits.hpp"
+#include "util/ntype_traits.hpp"
 
 namespace ntr
 {
@@ -27,7 +27,7 @@ using u64 = make_numeric_type_t<nnumeric::enumeric::euint64>;
 using f32 = make_numeric_type_t<nnumeric::enumeric::efloat>;
 using f64 = make_numeric_type_t<nnumeric::enumeric::edouble>;
 
-double nnumeric::get_value(const nobject& numeric)
+double nnumeric::get_value(const nwrapper& numeric)
 {
     if (!numeric.type()->is_numeric())
         throw std::invalid_argument(
@@ -84,7 +84,7 @@ double nnumeric::get_value(const nobject& numeric)
     return value;
 }
 
-void nnumeric::set_value(nobject& numeric, double value)
+void nnumeric::set_value(nwrapper& numeric, double value)
 {
     if (!numeric.type()->is_numeric())
         throw std::invalid_argument(
@@ -139,9 +139,8 @@ void nnumeric::set_value(nobject& numeric, double value)
     }
 }
 
-nnumeric::nnumeric(enumeric numeric_kind, uint32_t size, uint32_t align, operations* ops,
-                   std::string_view name)
-    : ntype(etype::enumeric, size, align, ops, name), _numeric_kind(numeric_kind)
+nnumeric::nnumeric(enumeric numeric_kind, uint16_t size, uint16_t align, operations* ops)
+    : ntype(etype::enumeric, size, align, ops), _numeric_kind(numeric_kind)
 {
     switch (numeric_kind)
     {

@@ -10,12 +10,13 @@
 #include "type/nenum.hpp"
 #include "type/nclass.hpp"
 #include "type/npointer.hpp"
+#include "type/nstd_pair.hpp"
+#include "type/ncontainer.hpp"
 
 namespace ntr
 {
 
-ntype::ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
-             std::string_view name)
+ntype::ntype(etype kind, uint16_t size, uint16_t align, operations* ops)
     : _kind(kind), _is_registered(false), _size(size), _align(align), _ops(ops),
       _name_size(), _name(nullptr)
 {
@@ -47,32 +48,42 @@ const npointer* ntype::as_pointer() const
     return is_pointer() ? static_cast<const npointer*>(this) : nullptr;
 }
 
-nobject ntype::new_instance() const
+const nstd_pair* ntype::as_std_pair() const
 {
-    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init());
+    return is_std_pair() ? static_cast<const nstd_pair*>(this) : nullptr;
 }
 
-nobject ntype::new_instance(const nwrapper& wrapper) const
+const ncontainer* ntype::as_container() const
+{
+    return is_container() ? static_cast<const ncontainer*>(this) : nullptr;
+}
+
+nobject ntype::new_instance() const
+{
+    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_default());
+}
+
+nobject ntype::copy_instance(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_instance : wrapper's type is different from this");
+            "ntype::copy_instance : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_copy(wrapper));
 }
 
-nobject ntype::new_instance_rv(const nwrapper& wrapper) const
+nobject ntype::move_instance(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_instance_rv : wrapper's type is different from this");
+            "ntype::move_instance : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_move(wrapper));
 }
 
-nobject ntype::new_reference(const nwrapper& wrapper) const
+nobject ntype::ref_instance(const nwrapper& wrapper) const
 {
     if (wrapper.type() != this)
         throw std::invalid_argument(
-            "ntype::new_reference : wrapper's type is different from this");
+            "ntype::ref_instance : wrapper's type is different from this");
     return std::move(nobject(this, nobject::eobject::eref).hold_ref(wrapper));
 }
 

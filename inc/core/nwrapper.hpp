@@ -15,8 +15,9 @@ namespace ntr
 class NTR_API nwrapper
 {
 public:
-    template <typename T,
-              typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, nwrapper>>>
+    template <typename T, typename = std::enable_if_t<
+                              !std::is_same_v<std::decay_t<T>, nwrapper> &&
+                              !std::is_same_v<std::decay_t<T>, class nobject>>>
     nwrapper(T&& value);
     nwrapper(const class ntype* type, const void* data);
     nwrapper(const nwrapper& other);

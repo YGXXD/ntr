@@ -6,43 +6,54 @@
 //
 
 #include "type/npointer.hpp"
+#include "type/nclass.hpp"
+#include "core/ntype_ops_factory.hpp"
 
 namespace ntr
 {
 
-void* npointer::get_value(const nobject& pointer)
+void* npointer::get_value(const nwrapper& pointer)
 {
     if (!pointer.type()->is_pointer())
         throw std::invalid_argument(
             "npointer::get_value : pointer's type is not pointer type");
-    return *reinterpret_cast<void* const*>(pointer.data());
+    return *static_cast<void* const*>(pointer.data());
 }
 
-void npointer::set_value(nobject& pointer, void* value)
+void npointer::set_value(nwrapper& pointer, void* value)
 {
     if (!pointer.type()->is_pointer())
         throw std::invalid_argument(
             "npointer::set_value : pointer's type is not pointer type");
-    *reinterpret_cast<void**>(pointer.data()) = value;
+    *static_cast<void**>(pointer.data()) = value;
 }
 
-nobject npointer::get_target(const nobject& pointer)
-{
-    void* ptr = get_value(pointer);
-    if (ptr == nullptr)
-        throw std::invalid_argument("npointer::get_target : pointer's value is nullptr");
-    const ntype* pointing_type = pointer.type()->as_pointer()->pointing_type();
-    return pointing_type->new_reference(nwrapper(pointing_type, ptr));
-}
-
-npointer::npointer(uint8_t depth, bool pointing_is_const, const ntype* pointing_type,
-                   operations* ops, std::string_view name)
-    : ntype(ntype::etype::epointer, static_cast<uint32_t>(sizeof(void*)),
-            static_cast<uint32_t>(alignof(void*)), ops, name),
-      _depth(depth), _pointing_is_const(pointing_is_const), _pointing_type(pointing_type)
+npointer::npointer(const ntype* dereference_type)
+    : ntype(ntype::etype::epointer, static_cast<uint16_t>(sizeof(void*)),
+            static_cast<uint16_t>(alignof(void*)),
+            &ntype_ops_factory<void*>::instance().ops),
+      _dereference_type(dereference_type)
 {
 }
 
 npointer::~npointer() = default;
+
+nobject npointer::dereference(const nwrapper& pointer) const
+{
+    void* ptr_value = *static_cast<void**>(pointer.data());
+    if (pointer.type() != this)
+    {
+        const npointer* pointer_type = pointer.type()->as_pointer();
+        const nclass* pointer_dereference_type =
+            pointer_type ? pointer_type->_dereference_type->as_class() : nullptr;
+        ptr_value = pointer_dereference_type
+                        ? pointer_dereference_type->cast_to(_dereference_type->as_class(),
+                                                            ptr_value)
+                        : nullptr;
+    }
+    if (!ptr_value)
+        throw std::invalid_argument("npointer::dereference : pointer deference failed");
+    return _dereference_type->ref_instance(nwrapper(_dereference_type, ptr_value));
+}
 
 } // namespace ntr

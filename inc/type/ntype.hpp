@@ -24,6 +24,8 @@ public:
         eenum,
         eclass,
         epointer,
+        estd_pair,
+        econtainer,
     };
 
     struct operations
@@ -34,15 +36,14 @@ public:
         void (*destruct)(void*);
     };
 
-    ntype(etype kind, uint32_t size, uint32_t align, operations* ops,
-          std::string_view name);
+    ntype(etype kind, uint16_t size, uint16_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(ntype)
     ~ntype();
 
     NTR_INLINE etype kind() const { return _kind; }
     NTR_INLINE bool is_registered() const { return _is_registered; }
-    NTR_INLINE uint32_t align() const { return _align; }
-    NTR_INLINE uint32_t size() const { return _size; }
+    NTR_INLINE uint16_t align() const { return _align; }
+    NTR_INLINE uint16_t size() const { return _size; }
     NTR_INLINE const operations* ops() const { return _ops; }
     NTR_INLINE std::string_view name() const { return { _name, _name_size }; }
 
@@ -51,16 +52,20 @@ public:
     NTR_INLINE bool is_enum() const { return _kind == etype::eenum; }
     NTR_INLINE bool is_class() const { return _kind == etype::eclass; }
     NTR_INLINE bool is_pointer() const { return _kind == etype::epointer; }
+    NTR_INLINE bool is_std_pair() const { return _kind == etype::estd_pair; }
+    NTR_INLINE bool is_container() const { return _kind == etype::econtainer; }
 
     const class nnumeric* as_numeric() const;
     const class nenum* as_enum() const;
     const class nclass* as_class() const;
     const class npointer* as_pointer() const;
+    const class nstd_pair* as_std_pair() const;
+    const class ncontainer* as_container() const;
 
     nobject new_instance() const;
-    nobject new_instance(const nwrapper& wrapper) const;
-    nobject new_instance_rv(const nwrapper& wrapper) const;
-    nobject new_reference(const nwrapper& wrapper) const;
+    nobject copy_instance(const nwrapper& wrapper) const;
+    nobject move_instance(const nwrapper& wrapper) const;
+    nobject ref_instance(const nwrapper& wrapper) const;
 
 private:
     friend class nregistrar;

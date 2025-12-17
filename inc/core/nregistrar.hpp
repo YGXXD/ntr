@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "../tool/ntable.hpp"
+#include "../setup.hpp"
+#include "../util/nhash_map.hpp"
 
 namespace ntr
 {
@@ -27,7 +28,7 @@ public:
     template <typename T>
     NTR_INLINE auto& regist_type(std::string_view name);
 
-    const ntype* get_type(std::string_view name) const;
+    const class ntype* get_type(std::string_view name) const;
 
 private:
     nregistrar() = default;

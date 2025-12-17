@@ -11,7 +11,7 @@
 namespace ntr
 {
 
-enum_integer_type nenum::get_value(const nobject& enum_)
+enum_integer_type nenum::get_value(const nwrapper& enum_)
 {
     if (!enum_.type()->is_enum())
         throw std::invalid_argument("nenum::get_value : enum_'s type is not enum type");
@@ -34,7 +34,7 @@ enum_integer_type nenum::get_value(const nobject& enum_)
     }
 }
 
-void nenum::set_value(nobject& enum_, enum_integer_type value)
+void nenum::set_value(nwrapper& enum_, enum_integer_type value)
 {
     if (!enum_.type()->is_enum())
         throw std::invalid_argument("nenum::set_value : enum_'s type is not enum type");
@@ -54,8 +54,8 @@ void nenum::set_value(nobject& enum_, enum_integer_type value)
         break;
     }
 }
-nenum::nenum(uint32_t size, uint32_t align, operations* ops, std::string_view name)
-    : ntype(etype::eenum, size, align, ops, name)
+nenum::nenum(uint16_t size, uint16_t align, operations* ops)
+    : ntype(etype::eenum, size, align, ops)
 {
 }
 

@@ -32,9 +32,9 @@ int main()
     {
         // test object
         int integer = 2048;
-        nobject obj = nregistrar::get_type<int>()->new_instance(integer);
+        nobject obj = nephren::get<int>()->copy_instance(integer);
         obj.as<int>() = 1024;
-        NTR_TEST_ASSERT(obj.type() == nregistrar::get_type<int>());
+        NTR_TEST_ASSERT(obj.type() == nephren::get<int>());
         NTR_TEST_ASSERT(obj.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(obj.is_valid());
         NTR_TEST_ASSERT(obj.as<int>() != integer);
@@ -46,9 +46,9 @@ int main()
         NTR_TEST_ASSERT(obj_new.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(obj_new.as<int>() == integer);
 
-        obj = nregistrar::get_type<int>()->new_reference(integer);
+        obj = nephren::get<int>()->ref_instance(integer);
         obj.as<int>() = 1024;
-        NTR_TEST_ASSERT(obj.type() == nregistrar::get_type<int>());
+        NTR_TEST_ASSERT(obj.type() == nephren::get<int>());
         NTR_TEST_ASSERT(obj.kind() == nobject::eobject::eref);
         NTR_TEST_ASSERT(obj.is_valid());
         NTR_TEST_ASSERT(obj.as<int>() == integer);
@@ -61,31 +61,31 @@ int main()
         NTR_TEST_ASSERT(obj.as<int>() == integer);
 
         kutori s_kutori {};
-        nobject kutori_obj = nregistrar::get_type<kutori>()->new_instance_rv(s_kutori);
+        nobject kutori_obj = nephren::get<kutori>()->move_instance(s_kutori);
         NTR_TEST_ASSERT(s_kutori.get_value() == nullptr);
-        NTR_TEST_ASSERT(kutori_obj.type() == nregistrar::get_type<kutori>());
+        NTR_TEST_ASSERT(kutori_obj.type() == nephren::get<kutori>());
         NTR_TEST_ASSERT(kutori_obj.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(kutori_obj.is_valid());
         NTR_TEST_ASSERT(kutori_obj.as<kutori>().get_value() != nullptr);
 
         nobject kutori_obj_clone = kutori_obj.clone();
-        NTR_TEST_ASSERT(kutori_obj_clone.type() == nregistrar::get_type<kutori>());
+        NTR_TEST_ASSERT(kutori_obj_clone.type() == nephren::get<kutori>());
         NTR_TEST_ASSERT(kutori_obj_clone.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(kutori_obj_clone.is_valid());
         NTR_TEST_ASSERT(kutori_obj_clone.as<kutori>().get_value() != nullptr);
         // check data is not moved
-        NTR_TEST_ASSERT(kutori_obj.type() == nregistrar::get_type<kutori>());
+        NTR_TEST_ASSERT(kutori_obj.type() == nephren::get<kutori>());
         NTR_TEST_ASSERT(kutori_obj.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(kutori_obj.is_valid());
         NTR_TEST_ASSERT(kutori_obj.as<kutori>().get_value() != nullptr);
 
         nobject kutori_obj_steal = kutori_obj.steal();
-        NTR_TEST_ASSERT(kutori_obj_steal.type() == nregistrar::get_type<kutori>());
+        NTR_TEST_ASSERT(kutori_obj_steal.type() == nephren::get<kutori>());
         NTR_TEST_ASSERT(kutori_obj_steal.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(kutori_obj_steal.is_valid());
         NTR_TEST_ASSERT(kutori_obj_steal.as<kutori>().get_value() != nullptr);
         // check data is moved
-        NTR_TEST_ASSERT(kutori_obj.type() == nregistrar::get_type<kutori>());
+        NTR_TEST_ASSERT(kutori_obj.type() == nephren::get<kutori>());
         NTR_TEST_ASSERT(kutori_obj.kind() == nobject::eobject::eobtain);
         NTR_TEST_ASSERT(kutori_obj.is_valid());
         NTR_TEST_ASSERT(kutori_obj.as<kutori>().get_value() == nullptr);

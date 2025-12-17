@@ -15,23 +15,18 @@ namespace ntr
 class NTR_API npointer : public ntype
 {
 public:
-    npointer(uint8_t depth, bool pointing_is_const, const ntype* pointed_type,
-             operations* ops, std::string_view name);
+    npointer(const ntype* dereference_type);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(npointer)
     ~npointer();
 
-    static void* get_value(const class nobject& pointer);
-    static void set_value(nobject& pointer, void* value);
-    static nobject get_target(const nobject& pointer);
+    static void* get_value(const nwrapper& pointer);
+    static void set_value(nwrapper& pointer, void* value);
 
-    NTR_INLINE uint8_t depth() const { return _depth; }
-    NTR_INLINE bool pointing_is_const() const { return _pointing_is_const; }
-    NTR_INLINE const ntype* pointing_type() const { return _pointing_type; }
+    nobject dereference(const nwrapper& pointer) const;
+    NTR_INLINE const ntype* dereference_type() const { return _dereference_type; }
 
 private:
-    uint8_t _depth;
-    bool _pointing_is_const;
-    const ntype* _pointing_type;
+    const ntype* _dereference_type;
 };
 
 } // namespace ntr
