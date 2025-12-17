@@ -19,7 +19,7 @@ public:
     enum class eobject : uint8_t
     {
         eobtain,
-        eref
+        ereference,
     };
 
     nobject(nobject&& other);
@@ -32,9 +32,9 @@ public:
 
     nobject clone() const;
     nobject steal() const;
-    nobject refer() const;
-    nwrapper wrapper() const;
+    nobject handle() const;
 
+    NTR_INLINE nwrapper wrapper() const { return nwrapper(_type, data()); };
     NTR_INLINE const class ntype* type() const { return _type; }
     NTR_INLINE eobject kind() const { return _kind; };
     NTR_INLINE operator nwrapper() { return wrapper(); }

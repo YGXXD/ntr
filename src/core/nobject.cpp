@@ -18,16 +18,16 @@ enum eobtain_status : uint8_t
     eobtain_status_initialized,
 };
 
-enum eref_status : uint8_t
+enum ereference_status : uint8_t
 {
-    eref_status_none,
-    eref_status_holding,
+    ereference_status_none,
+    ereference_status_holding,
 };
 
 nobject::nobject(const ntype* type, eobject kind)
     : _type(type), _kind(kind),
       _is_heap(type->size() > sizeof(_bytes) && kind == eobject::eobtain),
-      _obtain_status(eobtain_status_none), _ref_status(eref_status_none), _bytes()
+      _obtain_status(eobtain_status_none), _ref_status(ereference_status_none), _bytes()
 {
 }
 
@@ -39,7 +39,7 @@ nobject::nobject(nobject&& other)
     case eobject::eobtain:
         other._obtain_status = eobtain_status_none;
         break;
-    case eobject::eref:
+    case eobject::ereference:
         break;
     }
 }
@@ -66,14 +66,14 @@ nobject::~nobject()
         if (_obtain_status >= eobtain_status_allocated && _is_heap)
             _ntr_align_free(data());
         break;
-    case eobject::eref:
+    case eobject::ereference:
         break;
     }
 }
 
 nobject& nobject::alloc()
 {
-    if (_kind == eobject::eref)
+    if (_kind == eobject::ereference)
         throw std::runtime_error(
             "nobject::allocate : object is reference, cannot allocate");
     if (_obtain_status >= eobtain_status_allocated)
@@ -94,7 +94,7 @@ nobject& nobject::alloc()
 
 nobject& nobject::init_default()
 {
-    if (_kind == eobject::eref)
+    if (_kind == eobject::ereference)
         throw std::runtime_error(
             "nobject::init_default : object is reference, cannot initialize");
     if (_obtain_status == eobtain_status_initialized)
@@ -118,7 +118,7 @@ nobject& nobject::init_copy(const nwrapper& wrapper)
     if (wrapper.type() != type())
         throw std::invalid_argument(
             "nobject::init_copy : wrapper's type is different from object's type");
-    if (_kind == eobject::eref)
+    if (_kind == eobject::ereference)
         throw std::runtime_error(
             "nobject::init_copy : object is reference, cannot initialize");
     if (_obtain_status == eobtain_status_initialized)
@@ -142,7 +142,7 @@ nobject& nobject::init_move(const nwrapper& wrapper)
     if (wrapper.type() != type())
         throw std::invalid_argument(
             "nobject::init_move : wrapper's type is different from object's type");
-    if (_kind == eobject::eref)
+    if (_kind == eobject::ereference)
         throw std::runtime_error(
             "nobject::init_move : object is reference, cannot initialize");
     if (_obtain_status == eobtain_status_initialized)
@@ -169,7 +169,7 @@ nobject& nobject::hold_ref(const nwrapper& wrapper)
     if (_kind == eobject::eobtain)
         throw std::runtime_error("nobject::hold_ref : object is not reference");
     *reinterpret_cast<void**>(_bytes.data()) = wrapper.data();
-    _ref_status = eref_status_holding;
+    _ref_status = ereference_status_holding;
     return *this;
 }
 
@@ -179,22 +179,22 @@ bool nobject::is_valid() const
     {
     case eobject::eobtain:
         return _obtain_status == eobtain_status_initialized;
-    case eobject::eref:
-        return _ref_status == eref_status_holding;
+    case eobject::ereference:
+        return _ref_status == ereference_status_holding;
     }
     return false;
 }
 
 void* nobject::data()
 {
-    if (_kind == eobject::eref || _is_heap)
+    if (_kind == eobject::ereference || _is_heap)
         return *reinterpret_cast<void**>(_bytes.data());
     return _bytes.data();
 }
 
 const void* nobject::data() const
 {
-    if (_kind == eobject::eref || _is_heap)
+    if (_kind == eobject::ereference || _is_heap)
         return *reinterpret_cast<const void* const*>(_bytes.data());
     return _bytes.data();
 }
@@ -209,14 +209,9 @@ nobject nobject::steal() const
     return std::move(nobject(_type, eobject::eobtain).alloc().init_move(wrapper()));
 }
 
-nobject nobject::refer() const
+nobject nobject::handle() const
 {
-    return std::move(nobject(_type, eobject::eref).hold_ref(wrapper()));
-}
-
-nwrapper nobject::wrapper() const
-{
-    return nwrapper(_type, data());
+    return std::move(nobject(_type, eobject::ereference).hold_ref(wrapper()));
 }
 
 } // namespace ntr

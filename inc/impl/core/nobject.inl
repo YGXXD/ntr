@@ -8,7 +8,6 @@
 #pragma once
 
 #include "../../core/nobject.hpp"
-#include "../../core/nregistrar.hpp"
 
 namespace ntr
 {
@@ -16,17 +15,13 @@ namespace ntr
 template <typename T>
 NTR_INLINE T& nobject::as()
 {
-    if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nobject::as : type mismatch");
-    return *static_cast<T*>(data());
+    return wrapper().unwrap<T&>();
 }
 
 template <typename T>
 NTR_INLINE const T& nobject::as() const
 {
-    if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nobject::as : type mismatch");
-    return *static_cast<const T*>(data());
+    return wrapper().unwrap<const T&>();
 }
 
 } // namespace ntr

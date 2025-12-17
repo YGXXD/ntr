@@ -49,7 +49,7 @@ int main()
         obj = nephren::get<int>()->ref_instance(integer);
         obj.as<int>() = 1024;
         NTR_TEST_ASSERT(obj.type() == nephren::get<int>());
-        NTR_TEST_ASSERT(obj.kind() == nobject::eobject::eref);
+        NTR_TEST_ASSERT(obj.kind() == nobject::eobject::ereference);
         NTR_TEST_ASSERT(obj.is_valid());
         NTR_TEST_ASSERT(obj.as<int>() == integer);
 

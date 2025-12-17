@@ -84,7 +84,7 @@ nobject ntype::ref_instance(const nwrapper& wrapper) const
     if (wrapper.type() != this)
         throw std::invalid_argument(
             "ntype::ref_instance : wrapper's type is different from this");
-    return std::move(nobject(this, nobject::eobject::eref).hold_ref(wrapper));
+    return std::move(nobject(this, nobject::eobject::ereference).hold_ref(wrapper));
 }
 
 void ntype::regist(std::string_view name)

@@ -19,38 +19,17 @@ nwrapper::nwrapper(T&& value) : nwrapper(nregistrar::get_type<T>(), &value)
 }
 
 template <typename T>
-NTR_INLINE T& nwrapper::ref() const
-{
-    if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nwrapper::ref : type mismatch");
-    return *static_cast<T*>(_pdata);
-}
-
-template <typename T>
-NTR_INLINE const T& nwrapper::cref() const
-{
-    if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nwrapper::cref : type mismatch");
-    return *static_cast<const T*>(_pdata);
-}
-
-template <typename T>
-NTR_INLINE T&& nwrapper::rref() const
-{
-    if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nwrapper::rref : type mismatch");
-    return std::move(*static_cast<T*>(_pdata));
-}
-
-template <typename T>
 NTR_INLINE auto&& nwrapper::unwrap() const
 {
-    if constexpr (std::is_rvalue_reference_v<T>)
-        return rref<std::decay_t<T>>();
-    else if constexpr (!std::is_const_v<T>)
-        return ref<std::decay_t<T>>();
-    else
-        return cref<std::decay_t<T>>();
+    using decay_type = std::decay_t<T>;
+    using unwrap_type = std::conditional_t<
+        std::is_rvalue_reference_v<T>, decay_type&&,
+        std::conditional_t<std::is_lvalue_reference_v<T> &&
+                               !std::is_const_v<std::remove_reference_t<T>>,
+                           decay_type&, const decay_type&>>;
+    if (_type != nregistrar::get_type<T>())
+        throw std::runtime_error("nwrapper::unwrap : type mismatch");
+    return static_cast<unwrap_type>(*static_cast<decay_type*>(_pdata));
 }
 
 template <typename T>

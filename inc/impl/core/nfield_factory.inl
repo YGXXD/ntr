@@ -24,12 +24,13 @@ nfield_factory::make_property(const ntype* parent_type, std::string_view name,
     std::function<nobject(const nwrapper&)> getter =
         [member](const nwrapper& instance) -> nobject
     {
-        return nregistrar::get_type<T>()->ref_instance(instance.cref<ClassT>().*member);
+        return nregistrar::get_type<T>()->ref_instance(instance.unwrap<const ClassT&>().*
+                                                       member);
     };
     std::function<void(const nwrapper&, const nwrapper&)> setter =
         [member](const nwrapper& instance, const nwrapper& value)
     {
-        instance.ref<ClassT>().*member = value.cref<T>();
+        instance.unwrap<ClassT&>().*member = value.unwrap<const T&>();
     };
     return std::make_unique<nproperty>(parent_type, name, nregistrar::get_type<T>(),
                                        std::move(getter), std::move(setter));
@@ -48,12 +49,12 @@ nfield_factory::make_property(const ntype* parent_type, std::string_view name,
         [getter_fun](const nwrapper& instance) -> nobject
     {
         return nregistrar::get_type<T>()->ref_instance(
-            (instance.cref<ClassT>().*getter_fun)());
+            (instance.unwrap<const ClassT&>().*getter_fun)());
     };
     std::function<void(const nwrapper&, const nwrapper&)> setter =
         [setter_fun](const nwrapper& instance, const nwrapper& value)
     {
-        (instance.ref<ClassT>().*setter_fun)(value.cref<T>());
+        (instance.unwrap<ClassT&>().*setter_fun)(value.unwrap<const T&>());
     };
     return std::make_unique<nproperty>(parent_type, name, nregistrar::get_type<T>(),
                                        std::move(getter), std::move(setter));
@@ -87,7 +88,7 @@ nfield_factory::make_function(const ntype* parent_type, std::string_view name,
     {
         return function_call<Ret, Args...>(
             [instance = arg_arr.begin(), fun](Args... args) -> Ret
-        { return (instance->ref<ClassT>().*fun)(std::forward<Args>(args)...); },
+        { return (instance->unwrap<ClassT&>().*fun)(std::forward<Args>(args)...); },
             ++arg_arr.begin());
     };
     return std::make_unique<nfunction>(
@@ -108,7 +109,7 @@ nfield_factory::make_function(const ntype* parent_type, std::string_view name,
     {
         return function_call<Ret, Args...>(
             [instance = arg_arr.begin(), fun](Args... args) -> Ret
-        { return (instance->cref<ClassT>().*fun)(std::forward<Args>(args)...); },
+        { return (instance->unwrap<const ClassT&>().*fun)(std::forward<Args>(args)...); },
             ++arg_arr.begin());
     };
     return std::make_unique<nfunction>(

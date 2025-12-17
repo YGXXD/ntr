@@ -26,20 +26,14 @@ public:
     nwrapper& operator=(nwrapper&& other);
     ~nwrapper();
 
-    template <typename T>
-    NTR_INLINE T& ref() const;
-    template <typename T>
-    NTR_INLINE const T& cref() const;
-    template <typename T>
-    NTR_INLINE T&& rref() const;
+    nwrapper cast_to(const ntype* to_type) const;
+    NTR_INLINE const ntype* type() const { return _type; }
+    NTR_INLINE void* data() const { return _pdata; }
+
     template <typename T>
     NTR_INLINE auto&& unwrap() const;
     template <typename T>
     nwrapper cast_to() const;
-    nwrapper cast_to(const ntype* to_type) const;
-
-    NTR_INLINE const ntype* type() const { return _type; }
-    NTR_INLINE void* data() const { return _pdata; }
 
 private:
     const ntype* _type;
