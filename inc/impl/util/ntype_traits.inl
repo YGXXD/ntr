@@ -79,9 +79,9 @@ NTR_INLINE constexpr bool is_etype_type()
 template <typename T>
 NTR_INLINE constexpr bool is_etype_numeric()
 {
-    return std::apply([](auto&&... args)
-    { return (std::is_same_v<std::decay_t<decltype(args)>, T> || ...); },
-                      nnumeric::numeric_types {});
+    return std::apply([](auto&&... args) {
+        return (std::is_same_v<std::decay_t<decltype(args)>, T> || ...);
+    }, nnumeric::numeric_types {});
 }
 
 template <typename T>

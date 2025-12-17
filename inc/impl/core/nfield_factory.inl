@@ -16,7 +16,7 @@ namespace ntr
 template <typename T, typename ClassT>
 NTR_INLINE std::unique_ptr<nproperty>
 nfield_factory::make_property(const ntype* parent_type, std::string_view name,
-                              T(ClassT::* member))
+                              T(ClassT::*member))
 {
     if (parent_type != nregistrar::get_type<ClassT>())
         throw std::invalid_argument(
@@ -87,9 +87,9 @@ nfield_factory::make_function(const ntype* parent_type, std::string_view name,
         [fun](const nvector<nwrapper>& arg_arr) -> nobject
     {
         return function_call<Ret, Args...>(
-            [instance = arg_arr.begin(), fun](Args... args) -> Ret
-        { return (instance->unwrap<ClassT&>().*fun)(std::forward<Args>(args)...); },
-            ++arg_arr.begin());
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret {
+            return (instance->unwrap<ClassT&>().*fun)(std::forward<Args>(args)...);
+        }, ++arg_arr.begin());
     };
     return std::make_unique<nfunction>(
         parent_type, name, false, nregistrar::get_type<Ret>(),
@@ -108,9 +108,9 @@ nfield_factory::make_function(const ntype* parent_type, std::string_view name,
         [fun](const nvector<nwrapper>& arg_arr) -> nobject
     {
         return function_call<Ret, Args...>(
-            [instance = arg_arr.begin(), fun](Args... args) -> Ret
-        { return (instance->unwrap<const ClassT&>().*fun)(std::forward<Args>(args)...); },
-            ++arg_arr.begin());
+            [instance = arg_arr.begin(), fun](Args... args) -> Ret {
+            return (instance->unwrap<const ClassT&>().*fun)(std::forward<Args>(args)...);
+        }, ++arg_arr.begin());
     };
     return std::make_unique<nfunction>(
         parent_type, name, false, nregistrar::get_type<Ret>(),
