@@ -39,7 +39,7 @@ public:
                    int64_t, uint8_t, uint16_t, uint32_t, uint64_t, float, double>;
 
     static double get_value(const nwrapper& numeric);
-    static void set_value(nwrapper& numeric, double value);
+    static void set_value(const nwrapper& numeric, double value);
 
     nnumeric(enumeric numeric_kind, uint16_t size, uint16_t align, operations* ops);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(nnumeric)

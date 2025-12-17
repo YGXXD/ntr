@@ -34,7 +34,7 @@ enum_integer_type nenum::get_value(const nwrapper& enum_)
     }
 }
 
-void nenum::set_value(nwrapper& enum_, enum_integer_type value)
+void nenum::set_value(const nwrapper& enum_, enum_integer_type value)
 {
     if (!enum_.type()->is_enum())
         throw std::invalid_argument("nenum::set_value : enum_'s type is not enum type");

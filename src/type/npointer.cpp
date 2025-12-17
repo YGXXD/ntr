@@ -20,7 +20,7 @@ void* npointer::get_value(const nwrapper& pointer)
     return *static_cast<void* const*>(pointer.data());
 }
 
-void npointer::set_value(nwrapper& pointer, void* value)
+void npointer::set_value(const nwrapper& pointer, void* value)
 {
     if (!pointer.type()->is_pointer())
         throw std::invalid_argument(

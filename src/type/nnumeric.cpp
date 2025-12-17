@@ -84,7 +84,7 @@ double nnumeric::get_value(const nwrapper& numeric)
     return value;
 }
 
-void nnumeric::set_value(nwrapper& numeric, double value)
+void nnumeric::set_value(const nwrapper& numeric, double value)
 {
     if (!numeric.type()->is_numeric())
         throw std::invalid_argument(

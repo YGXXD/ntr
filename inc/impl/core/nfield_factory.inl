@@ -91,7 +91,7 @@ nfield_factory::make_function(const ntype* parent_type, std::string_view name,
             ++arg_arr.begin());
     };
     return std::make_unique<nfunction>(
-        parent_type, name, true, nregistrar::get_type<Ret>(),
+        parent_type, name, false, nregistrar::get_type<Ret>(),
         make_function_args<ClassT&, Args...>(), std::move(function));
 }
 
@@ -112,7 +112,7 @@ nfield_factory::make_function(const ntype* parent_type, std::string_view name,
             ++arg_arr.begin());
     };
     return std::make_unique<nfunction>(
-        parent_type, name, true, nregistrar::get_type<Ret>(),
+        parent_type, name, false, nregistrar::get_type<Ret>(),
         make_function_args<const ClassT&, Args...>(), std::move(function));
 }
 
