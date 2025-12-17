@@ -108,7 +108,7 @@ ntype_factory<ntype::etype::eclass, T>::function(std::string_view name,
 template <typename T>
 template <typename U>
 NTR_INLINE ntype_factory<ntype::etype::eclass, T>&
-ntype_factory<ntype::etype::eclass, T>::property(std::string_view name, U(T::* member))
+ntype_factory<ntype::etype::eclass, T>::property(std::string_view name, U(T::*member))
 {
     _type.add_property(nfield_factory::make_property(&_type, name, member));
     return *this;
