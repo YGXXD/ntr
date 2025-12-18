@@ -60,7 +60,7 @@ const ncontainer* ntype::as_container() const
 
 nobject ntype::new_instance() const
 {
-    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_default());
+    return nobject::new_(this);
 }
 
 nobject ntype::copy_instance(const nwrapper& wrapper) const
@@ -68,7 +68,7 @@ nobject ntype::copy_instance(const nwrapper& wrapper) const
     if (wrapper.type() != this)
         throw std::invalid_argument(
             "ntype::copy_instance : wrapper's type is different from this");
-    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_copy(wrapper));
+    return nobject::copy(wrapper);
 }
 
 nobject ntype::move_instance(const nwrapper& wrapper) const
@@ -76,7 +76,7 @@ nobject ntype::move_instance(const nwrapper& wrapper) const
     if (wrapper.type() != this)
         throw std::invalid_argument(
             "ntype::move_instance : wrapper's type is different from this");
-    return std::move(nobject(this, nobject::eobject::eobtain).alloc().init_move(wrapper));
+    return nobject::move(wrapper);
 }
 
 nobject ntype::ref_instance(const nwrapper& wrapper) const
@@ -84,7 +84,7 @@ nobject ntype::ref_instance(const nwrapper& wrapper) const
     if (wrapper.type() != this)
         throw std::invalid_argument(
             "ntype::ref_instance : wrapper's type is different from this");
-    return std::move(nobject(this, nobject::eobject::ereference).hold_ref(wrapper));
+    return nobject::ref(wrapper);
 }
 
 void ntype::regist(std::string_view name)
