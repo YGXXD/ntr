@@ -22,21 +22,26 @@ public:
         ereference,
     };
 
+    static nobject new_(const ntype* type);
+    static nobject copy(const nwrapper& other);
+    static nobject move(const nwrapper& other);
+    static nobject ref(const nwrapper& ref);
+
     nobject(nobject&& other);
     nobject& operator=(nobject&& other);
     ~nobject();
 
-    bool is_valid() const;
-    void* data();
-    const void* data() const;
-
     nobject clone() const;
     nobject steal() const;
-    nobject handle() const;
+    nobject hold() const;
 
-    NTR_INLINE nwrapper wrapper() const { return nwrapper(_type, data()); };
+    void* data();
+    const void* data() const;
+    NTR_INLINE bool is_valid() const { return data(); };
+    NTR_INLINE bool is_ref() const { return _handle && _handle != _obtain; }
     NTR_INLINE const class ntype* type() const { return _type; }
-    NTR_INLINE eobject kind() const { return _kind; };
+    NTR_INLINE nwrapper wrapper() const { return nwrapper(_type, data()); };
+    NTR_INLINE operator bool() { return is_valid(); }
     NTR_INLINE operator nwrapper() { return wrapper(); }
 
     template <typename T>
@@ -45,31 +50,13 @@ public:
     NTR_INLINE const T& as() const;
 
 private:
-    friend class ntype;
-
-    nobject(const ntype* type, eobject kind);
+    nobject();
     nobject(const nobject& other) = delete;
     nobject& operator=(const nobject& other) = delete;
 
-    nobject& alloc();
-    nobject& init_default();
-    nobject& init_copy(const nwrapper& wrapper);
-    nobject& init_move(const nwrapper& wrapper);
-    nobject& hold_ref(const nwrapper& wrapper);
-
     const ntype* _type;
-    union
-    {
-        struct
-        {
-            eobject _kind;
-            bool _is_heap;
-            uint8_t _obtain_status;
-            uint8_t _ref_status;
-        };
-        std::array<char, sizeof(void*)> _status;
-    };
-    alignas(16) std::array<char, 16> _bytes;
+    void* _handle;
+    alignas(16) uint64_t _obtain[2];
 };
 
 } // namespace ntr

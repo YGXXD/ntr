@@ -11,36 +11,111 @@
 namespace ntr
 {
 
-enum eobtain_status : uint8_t
+template <size_t N>
+NTR_INLINE bool use_sso(const ntype* type)
 {
-    eobtain_status_none,
-    eobtain_status_allocated,
-    eobtain_status_initialized,
-};
+    return type->size() <= N;
+}
 
-enum ereference_status : uint8_t
+nobject nobject::new_(const ntype* type)
 {
-    ereference_status_none,
-    ereference_status_holding,
-};
+    nobject object {};
+    object._type = type;
+    if (object._type->size() > 0)
+    {
+        if (!type->ops()->default_construct)
+            throw std::invalid_argument(
+                "nobject::new_: type does not support default construction");
+        if (use_sso<sizeof(nobject::_obtain)>(object._type))
+        {
+            object._handle = object._obtain;
+            object._type->ops()->default_construct(object._handle);
+        }
+        else
+        {
+            void*& data = *reinterpret_cast<void**>(object._obtain);
+            data = _ntr_align_alloc(object._type->size(), object._type->align());
+            object._type->ops()->default_construct(data);
+        }
+    }
+    return std::move(object);
+}
 
-nobject::nobject(const ntype* type, eobject kind)
-    : _type(type), _kind(kind),
-      _is_heap(type->size() > sizeof(_bytes) && kind == eobject::eobtain),
-      _obtain_status(eobtain_status_none), _ref_status(ereference_status_none), _bytes()
+nobject nobject::copy(const nwrapper& other)
+{
+    nobject object {};
+    object._type = other.type();
+    if (object._type->size() > 0)
+    {
+        if (!other.type()->ops()->copy_construct)
+            throw std::invalid_argument(
+                "nobject::copy: type does not support default construction");
+        if (use_sso<sizeof(nobject::_obtain)>(object._type))
+        {
+            object._handle = object._obtain;
+            object._type->ops()->copy_construct(object._handle, other.data());
+        }
+        else
+        {
+            void*& data = *reinterpret_cast<void**>(object._obtain);
+            data = _ntr_align_alloc(object._type->size(), object._type->align());
+            object._type->ops()->copy_construct(data, other.data());
+        }
+    }
+    return std::move(object);
+}
+
+nobject nobject::move(const nwrapper& other)
+{
+    nobject object {};
+    object._type = other.type();
+    if (object._type->size() > 0)
+    {
+        if (!other.type()->ops()->move_construct)
+            throw std::invalid_argument(
+                "nobject::move: type does not support move construction");
+        if (use_sso<sizeof(nobject::_obtain)>(object._type))
+        {
+            object._handle = object._obtain;
+            object._type->ops()->move_construct(object._handle, other.data());
+        }
+        else
+        {
+            void*& data = *reinterpret_cast<void**>(object._obtain);
+            data = _ntr_align_alloc(object._type->size(), object._type->align());
+            object._type->ops()->move_construct(data, other.data());
+        }
+    }
+    return std::move(object);
+}
+
+nobject nobject::ref(const nwrapper& reference)
+{
+    nobject object {};
+    object._type = reference.type();
+    object._handle = reference.data();
+    return std::move(object);
+}
+
+nobject::nobject() : _type(nullptr), _handle(), _obtain {}
 {
 }
 
 nobject::nobject(nobject&& other)
-    : _type(other._type), _status(other._status), _bytes(other._bytes)
+    : _type(other._type), _handle(other._handle),
+      _obtain { other._obtain[0], other._obtain[1] }
 {
-    switch (other._kind)
+    // sso
+    if (other._handle == other._obtain)
     {
-    case eobject::eobtain:
-        other._obtain_status = eobtain_status_none;
-        break;
-    case eobject::ereference:
-        break;
+        _handle = _obtain;
+        other._handle = nullptr;
+    }
+    // sso or heap
+    if (!other._handle)
+    {
+        other._obtain[0] = 0;
+        other._obtain[1] = 0;
     }
 }
 
@@ -48,170 +123,63 @@ nobject& nobject::operator=(nobject&& other)
 {
     if (this != &other)
     {
-        nobject temp(std::move(other));
-        std::swap(_type, temp._type);
-        std::swap(_status, temp._status);
-        std::swap(_bytes, temp._bytes);
+        this->~nobject();
+        _type = other._type;
+        _handle = other._handle;
+        _obtain[0] = other._obtain[0];
+        _obtain[1] = other._obtain[1];
+        // sso
+        if (other._handle == other._obtain)
+        {
+            _handle = _obtain;
+            other._handle = nullptr;
+        }
+        // sso or heap
+        if (!other._handle)
+        {
+            other._obtain[0] = 0;
+            other._obtain[1] = 0;
+        }
     }
     return *this;
 }
 
 nobject::~nobject()
 {
-    switch (_kind)
+    // sso
+    if (_handle == _obtain)
+        _type->ops()->destruct(_handle);
+    // heap
+    else if (void* data = *reinterpret_cast<void**>(_obtain))
     {
-    case eobject::eobtain:
-        if (_obtain_status == eobtain_status_initialized)
-            type()->ops()->destruct(data());
-        if (_obtain_status >= eobtain_status_allocated && _is_heap)
-            _ntr_align_free(data());
-        break;
-    case eobject::ereference:
-        break;
+        type()->ops()->destruct(data);
+        _ntr_align_free(data);
     }
-}
-
-nobject& nobject::alloc()
-{
-    if (_kind == eobject::ereference)
-        throw std::runtime_error(
-            "nobject::allocate : object is reference, cannot allocate");
-    if (_obtain_status >= eobtain_status_allocated)
-        throw std::runtime_error("nobject::allocate : object is already allocated");
-    if (_type->size() > 0)
-    {
-        if (_is_heap)
-        {
-            void* ptr = _ntr_align_alloc(_type->size(), _type->align());
-            if (!ptr)
-                throw std::runtime_error("nobject::allocate : failed to allocate memory");
-            *reinterpret_cast<void**>(_bytes.data()) = ptr;
-        }
-        _obtain_status = eobtain_status_allocated;
-    }
-    return *this;
-}
-
-nobject& nobject::init_default()
-{
-    if (_kind == eobject::ereference)
-        throw std::runtime_error(
-            "nobject::init_default : object is reference, cannot initialize");
-    if (_obtain_status == eobtain_status_initialized)
-        throw std::runtime_error("nobject::init : object is already initialized");
-    if (_obtain_status == eobtain_status_allocated)
-    {
-        if (type()->ops()->default_construct)
-        {
-            type()->ops()->default_construct(data());
-            _obtain_status = eobtain_status_initialized;
-        }
-        else
-            throw std::runtime_error(
-                "nobject::init_default : default_construct operation not found");
-    }
-    return *this;
-}
-
-nobject& nobject::init_copy(const nwrapper& wrapper)
-{
-    if (wrapper.type() != type())
-        throw std::invalid_argument(
-            "nobject::init_copy : wrapper's type is different from object's type");
-    if (_kind == eobject::ereference)
-        throw std::runtime_error(
-            "nobject::init_copy : object is reference, cannot initialize");
-    if (_obtain_status == eobtain_status_initialized)
-        throw std::runtime_error("nobject::init_copy : object is already initialized");
-    if (_obtain_status == eobtain_status_allocated)
-    {
-        if (type()->ops()->copy_construct)
-        {
-            type()->ops()->copy_construct(data(), wrapper.data());
-            _obtain_status = eobtain_status_initialized;
-        }
-        else
-            throw std::runtime_error(
-                "nobject::init_copy : copy_construct operation not found");
-    }
-    return *this;
-}
-
-nobject& nobject::init_move(const nwrapper& wrapper)
-{
-    if (wrapper.type() != type())
-        throw std::invalid_argument(
-            "nobject::init_move : wrapper's type is different from object's type");
-    if (_kind == eobject::ereference)
-        throw std::runtime_error(
-            "nobject::init_move : object is reference, cannot initialize");
-    if (_obtain_status == eobtain_status_initialized)
-        throw std::runtime_error("nobject::init_move : object is already initialized");
-    if (_obtain_status == eobtain_status_allocated)
-    {
-        if (type()->ops()->move_construct)
-        {
-            type()->ops()->move_construct(data(), wrapper.data());
-            _obtain_status = eobtain_status_initialized;
-        }
-        else
-            throw std::runtime_error(
-                "nobject::init_move : move_construct operation not found");
-    }
-    return *this;
-}
-
-nobject& nobject::hold_ref(const nwrapper& wrapper)
-{
-    if (wrapper.type() != type())
-        throw std::invalid_argument(
-            "nobject::hold_ref : wrapper's type is different from object's type");
-    if (_kind == eobject::eobtain)
-        throw std::runtime_error("nobject::hold_ref : object is not reference");
-    *reinterpret_cast<void**>(_bytes.data()) = wrapper.data();
-    _ref_status = ereference_status_holding;
-    return *this;
-}
-
-bool nobject::is_valid() const
-{
-    switch (_kind)
-    {
-    case eobject::eobtain:
-        return _obtain_status == eobtain_status_initialized;
-    case eobject::ereference:
-        return _ref_status == ereference_status_holding;
-    }
-    return false;
-}
-
-void* nobject::data()
-{
-    if (_kind == eobject::ereference || _is_heap)
-        return *reinterpret_cast<void**>(_bytes.data());
-    return _bytes.data();
-}
-
-const void* nobject::data() const
-{
-    if (_kind == eobject::ereference || _is_heap)
-        return *reinterpret_cast<const void* const*>(_bytes.data());
-    return _bytes.data();
 }
 
 nobject nobject::clone() const
 {
-    return std::move(nobject(_type, eobject::eobtain).alloc().init_copy(wrapper()));
+    return copy(wrapper());
 }
 
 nobject nobject::steal() const
 {
-    return std::move(nobject(_type, eobject::eobtain).alloc().init_move(wrapper()));
+    return move(wrapper());
 }
 
-nobject nobject::handle() const
+nobject nobject::hold() const
 {
-    return std::move(nobject(_type, eobject::ereference).hold_ref(wrapper()));
+    return ref(wrapper());
+}
+
+void* nobject::data()
+{
+    return _handle ? _handle : *reinterpret_cast<void**>(_obtain);
+}
+
+const void* nobject::data() const
+{
+    return _handle ? _handle : *reinterpret_cast<void* const*>(_obtain);
 }
 
 } // namespace ntr
