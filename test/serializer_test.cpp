@@ -76,35 +76,35 @@ int print_ntr_instance(std::string_view name, const nwrapper& instance, int dept
         }
     }
     break;
-    case ntr::ntype::etype::estd_pair:
-    {
-        std::pair<nobject, nobject> unpacked = nstd_pair::unpack(instance);
-        std::cout << "(" << std::endl;
-        NTR_TEST_ASSERT(unpacked.first.is_valid());
-        NTR_TEST_ASSERT(unpacked.first.is_ref());
-        print_ntr_instance("first", unpacked.first.wrapper(), depth + 1);
-        NTR_TEST_ASSERT(unpacked.second.is_valid());
-        NTR_TEST_ASSERT(unpacked.second.is_ref());
-        print_ntr_instance("second", unpacked.second.wrapper(), depth + 1);
-        for (int i = 0; i < depth; i++)
-            std::cout << "  ";
-        std::cout << ")";
-    }
-    break;
     case ntr::ntype::etype::econtainer:
     {
         const ncontainer* container = instance.type()->as_container();
-        nobject end = container->end(instance);
         std::cout << "[" << std::endl;
-        for (nobject it = container->begin(instance);
-             !container->equal(it.wrapper(), end.wrapper());
-             instance.type()->as_container()->next(it.wrapper()))
+        bool test = true;
+        if (!container->is_map())
         {
-            nobject value = instance.type()->as_container()->get(it.wrapper());
-            NTR_TEST_ASSERT(value.is_valid());
-            NTR_TEST_ASSERT(value.is_ref());
-            print_ntr_instance("", value.wrapper(), depth + 1);
+            auto lambda = [container, &test, depth](nobject&& element)
+            {
+                test = element.is_valid() && element.is_ref() ? test : false;
+                test = element.type() == container->element_type();
+                print_ntr_instance("", element.wrapper(), depth + 1);
+            };
+            container->for_each(instance, lambda);
         }
+        else
+        {
+            auto lambda = [container, &test, depth](nobject&& key, nobject&& value)
+            {
+                test = key.is_valid() && key.is_ref() ? test : false;
+                test = key.type() == container->key_type();
+                test = value.is_valid() && value.is_ref() ? test : false;
+                test = value.type() == container->value_type();
+                print_ntr_instance("key", key.wrapper(), depth + 1);
+                print_ntr_instance("value", value.wrapper(), depth + 1);
+            };
+            container->for_each(instance, lambda);
+        }
+        NTR_TEST_ASSERT(test);
         for (int i = 0; i < depth; i++)
             std::cout << "  ";
         std::cout << "]";

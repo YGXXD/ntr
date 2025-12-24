@@ -14,20 +14,6 @@
 
 namespace ntr
 {
-
-template <typename T>
-struct is_std_pair : std::false_type
-{
-};
-
-template <typename... Args>
-struct is_std_pair<std::pair<Args...>> : std::true_type
-{
-};
-
-template <typename T>
-inline constexpr bool is_std_pair_v = is_std_pair<T>::value;
-
 template <typename T>
 struct is_container : std::false_type
 {
@@ -52,22 +38,17 @@ template <typename T>
 inline constexpr bool is_container_v = is_container<T>::value;
 
 template <typename T>
-struct is_container_iterator : std::false_type
+struct is_container_map : std::false_type
 {
 };
 
 template <typename... Args>
-struct is_container_iterator<nvector_iterator<Args...>> : std::true_type
-{
-};
-
-template <typename... Args>
-struct is_container_iterator<nhash_table_iterator<Args...>> : std::true_type
+struct is_container_map<nhash_map<Args...>> : std::true_type
 {
 };
 
 template <typename T>
-inline constexpr bool is_container_iterator_v = is_container_iterator<T>::value;
+inline constexpr bool is_container_map_v = is_container_map<T>::value;
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_type()
@@ -93,20 +74,14 @@ NTR_INLINE constexpr bool is_etype_enum()
 template <typename T>
 NTR_INLINE constexpr bool is_etype_class()
 {
-    return std::is_class_v<T> && !is_std_pair_v<T> && !is_container_v<T> &&
-           !is_container_iterator_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T>;
+    return std::is_class_v<T> && !is_container_v<T> && !std::is_const_v<T> &&
+           !std::is_volatile_v<T>;
 }
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_pointer()
 {
     return std::is_pointer_v<T> && !std::is_const_v<T> && !std::is_volatile_v<T>;
-}
-
-template <typename T>
-NTR_INLINE constexpr bool is_etype_std_pair()
-{
-    return is_std_pair_v<T>;
 }
 
 template <typename T>
@@ -128,8 +103,6 @@ NTR_INLINE constexpr ntype::etype make_etype()
         return ntype::etype::eclass;
     else if constexpr (is_etype_pointer<T>())
         return ntype::etype::epointer;
-    else if constexpr (is_etype_std_pair<T>())
-        return ntype::etype::estd_pair;
     else if constexpr (is_etype_container<T>())
         return ntype::etype::econtainer;
     else
