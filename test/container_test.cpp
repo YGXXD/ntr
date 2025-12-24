@@ -42,24 +42,16 @@ int main()
         vector_kutori_type->put(kutori_vector, kutori("kutori3"));
         NTR_TEST_ASSERT(kutori_vector.size() == 4);
         NTR_TEST_ASSERT(vector_kutori_type->size(kutori_vector) == 4);
-        bool vector_for_each_test = true;
         auto kutori_vector_it = kutori_vector.begin();
         vector_kutori_type->for_each(
-            kutori_vector,
-            [&kutori_vector, &kutori_vector_it, &vector_for_each_test](nobject&& element)
+            kutori_vector, [&kutori_vector, &kutori_vector_it](nobject&& element)
         {
-            vector_for_each_test =
-                (element.as<kutori>().get_name() == (*kutori_vector_it).get_name())
-                    ? vector_for_each_test
-                    : false;
-            vector_for_each_test = (&element.as<kutori>() == &(*kutori_vector_it))
-                                       ? vector_for_each_test
-                                       : false;
-            vector_for_each_test =
-                (element.data() == &(*kutori_vector_it)) ? vector_for_each_test : false;
+            NTR_TEST_THROW(element.as<kutori>().get_name() ==
+                           (*kutori_vector_it).get_name());
+            NTR_TEST_THROW(&element.as<kutori>() == &(*kutori_vector_it));
+            NTR_TEST_THROW(element.data() == &(*kutori_vector_it));
             ++kutori_vector_it;
         });
-        NTR_TEST_ASSERT(vector_for_each_test);
         vector_kutori_type->clear(kutori_vector);
         NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
                             kutori_move_construct ==
@@ -79,28 +71,17 @@ int main()
                                     kutori("kutori4"));
         NTR_TEST_ASSERT(kutori_map.size() == 4);
         NTR_TEST_ASSERT(map_string_kutori_type->size(kutori_map) == 4);
-        bool map_for_each_test = true;
         auto kutori_map_it = kutori_map.begin();
         map_string_kutori_type->for_each(
-            kutori_map, [&kutori_map, &kutori_map_it, &map_for_each_test](nobject&& key,
-                                                                          nobject&& value)
+            kutori_map, [&kutori_map, &kutori_map_it](nobject&& key, nobject&& value)
         {
-            map_for_each_test = (key.as<std::string>() == kutori_map_it->first)
-                                    ? map_for_each_test
-                                    : false;
-            map_for_each_test = (&key.as<std::string>() == &kutori_map_it->first)
-                                    ? map_for_each_test
-                                    : false;
-            map_for_each_test =
-                (value.as<kutori>().get_name() == kutori_map_it->second.get_name())
-                    ? map_for_each_test
-                    : false;
-            map_for_each_test = (&value.as<kutori>() == &kutori_map_it->second)
-                                    ? map_for_each_test
-                                    : false;
+            NTR_TEST_THROW(key.as<std::string>() == kutori_map_it->first);
+            NTR_TEST_THROW(&key.as<std::string>() == &kutori_map_it->first);
+            NTR_TEST_THROW(value.as<kutori>().get_name() ==
+                           kutori_map_it->second.get_name());
+            NTR_TEST_THROW(&value.as<kutori>() == &kutori_map_it->second);
             ++kutori_map_it;
         });
-        NTR_TEST_ASSERT(map_for_each_test);
         map_string_kutori_type->clear(kutori_map);
         NTR_TEST_ASSERT(kutori_construct + kutori_copy_construct +
                             kutori_move_construct ==
@@ -122,10 +103,8 @@ int main()
         set_float_type->for_each(
             float_set, [&float_set, &float_set_it, &set_for_each_test](nobject&& element)
         {
-            set_for_each_test =
-                (element.as<float>() == *float_set_it) ? set_for_each_test : false;
-            set_for_each_test =
-                (&element.as<float>() == &(*float_set_it)) ? set_for_each_test : false;
+            NTR_TEST_THROW(element.as<float>() == *float_set_it);
+            NTR_TEST_THROW(&element.as<float>() == &(*float_set_it));
             ++float_set_it;
         });
         NTR_TEST_ASSERT(set_for_each_test);
