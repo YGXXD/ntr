@@ -13,7 +13,6 @@
 #include "../type/nenum.hpp"
 #include "../type/nclass.hpp"
 #include "../type/npointer.hpp"
-#include "../type/nstd_pair.hpp"
 #include "../type/ncontainer.hpp"
 
 namespace ntr
@@ -145,23 +144,6 @@ private:
 };
 
 template <typename T>
-class ntype_factory<ntype::etype::estd_pair, T>
-{
-    static_assert(is_etype_std_pair<T>(), "ntype::etype::estd_pair factory template "
-                                          "parameter \"T\" must be std::pair type");
-
-public:
-    friend class nregistrar;
-    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::estd_pair, T>)
-
-private:
-    ntype_factory();
-    ~ntype_factory() = default;
-
-    nstd_pair _type;
-};
-
-template <typename T>
 class ntype_factory<ntype::etype::econtainer, T>
 {
     static_assert(is_etype_container<T>(),
@@ -174,6 +156,9 @@ public:
     NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::econtainer, T>)
 
 private:
+    static const ntype* key_type();
+    static const ntype* value_type();
+
     ntype_factory();
     ~ntype_factory() = default;
 
