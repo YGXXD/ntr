@@ -31,6 +31,16 @@ void ncontainer::put(const nwrapper& container, const nwrapper& element) const
     _container_ops->put(container.data(), element.data());
 }
 
+void ncontainer::for_each(const nwrapper& container,
+                          const std::function<void(nobject&&)>& callback) const
+{
+    if (container.type() != this)
+        throw std::invalid_argument(
+            "nncontainer::for_each : container's type is not this container type");
+    _container_ops->for_each(container.data(),
+                             const_cast<std::function<void(nobject&&)>*>(&callback));
+}
+
 void ncontainer::put(const nwrapper& container, const nwrapper& key,
                      const nwrapper& value) const
 {
@@ -44,16 +54,6 @@ void ncontainer::put(const nwrapper& container, const nwrapper& key,
             "nncontainer::put : value's type is not this value type");
     std::pair<void*, void*> pair(key.data(), value.data());
     _container_ops->put(container.data(), &pair);
-}
-
-void ncontainer::for_each(const nwrapper& container,
-                          const std::function<void(nobject&&)>& callback) const
-{
-    if (container.type() != this)
-        throw std::invalid_argument(
-            "nncontainer::for_each : container's type is not this container type");
-    _container_ops->for_each(container.data(),
-                             const_cast<std::function<void(nobject&&)>*>(&callback));
 }
 
 void ncontainer::for_each(const nwrapper& container,

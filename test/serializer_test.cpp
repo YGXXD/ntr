@@ -28,7 +28,7 @@ struct kutori
     kutori* friend_kutori;
 };
 
-int print_ntr_instance(std::string_view name, const nwrapper& instance, int depth)
+void print_ntr_instance(std::string_view name, const nwrapper& instance, int depth)
 {
     const nclass* type = instance.type()->as_class();
     for (int i = 0; i < depth; i++)
@@ -66,8 +66,8 @@ int print_ntr_instance(std::string_view name, const nwrapper& instance, int dept
             for (auto& property : instance.type()->as_class()->propertys())
             {
                 nobject value = property->get(instance);
-                NTR_TEST_ASSERT(value.is_valid());
-                NTR_TEST_ASSERT(value.is_ref());
+                NTR_TEST_THROW(value.is_valid());
+                NTR_TEST_THROW(value.is_ref());
                 print_ntr_instance(property->name(), value.wrapper(), depth + 1);
             }
             for (int i = 0; i < depth; i++)
@@ -104,7 +104,7 @@ int print_ntr_instance(std::string_view name, const nwrapper& instance, int dept
             };
             container->for_each(instance, lambda);
         }
-        NTR_TEST_ASSERT(test);
+        NTR_TEST_THROW(test);
         for (int i = 0; i < depth; i++)
             std::cout << "  ";
         std::cout << "]";
@@ -112,7 +112,6 @@ int print_ntr_instance(std::string_view name, const nwrapper& instance, int dept
     break;
     }
     std::cout << std::endl;
-    return 0;
 }
 
 int main()
@@ -157,7 +156,8 @@ int main()
         };
         test_kutori.friend_kutori = &friend_kutori;
         nobject test_kutori_ref = nephren::get<kutori>()->ref_instance(test_kutori);
-        return print_ntr_instance("kutori", test_kutori_ref.wrapper(), 0);
+        print_ntr_instance("kutori", test_kutori_ref.wrapper(), 0);
+        return 0;
     }
     catch (const std::exception& e)
     {
