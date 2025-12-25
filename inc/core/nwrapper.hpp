@@ -9,6 +9,8 @@
 
 #include "../setup.hpp"
 
+#include <type_traits>
+
 namespace ntr
 {
 

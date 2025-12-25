@@ -8,6 +8,8 @@
 #include "core/nobject.hpp"
 #include "type/ntype.hpp"
 
+#include <stdexcept>
+
 namespace ntr
 {
 

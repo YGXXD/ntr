@@ -11,6 +11,8 @@
 #include "../util/nvector.hpp"
 #include "../core/nobject.hpp"
 
+#include <functional>
+
 namespace ntr
 {
 

@@ -11,7 +11,7 @@
 namespace ntr
 {
 
-enum_integer_type nenum::get_value(const nwrapper& enum_)
+nenum::enum_integer_type nenum::get_value(const nwrapper& enum_)
 {
     if (!enum_.type()->is_enum())
         throw std::invalid_argument("nenum::get_value : enum_'s type is not enum type");

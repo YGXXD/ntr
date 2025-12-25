@@ -9,20 +9,14 @@
 
 #include "../setup.hpp"
 
+#include <cstddef>
+
 namespace ntr
 {
 
 template <template <typename...> class... Tps>
 struct ntemplate_list
 {
-    template <typename TpList>
-    struct append;
-    template <template <typename...> class... Aps>
-    struct append<ntemplate_list<Aps...>>
-    {
-        using type = ntemplate_list<Tps..., Aps...>;
-    };
-
     template <template <typename...> class Ftp>
     NTR_INLINE static constexpr size_t find_index();
 
@@ -31,11 +25,24 @@ struct ntemplate_list
     template <template <typename...> class Ctp>
     constexpr static bool contains = find_index<Ctp>() < size;
 
-    template <typename T>
-    constexpr static bool contains_type = false;
+    template <typename TpList>
+    struct append;
+    template <template <typename...> class... Aps>
+    struct append<ntemplate_list<Aps...>>
+    {
+        using type = ntemplate_list<Tps..., Aps...>;
+    };
 
+    template <typename T>
+    struct contains_type
+    {
+        constexpr static bool value = false;
+    };
     template <template <typename...> class Ctp, typename... Args>
-    constexpr static bool contains_type<Ctp<Args...>> = contains<Ctp>;
+    struct contains_type<Ctp<Args...>>
+    {
+        constexpr static bool value = contains<Ctp>;
+    };
 };
 
 } // namespace ntr

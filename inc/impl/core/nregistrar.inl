@@ -16,8 +16,13 @@ namespace ntr
 template <typename T>
 NTR_INLINE auto& nregistrar::factory_wrapper()
 {
-    using mt = make_type_t<T>;
-    return ntype_factory<make_etype<mt>(), mt>::instance();
+    using ntr_type = std::enable_if_t<
+        !std::is_array_v<std::remove_cv_t<std::remove_reference_t<T>>>,
+        std::conditional_t<std::is_pointer_v<T>,
+                           std::add_pointer_t<std::remove_cv_t<
+                               std::remove_reference_t<std::remove_pointer_t<T>>>>,
+                           std::remove_cv_t<std::remove_reference_t<T>>>>;
+    return ntype_factory<make_etype<ntr_type>(), ntr_type>::instance();
 }
 
 template <typename T>

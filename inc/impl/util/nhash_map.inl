@@ -9,6 +9,8 @@
 
 #include "../../util/nhash_map.hpp"
 
+#include <stdexcept>
+
 namespace ntr
 {
 

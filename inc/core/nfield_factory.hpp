@@ -20,7 +20,7 @@ class NTR_API nfield_factory
 {
 public:
     static std::unique_ptr<neitem> make_eitem(ntype* parent_type, std::string_view name,
-                                              enum_integer_type value);
+                                              nenum::enum_integer_type value);
 
     template <typename T, typename ClassT>
     static NTR_INLINE std::unique_ptr<nproperty>

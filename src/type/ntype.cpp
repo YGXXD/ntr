@@ -12,6 +12,8 @@
 #include "type/npointer.hpp"
 #include "type/ncontainer.hpp"
 
+#include <cstring>
+
 namespace ntr
 {
 

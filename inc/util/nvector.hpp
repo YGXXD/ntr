@@ -9,6 +9,10 @@
 
 #include "../setup.hpp"
 
+#include <cstdint>
+#include <iterator>
+#include <memory>
+
 namespace ntr
 {
 

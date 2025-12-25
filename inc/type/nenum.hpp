@@ -10,7 +10,6 @@
 #include "ntype.hpp"
 #include "../util/nhash_map.hpp"
 #include "../util/nvector.hpp"
-#include "../util/ntype_traits.hpp"
 
 namespace ntr
 {
@@ -18,6 +17,8 @@ namespace ntr
 class NTR_API nenum : public ntype
 {
 public:
+    using enum_integer_type = long;
+
     static enum_integer_type get_value(const nwrapper& enum_);
     static void set_value(const nwrapper& enum_, enum_integer_type value);
 

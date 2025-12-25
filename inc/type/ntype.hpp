@@ -11,6 +11,8 @@
 #include "../core/nobject.hpp"
 #include "../core/nwrapper.hpp"
 
+#include <string_view>
+
 namespace ntr
 {
 

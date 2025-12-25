@@ -14,6 +14,7 @@
 #include "../type/nclass.hpp"
 #include "../type/npointer.hpp"
 #include "../type/ncontainer.hpp"
+#include "../util/ntype_traits.hpp"
 
 namespace ntr
 {

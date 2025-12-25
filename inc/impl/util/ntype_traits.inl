@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../../util/ntype_traits.hpp"
+#include "../../type/ncontainer.hpp"
 
 namespace ntr
 {
@@ -50,7 +51,7 @@ template <typename T>
 NTR_INLINE constexpr bool is_etype_container()
 {
     return ncontainer::list_templates::append<
-        ncontainer::map_templates>::type::contains_type<T>;
+        ncontainer::map_templates>::type::contains_type<T>::value;
 }
 
 template <typename T>
@@ -91,7 +92,7 @@ NTR_INLINE constexpr bool is_econtainer_map()
     static_assert(
         is_etype_container<T>(),
         "is_econtainer_map : template parameter \"T\" is not valid container type");
-    return ncontainer::map_templates::contains_type<T>;
+    return ncontainer::map_templates::contains_type<T>::value;
 }
 
 } // namespace ntr
