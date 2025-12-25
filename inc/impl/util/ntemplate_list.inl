@@ -13,13 +13,15 @@ namespace ntr
 {
 
 template <template <typename...> class Tp1, template <typename...> class Tp2>
-struct is_template_same : std::false_type
+struct is_template_same
 {
+    static constexpr bool value = false;
 };
 
 template <template <typename...> class Tp>
-struct is_template_same<Tp, Tp> : std::true_type
+struct is_template_same<Tp, Tp>
 {
+    static constexpr bool value = true;
 };
 
 template <template <typename...> class... Tps>

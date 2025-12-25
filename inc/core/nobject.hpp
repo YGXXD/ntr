@@ -10,6 +10,8 @@
 #include "../setup.hpp"
 #include "nwrapper.hpp"
 
+#include <cstdint>
+
 namespace ntr
 {
 

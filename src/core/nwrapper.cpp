@@ -8,6 +8,8 @@
 #include "core/nwrapper.hpp"
 #include "type/nclass.hpp"
 
+#include <stdexcept>
+
 namespace ntr
 {
 

@@ -9,6 +9,10 @@
 
 #include "../../util/nvector.hpp"
 
+#include <cstring>
+#include <stdexcept>
+#include <algorithm>
+
 namespace ntr
 {
 

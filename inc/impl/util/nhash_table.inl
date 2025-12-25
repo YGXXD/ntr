@@ -9,6 +9,8 @@
 
 #include "../../util/nhash_table.hpp"
 
+#include <cstring>
+
 namespace ntr
 {
 

@@ -10,6 +10,8 @@
 #include "../setup.hpp"
 #include "nhash_table.hpp"
 
+#include <utility>
+
 namespace ntr
 {
 

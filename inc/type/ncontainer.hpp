@@ -13,6 +13,8 @@
 #include "../util/nhash_map.hpp"
 #include "../util/nhash_set.hpp"
 
+#include <functional>
+
 namespace ntr
 {
 
