@@ -148,16 +148,13 @@ const ntype* ntype_factory<ntype::etype::econtainer, T>::key_type()
     if constexpr (is_container_map_v<T>)
         return nregistrar::get_type<typename T::key_type>();
     else
-        return nregistrar::get_type<typename T::element_type>();
+        return nullptr;
 };
 
 template <typename T>
 const ntype* ntype_factory<ntype::etype::econtainer, T>::value_type()
 {
-    if constexpr (is_container_map_v<T>)
-        return nregistrar::get_type<typename T::value_type>();
-    else
-        return nullptr;
+    return nregistrar::get_type<typename T::value_type>();
 };
 
 template <typename T>

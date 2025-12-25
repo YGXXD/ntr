@@ -44,41 +44,41 @@ template <class Value, class Allocator = std::allocator<Value>>
 class nvector
 {
 public:
-    using element_type = Value;
-    using iterator = nvector_iterator<element_type>;
+    using value_type = Value;
+    using iterator = nvector_iterator<value_type>;
 
     nvector();
     nvector(const nvector& other);
     nvector(nvector&& other);
-    nvector(std::initializer_list<element_type> list);
+    nvector(std::initializer_list<value_type> list);
     ~nvector();
     NTR_INLINE nvector& operator=(const nvector& other);
     NTR_INLINE nvector& operator=(nvector&& other);
 
     void reserve(uint32_t new_capacity);
-    NTR_INLINE void push_back(const element_type& value);
-    NTR_INLINE void push_back(element_type&& value);
+    NTR_INLINE void push_back(const value_type& value);
+    NTR_INLINE void push_back(value_type&& value);
     NTR_INLINE void pop_back();
-    NTR_INLINE void insert(uint32_t index, const element_type& value);
-    void insert(uint32_t index, element_type&& value);
+    NTR_INLINE void insert(uint32_t index, const value_type& value);
+    void insert(uint32_t index, value_type&& value);
     void remove(uint32_t index);
     NTR_INLINE void remove(const iterator& it);
     NTR_INLINE void clear();
     NTR_INLINE uint32_t size() const;
     NTR_INLINE bool empty() const;
-    NTR_INLINE element_type* data();
-    NTR_INLINE const element_type* data() const;
-    NTR_INLINE element_type& at(uint32_t index);
-    NTR_INLINE const element_type& at(uint32_t index) const;
-    NTR_INLINE element_type& operator[](uint32_t index);
-    NTR_INLINE const element_type& operator[](uint32_t index) const;
+    NTR_INLINE value_type* data();
+    NTR_INLINE const value_type* data() const;
+    NTR_INLINE value_type& at(uint32_t index);
+    NTR_INLINE const value_type& at(uint32_t index) const;
+    NTR_INLINE value_type& operator[](uint32_t index);
+    NTR_INLINE const value_type& operator[](uint32_t index) const;
     NTR_INLINE iterator begin() const;
     NTR_INLINE iterator end() const;
 
 private:
     uint32_t _size;
     uint32_t _capacity;
-    element_type* _datas;
+    value_type* _datas;
 };
 
 } // namespace ntr

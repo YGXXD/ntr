@@ -43,13 +43,13 @@ int main()
         NTR_TEST_ASSERT(kutori_vector.size() == 4);
         NTR_TEST_ASSERT(vector_kutori_type->size(kutori_vector) == 4);
         auto kutori_vector_it = kutori_vector.begin();
-        vector_kutori_type->for_each(
-            kutori_vector, [&kutori_vector, &kutori_vector_it](nobject&& element)
+        vector_kutori_type->for_each(kutori_vector,
+                                     [&kutori_vector, &kutori_vector_it](nobject&& value)
         {
-            NTR_TEST_THROW(element.as<kutori>().get_name() ==
+            NTR_TEST_THROW(value.as<kutori>().get_name() ==
                            (*kutori_vector_it).get_name());
-            NTR_TEST_THROW(&element.as<kutori>() == &(*kutori_vector_it));
-            NTR_TEST_THROW(element.data() == &(*kutori_vector_it));
+            NTR_TEST_THROW(&value.as<kutori>() == &(*kutori_vector_it));
+            NTR_TEST_THROW(value.data() == &(*kutori_vector_it));
             ++kutori_vector_it;
         });
         vector_kutori_type->clear(kutori_vector);
@@ -98,16 +98,13 @@ int main()
         set_float_type->put(float_set, 4.0f);
         NTR_TEST_ASSERT(float_set.size() == 4);
         NTR_TEST_ASSERT(set_float_type->size(float_set) == 4);
-        bool set_for_each_test = true;
         auto float_set_it = float_set.begin();
-        set_float_type->for_each(
-            float_set, [&float_set, &float_set_it, &set_for_each_test](nobject&& element)
+        set_float_type->for_each(float_set, [&float_set, &float_set_it](nobject&& value)
         {
-            NTR_TEST_THROW(element.as<float>() == *float_set_it);
-            NTR_TEST_THROW(&element.as<float>() == &(*float_set_it));
+            NTR_TEST_THROW(value.as<float>() == *float_set_it);
+            NTR_TEST_THROW(&value.as<float>() == &(*float_set_it));
             ++float_set_it;
         });
-        NTR_TEST_ASSERT(set_for_each_test);
         set_float_type->clear(float_set);
         NTR_TEST_ASSERT(set_float_type->size(float_set) == 0);
         return 0;

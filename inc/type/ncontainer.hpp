@@ -8,7 +8,6 @@
 #pragma once
 
 #include "ntype.hpp"
-#include "../util/nvector.hpp"
 
 namespace ntr
 {
@@ -30,7 +29,7 @@ public:
     ~ncontainer();
 
     // list container
-    void put(const nwrapper& container, const nwrapper& element) const;
+    void put(const nwrapper& container, const nwrapper& value) const;
     void for_each(const nwrapper& container,
                   const std::function<void(nobject&&)>& callback) const;
     // map container
@@ -40,24 +39,14 @@ public:
     // common
     void clear(const nwrapper& container) const;
     uint32_t size(const nwrapper& container) const;
-    NTR_INLINE bool is_map() const { return _value_type != nullptr; }
-    NTR_INLINE const ntype* element_type() const
-    {
-        return is_map() ? nullptr : _element_type;
-    }
-    NTR_INLINE const ntype* key_type() const { return is_map() ? _key_type : nullptr; }
+    NTR_INLINE bool is_map() const { return _key_type; }
+    NTR_INLINE bool is_list() const { return !is_map(); }
+    NTR_INLINE const ntype* key_type() const { return _key_type; }
     NTR_INLINE const ntype* value_type() const { return _value_type; }
 
 private:
-    union
-    {
-        const ntype* _element_type;
-        struct
-        {
-            const ntype* _key_type;
-            const ntype* _value_type;
-        };
-    };
+    const ntype* _key_type;
+    const ntype* _value_type;
     operations* _container_ops;
 };
 
