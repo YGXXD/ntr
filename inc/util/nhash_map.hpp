@@ -29,20 +29,19 @@ class nhash_map : public nhash_table<nhash_map_table_traits<Key, Value>, Hash, A
     using hash_table_type =
         nhash_table<nhash_map_table_traits<Key, Value>, Hash, Allocator>;
     using hash_table_type::hash_table_type;
-
-public:
     using typename hash_table_type::element_type;
-    using typename hash_table_type::iterator;
-    using typename hash_table_type::key_type;
-    using typename hash_table_type::value_type;
 
-private:
-    static_assert(std::is_same_v<Key, key_type>);
-    static_assert(std::is_same_v<Value, value_type>);
     using hash_table_type::_buckets;
     using hash_table_type::_capacity;
 
 public:
+    using typename hash_table_type::iterator;
+    using typename hash_table_type::key_type;
+    using typename hash_table_type::value_type;
+
+    static_assert(std::is_same_v<Key, key_type>);
+    static_assert(std::is_same_v<Value, value_type>);
+
     using hash_table_type::insert;
     NTR_INLINE void insert(const key_type& key, const value_type& value);
     NTR_INLINE void insert(const key_type& key, value_type&& value);

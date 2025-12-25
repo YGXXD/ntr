@@ -17,22 +17,21 @@ namespace ncontainer_ops_function
 {
 
 template <typename T>
-static void vector_put(void* container, void* element)
+static void vector_put(void* container, void* value)
 {
-    static_cast<T*>(container)->push_back(
-        *static_cast<typename T::element_type*>(element));
+    static_cast<T*>(container)->push_back(*static_cast<typename T::value_type*>(value));
 }
 
 template <typename T>
-static void hash_set_put(void* container, void* element)
+static void hash_set_put(void* container, void* value)
 {
-    static_cast<T*>(container)->insert(*static_cast<typename T::element_type*>(element));
+    static_cast<T*>(container)->insert(*static_cast<typename T::value_type*>(value));
 }
 
 template <typename T>
-static void hash_map_put(void* container, void* element)
+static void hash_map_put(void* container, void* key_value)
 {
-    std::pair<void*, void*> pair = *static_cast<std::pair<void*, void*>*>(element);
+    std::pair<void*, void*> pair = *static_cast<std::pair<void*, void*>*>(key_value);
     static_cast<T*>(container)->insert(
         *static_cast<typename T::key_type*>(pair.first),
         *static_cast<typename T::value_type*>(pair.second));
@@ -41,10 +40,10 @@ static void hash_map_put(void* container, void* element)
 template <typename T>
 static void list_for_each(void* container, void* callback)
 {
-    for (auto& element : *static_cast<T*>(container))
+    for (auto& value : *static_cast<T*>(container))
     {
         (*static_cast<std::function<void(nobject&&)>*>(callback))(
-            nregistrar::get_type<typename T::element_type>()->ref_instance(element));
+            nregistrar::get_type<typename T::value_type>()->ref_instance(value));
     }
 }
 

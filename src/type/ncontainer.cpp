@@ -20,20 +20,24 @@ ncontainer::ncontainer(const ntype* key_type, const ntype* value_type,
 
 ncontainer::~ncontainer() = default;
 
-void ncontainer::put(const nwrapper& container, const nwrapper& element) const
+void ncontainer::put(const nwrapper& container, const nwrapper& value) const
 {
+    if (!is_list())
+        throw std::logic_error("nncontainer::put : container's type is not a list type");
     if (container.type() != this)
         throw std::invalid_argument(
             "nncontainer::put : container's type is not this container type");
-    if (element.type() != _element_type)
+    if (value.type() != _value_type)
         throw std::invalid_argument(
-            "nncontainer::put : element's type is not this element type");
-    _container_ops->put(container.data(), element.data());
+            "nncontainer::put : value's type is not this value type");
+    _container_ops->put(container.data(), value.data());
 }
 
 void ncontainer::for_each(const nwrapper& container,
                           const std::function<void(nobject&&)>& callback) const
 {
+    if (!is_list())
+        throw std::logic_error("nncontainer::put : container's type is not a list type");
     if (container.type() != this)
         throw std::invalid_argument(
             "nncontainer::for_each : container's type is not this container type");
@@ -44,6 +48,8 @@ void ncontainer::for_each(const nwrapper& container,
 void ncontainer::put(const nwrapper& container, const nwrapper& key,
                      const nwrapper& value) const
 {
+    if (!is_map())
+        throw std::logic_error("nncontainer::put : container's type is not a map type");
     if (container.type() != this)
         throw std::invalid_argument(
             "nncontainer::put : container's type is not this container type");
@@ -59,6 +65,8 @@ void ncontainer::put(const nwrapper& container, const nwrapper& key,
 void ncontainer::for_each(const nwrapper& container,
                           const std::function<void(nobject&&, nobject&&)>& callback) const
 {
+    if (!is_map())
+        throw std::logic_error("nncontainer::put : container's type is not a map type");
     if (container.type() != this)
         throw std::invalid_argument(
             "nncontainer::for_each : container's type is not this container type");

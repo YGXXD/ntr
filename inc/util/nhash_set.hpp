@@ -29,8 +29,11 @@ class nhash_set : public nhash_table<nhash_set_table_traits<Value>, Hash, Alloca
     using hash_table_type::hash_table_type;
 
 public:
-    using typename hash_table_type::element_type;
     using typename hash_table_type::iterator;
+    using typename hash_table_type::value_type;
+
+    static_assert(std::is_same_v<Value, typename hash_table_type::key_type>);
+    static_assert(std::is_same_v<Value, value_type>);
 };
 
 } // namespace ntr

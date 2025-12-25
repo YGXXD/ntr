@@ -83,11 +83,11 @@ void print_ntr_instance(std::string_view name, const nwrapper& instance, int dep
         bool test = true;
         if (!container->is_map())
         {
-            auto lambda = [container, &test, depth](nobject&& element)
+            auto lambda = [container, &test, depth](nobject&& value)
             {
-                test = element.is_valid() && element.is_ref() ? test : false;
-                test = element.type() == container->element_type();
-                print_ntr_instance("", element.wrapper(), depth + 1);
+                test = value.is_valid() && value.is_ref() ? test : false;
+                test = value.type() == container->value_type();
+                print_ntr_instance("", value.wrapper(), depth + 1);
             };
             container->for_each(instance, lambda);
         }

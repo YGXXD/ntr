@@ -126,8 +126,8 @@ nvector<Value, Allocator>::nvector(const nvector& other)
         _datas = Allocator().allocate(_capacity);
     if (_size > 0)
     {
-        if constexpr (std::is_trivially_copyable_v<element_type>)
-            std::memcpy(_datas, other._datas, _size * sizeof(element_type));
+        if constexpr (std::is_trivially_copyable_v<value_type>)
+            std::memcpy(_datas, other._datas, _size * sizeof(value_type));
         else
             std::uninitialized_copy_n(other._datas, _size, _datas);
     }
@@ -143,7 +143,7 @@ nvector<Value, Allocator>::nvector(nvector&& other)
 }
 
 template <class Value, class Allocator>
-nvector<Value, Allocator>::nvector(std::initializer_list<element_type> list)
+nvector<Value, Allocator>::nvector(std::initializer_list<value_type> list)
     : _size(0), _capacity(0), _datas(nullptr)
 {
     reserve(list.size());
@@ -193,11 +193,11 @@ void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
     if (new_capacity <= _capacity)
         return;
     Allocator allocator {};
-    element_type* new_datas = allocator.allocate(new_capacity);
+    value_type* new_datas = allocator.allocate(new_capacity);
     if (_datas)
     {
-        if constexpr (std::is_trivially_copyable_v<element_type>)
-            std::memcpy(new_datas, _datas, _size * sizeof(element_type));
+        if constexpr (std::is_trivially_copyable_v<value_type>)
+            std::memcpy(new_datas, _datas, _size * sizeof(value_type));
         else
         {
             std::uninitialized_move_n(_datas, _size, new_datas);
@@ -210,20 +210,20 @@ void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
 }
 
 template <class Value, class Allocator>
-NTR_INLINE void nvector<Value, Allocator>::push_back(const element_type& value)
+NTR_INLINE void nvector<Value, Allocator>::push_back(const value_type& value)
 {
-    push_back(std::move(element_type(value)));
+    push_back(std::move(value_type(value)));
 }
 
 template <class Value, class Allocator>
-NTR_INLINE void nvector<Value, Allocator>::push_back(element_type&& value)
+NTR_INLINE void nvector<Value, Allocator>::push_back(value_type&& value)
 {
     if (_size >= _capacity)
         reserve(nvector_growth_capacity(_capacity));
-    if constexpr (std::is_trivially_copyable_v<element_type>)
+    if constexpr (std::is_trivially_copyable_v<value_type>)
         _datas[_size++] = std::move(value);
     else
-        new (&_datas[_size++]) element_type(std::move(value));
+        new (&_datas[_size++]) value_type(std::move(value));
 }
 
 template <class Value, class Allocator>
@@ -231,22 +231,21 @@ NTR_INLINE void nvector<Value, Allocator>::pop_back()
 {
     if (_size > 0)
     {
-        if constexpr (std::is_trivially_copyable_v<element_type>)
+        if constexpr (std::is_trivially_copyable_v<value_type>)
             --_size;
         else
-            _datas[--_size].~element_type();
+            _datas[--_size].~value_type();
     }
 }
 
 template <class Value, class Allocator>
-NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index,
-                                                  const element_type& value)
+NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index, const value_type& value)
 {
-    insert(index, std::move(element_type(value)));
+    insert(index, std::move(value_type(value)));
 }
 
 template <class Value, class Allocator>
-void nvector<Value, Allocator>::insert(uint32_t index, element_type&& value)
+void nvector<Value, Allocator>::insert(uint32_t index, value_type&& value)
 {
     if (index >= _size)
     {
@@ -255,18 +254,18 @@ void nvector<Value, Allocator>::insert(uint32_t index, element_type&& value)
     }
     if (_size >= _capacity)
         reserve(nvector_growth_capacity(_capacity));
-    if constexpr (std::is_trivially_copyable_v<element_type>)
+    if constexpr (std::is_trivially_copyable_v<value_type>)
     {
         std::memmove(_datas + index + 1, _datas + index,
-                     (_size - index) * sizeof(element_type));
+                     (_size - index) * sizeof(value_type));
         _datas[index] = std::move(value);
     }
     else
     {
-        new (&_datas[_size]) element_type(std::move(_datas[_size - 1]));
+        new (&_datas[_size]) value_type(std::move(_datas[_size - 1]));
         std::move_backward(_datas + index, _datas + _size - 1, _datas + _size);
-        _datas[index].~element_type();
-        new (&_datas[index]) element_type(std::move(value));
+        _datas[index].~value_type();
+        new (&_datas[index]) value_type(std::move(value));
     }
     ++_size;
 }
@@ -276,18 +275,18 @@ void nvector<Value, Allocator>::remove(uint32_t index)
 {
     if (index >= _size)
         return;
-    _datas[index].~element_type();
-    if constexpr (std::is_trivially_copyable_v<element_type>)
+    _datas[index].~value_type();
+    if constexpr (std::is_trivially_copyable_v<value_type>)
     {
         if (index < _size - 1)
             std::memmove(_datas + index, _datas + index + 1,
-                         (_size - index - 1) * sizeof(element_type));
+                         (_size - index - 1) * sizeof(value_type));
     }
     else
     {
         if (index < _size - 1)
             std::move(_datas + index + 1, _datas + _size, _datas + index);
-        _datas[_size - 1].~element_type();
+        _datas[_size - 1].~value_type();
     }
     --_size;
 }
@@ -303,7 +302,7 @@ NTR_INLINE void nvector<Value, Allocator>::clear()
 {
     if (_size > 0)
     {
-        if constexpr (!std::is_trivially_copyable_v<element_type>)
+        if constexpr (!std::is_trivially_copyable_v<value_type>)
             std::destroy_n(_datas, _size);
         _size = 0;
     }
@@ -322,21 +321,21 @@ NTR_INLINE bool nvector<Value, Allocator>::empty() const
 }
 
 template <class Value, class Allocator>
-NTR_INLINE typename nvector<Value, Allocator>::element_type*
+NTR_INLINE typename nvector<Value, Allocator>::value_type*
 nvector<Value, Allocator>::data()
 {
     return _datas;
 }
 
 template <class Value, class Allocator>
-NTR_INLINE const typename nvector<Value, Allocator>::element_type*
+NTR_INLINE const typename nvector<Value, Allocator>::value_type*
 nvector<Value, Allocator>::data() const
 {
     return _datas;
 }
 
 template <class Value, class Allocator>
-NTR_INLINE typename nvector<Value, Allocator>::element_type&
+NTR_INLINE typename nvector<Value, Allocator>::value_type&
 nvector<Value, Allocator>::at(uint32_t index)
 {
     if (index >= _size)
@@ -345,7 +344,7 @@ nvector<Value, Allocator>::at(uint32_t index)
 }
 
 template <class Value, class Allocator>
-NTR_INLINE const typename nvector<Value, Allocator>::element_type&
+NTR_INLINE const typename nvector<Value, Allocator>::value_type&
 nvector<Value, Allocator>::at(uint32_t index) const
 {
     if (index >= _size)
@@ -354,14 +353,14 @@ nvector<Value, Allocator>::at(uint32_t index) const
 }
 
 template <class Value, class Allocator>
-NTR_INLINE typename nvector<Value, Allocator>::element_type&
+NTR_INLINE typename nvector<Value, Allocator>::value_type&
 nvector<Value, Allocator>::operator[](uint32_t index)
 {
     return _datas[index];
 }
 
 template <class Value, class Allocator>
-NTR_INLINE const typename nvector<Value, Allocator>::element_type&
+NTR_INLINE const typename nvector<Value, Allocator>::value_type&
 nvector<Value, Allocator>::operator[](uint32_t index) const
 {
     return _datas[index];
