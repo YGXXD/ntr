@@ -143,25 +143,17 @@ ntype_factory<ntype::etype::epointer, T>::ntype_factory()
 
 // ntype::etype::econtainer impl
 template <typename T>
-const ntype* ntype_factory<ntype::etype::econtainer, T>::key_type()
+ntype_factory<ntype::etype::econtainer, T>::ntype_factory()
+    : _type(
+          []()
 {
-    if constexpr (is_container_map_v<T>)
+    if constexpr (is_econtainer_map<T>())
         return nregistrar::get_type<typename T::key_type>();
     else
         return nullptr;
-};
-
-template <typename T>
-const ntype* ntype_factory<ntype::etype::econtainer, T>::value_type()
-{
-    return nregistrar::get_type<typename T::value_type>();
-};
-
-template <typename T>
-ntype_factory<ntype::etype::econtainer, T>::ntype_factory()
-    : _type(key_type(), value_type(), &ncontainer_ops_factory<T>::instance().ops,
-            static_cast<uint16_t>(sizeof(T)), static_cast<uint16_t>(alignof(T)),
-            &ntype_ops_factory<T>::instance().ops)
+}(), nregistrar::get_type<typename T::value_type>(),
+          &ncontainer_ops_factory<T>::instance().ops, static_cast<uint16_t>(sizeof(T)),
+          static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
 {
 }
 

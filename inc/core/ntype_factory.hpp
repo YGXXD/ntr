@@ -156,9 +156,6 @@ public:
     NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::econtainer, T>)
 
 private:
-    static const ntype* key_type();
-    static const ntype* value_type();
-
     ntype_factory();
     ~ntype_factory() = default;
 

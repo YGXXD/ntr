@@ -8,47 +8,9 @@
 #pragma once
 
 #include "../../util/ntype_traits.hpp"
-#include "../../util/nvector.hpp"
-#include "../../util/nhash_map.hpp"
-#include "../../util/nhash_set.hpp"
 
 namespace ntr
 {
-template <typename T>
-struct is_container : std::false_type
-{
-};
-
-template <typename... Args>
-struct is_container<nvector<Args...>> : std::true_type
-{
-};
-
-template <typename... Args>
-struct is_container<nhash_map<Args...>> : std::true_type
-{
-};
-
-template <typename... Args>
-struct is_container<nhash_set<Args...>> : std::true_type
-{
-};
-
-template <typename T>
-inline constexpr bool is_container_v = is_container<T>::value;
-
-template <typename T>
-struct is_container_map : std::false_type
-{
-};
-
-template <typename... Args>
-struct is_container_map<nhash_map<Args...>> : std::true_type
-{
-};
-
-template <typename T>
-inline constexpr bool is_container_map_v = is_container_map<T>::value;
 
 template <typename T>
 NTR_INLINE constexpr bool is_etype_type()
@@ -74,7 +36,7 @@ NTR_INLINE constexpr bool is_etype_enum()
 template <typename T>
 NTR_INLINE constexpr bool is_etype_class()
 {
-    return std::is_class_v<T> && !is_container_v<T> && !std::is_const_v<T> &&
+    return !is_etype_container<T>() && std::is_class_v<T> && !std::is_const_v<T> &&
            !std::is_volatile_v<T>;
 }
 
@@ -87,7 +49,8 @@ NTR_INLINE constexpr bool is_etype_pointer()
 template <typename T>
 NTR_INLINE constexpr bool is_etype_container()
 {
-    return is_container_v<T>;
+    return ncontainer::list_templates::append<
+        ncontainer::map_templates>::type::contains_type<T>;
 }
 
 template <typename T>
@@ -117,12 +80,18 @@ NTR_INLINE constexpr nnumeric::enumeric make_enumeric()
     return std::apply([](auto&&... args)
     {
         size_t index = 0;
-        size_t result = static_cast<size_t>(-1);
-        ((std::is_same_v<std::decay_t<decltype(args)>, T> ? (result = index, 0)
-                                                          : (++index, 0)),
-         ...);
-        return static_cast<nnumeric::enumeric>(result);
+        ((index += (std::is_same_v<std::decay_t<decltype(args)>, T> ? 0 : 1)), ...);
+        return static_cast<nnumeric::enumeric>(index);
     }, nnumeric::numeric_types {});
+}
+
+template <typename T>
+NTR_INLINE constexpr bool is_econtainer_map()
+{
+    static_assert(
+        is_etype_container<T>(),
+        "is_econtainer_map : template parameter \"T\" is not valid container type");
+    return ncontainer::map_templates::contains_type<T>;
 }
 
 } // namespace ntr

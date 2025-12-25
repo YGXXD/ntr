@@ -9,6 +9,7 @@
 
 #include "../type/ntype.hpp"
 #include "../type/nnumeric.hpp"
+#include "../type/ncontainer.hpp"
 
 namespace ntr
 {
@@ -50,6 +51,9 @@ using make_numeric_type_t =
 
 template <typename T>
 NTR_INLINE constexpr nnumeric::enumeric make_enumeric();
+
+template <typename T>
+NTR_INLINE constexpr bool is_econtainer_map();
 
 } // namespace ntr
 

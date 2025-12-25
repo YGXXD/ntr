@@ -8,6 +8,10 @@
 #pragma once
 
 #include "ntype.hpp"
+#include "../util/ntemplate_list.hpp"
+#include "../util/nvector.hpp"
+#include "../util/nhash_map.hpp"
+#include "../util/nhash_set.hpp"
 
 namespace ntr
 {
@@ -22,6 +26,9 @@ public:
         void (*clear)(void*);
         uint32_t (*size)(void*);
     };
+
+    using list_templates = ntemplate_list<nvector, nhash_set>;
+    using map_templates = ntemplate_list<nhash_map>;
 
     ncontainer(const ntype* key_type, const ntype* value_type, operations* container_ops,
                uint16_t size, uint16_t align, ntype::operations* ops);
@@ -39,8 +46,8 @@ public:
     // common
     void clear(const nwrapper& container) const;
     uint32_t size(const nwrapper& container) const;
-    NTR_INLINE bool is_map() const { return _key_type; }
     NTR_INLINE bool is_list() const { return !is_map(); }
+    NTR_INLINE bool is_map() const { return _key_type; }
     NTR_INLINE const ntype* key_type() const { return _key_type; }
     NTR_INLINE const ntype* value_type() const { return _value_type; }
 
