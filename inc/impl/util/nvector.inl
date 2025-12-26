@@ -216,18 +216,13 @@ void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
 template <class Value, class Allocator>
 NTR_INLINE void nvector<Value, Allocator>::push_back(const value_type& value)
 {
-    push_back(std::move(value_type(value)));
+    forward_push_back(value);
 }
 
 template <class Value, class Allocator>
 NTR_INLINE void nvector<Value, Allocator>::push_back(value_type&& value)
 {
-    if (_size >= _capacity)
-        reserve(nvector_growth_capacity(_capacity));
-    if constexpr (std::is_trivially_copyable_v<value_type>)
-        _datas[_size++] = std::move(value);
-    else
-        new (&_datas[_size++]) value_type(std::move(value));
+    forward_push_back(std::move(value));
 }
 
 template <class Value, class Allocator>
@@ -245,33 +240,13 @@ NTR_INLINE void nvector<Value, Allocator>::pop_back()
 template <class Value, class Allocator>
 NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index, const value_type& value)
 {
-    insert(index, std::move(value_type(value)));
+    forward_insert(index, value);
 }
 
 template <class Value, class Allocator>
-void nvector<Value, Allocator>::insert(uint32_t index, value_type&& value)
+NTR_INLINE void nvector<Value, Allocator>::insert(uint32_t index, value_type&& value)
 {
-    if (index >= _size)
-    {
-        push_back(std::move(value));
-        return;
-    }
-    if (_size >= _capacity)
-        reserve(nvector_growth_capacity(_capacity));
-    if constexpr (std::is_trivially_copyable_v<value_type>)
-    {
-        std::memmove(_datas + index + 1, _datas + index,
-                     (_size - index) * sizeof(value_type));
-        _datas[index] = std::move(value);
-    }
-    else
-    {
-        new (&_datas[_size]) value_type(std::move(_datas[_size - 1]));
-        std::move_backward(_datas + index, _datas + _size - 1, _datas + _size);
-        _datas[index].~value_type();
-        new (&_datas[index]) value_type(std::move(value));
-    }
-    ++_size;
+    forward_insert(index, std::move(value));
 }
 
 template <class Value, class Allocator>
@@ -382,6 +357,45 @@ NTR_INLINE typename nvector<Value, Allocator>::iterator
 nvector<Value, Allocator>::end() const
 {
     return iterator(_datas + _size);
+}
+
+template <class Value, class Allocator>
+template <class ValueType>
+NTR_INLINE void nvector<Value, Allocator>::forward_push_back(ValueType&& value)
+{
+    if (_size >= _capacity)
+        reserve(nvector_growth_capacity(_capacity));
+    if constexpr (std::is_trivially_copyable_v<value_type>)
+        _datas[_size++] = std::forward<ValueType>(value);
+    else
+        new (&_datas[_size++]) value_type(std::forward<ValueType>(value));
+}
+
+template <class Value, class Allocator>
+template <class ValueType>
+void nvector<Value, Allocator>::forward_insert(uint32_t index, ValueType&& value)
+{
+    if (index >= _size)
+    {
+        push_back(std::forward<ValueType>(value));
+        return;
+    }
+    if (_size >= _capacity)
+        reserve(nvector_growth_capacity(_capacity));
+    if constexpr (std::is_trivially_copyable_v<value_type>)
+    {
+        std::memmove(_datas + index + 1, _datas + index,
+                     (_size - index) * sizeof(value_type));
+        _datas[index] = std::forward<ValueType>(value);
+    }
+    else
+    {
+        new (&_datas[_size]) value_type(std::move(_datas[_size - 1]));
+        std::move_backward(_datas + index, _datas + _size - 1, _datas + _size);
+        _datas[index].~value_type();
+        new (&_datas[index]) value_type(std::forward<ValueType>(value));
+    }
+    ++_size;
 }
 
 } // namespace ntr

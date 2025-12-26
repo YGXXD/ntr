@@ -61,8 +61,8 @@ int main()
         const ncontainer* map_string_kutori_type =
             nephren::get<nhash_map<std::string, kutori>>();
         nhash_map<std::string, kutori> kutori_map;
-        kutori_map.insert("kutori0", kutori("kutori0"));
-        kutori_map.insert("kutori1", kutori("kutori1"));
+        kutori_map.insert_or_assign("kutori0", kutori("kutori0"));
+        kutori_map.insert_or_assign("kutori1", kutori("kutori1"));
         map_string_kutori_type->put(kutori_map, std::string("kutori2"),
                                     kutori("kutori2"));
         map_string_kutori_type->put(kutori_map, std::string("kutori3"),
