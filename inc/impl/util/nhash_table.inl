@@ -300,12 +300,12 @@ nhash_table<TableTraits, Hash, Allocator>::end() const
 }
 
 template <class TableTraits, class Hash, class Allocator>
-uint32_t
-nhash_table<TableTraits, Hash, Allocator>::insert_force(element_type&& insert_element)
+uint32_t nhash_table<TableTraits, Hash, Allocator>::insert_force(element_type&& element)
 {
     if (_size >= _capacity * 4 / 5)
         reserve(nhash_table_growth_capacity(_capacity));
 
+    element_type insert_element(std::move(element));
     uint32_t position = Hash()(get_key(insert_element)) % _capacity;
     uint16_t distance = 0;
     while (true)
@@ -362,7 +362,10 @@ nhash_table<TableTraits, Hash, Allocator>::forward_insert(ElementType&& element)
         if constexpr (std::is_rvalue_reference_v<ElementType>)
             insert_force(std::forward<ElementType>(element));
         else
-            insert_force(element_type(std::forward<ElementType>(element)));
+        {
+            element_type element_copy(std::forward<ElementType>(element));
+            insert_force(std::move(element_copy));
+        }
     }
 }
 

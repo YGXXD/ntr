@@ -40,10 +40,13 @@ struct ntemplate_list
     {
         template <template <typename...> class... AllTps>
         struct impl;
-        template <>
-        struct impl<>
+        template <template <typename...> class FirstTp>
+        struct impl<FirstTp>
         {
-            constexpr static size_t value = 0;
+            constexpr static size_t value =
+                std::conditional_t<is_template_same<Ftp, FirstTp>::value,
+                                   std::integral_constant<size_t, 0>,
+                                   std::integral_constant<size_t, 1>>::value;
         };
         template <template <typename...> class FirstTp,
                   template <typename...> class... OtherTps>

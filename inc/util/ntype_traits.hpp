@@ -93,10 +93,13 @@ struct make_enumeric
                   "make_enumeric : template parameter \"T\" is not valid numeric type");
     template <typename Tuple>
     struct impl;
-    template <>
-    struct impl<std::tuple<>>
+    template <typename FirstT>
+    struct impl<std::tuple<FirstT>>
     {
-        constexpr static size_t value = 0;
+        constexpr static size_t value =
+            std::conditional_t<std::is_same_v<T, FirstT>,
+                               std::integral_constant<size_t, 0>,
+                               std::integral_constant<size_t, 1>>::value;
     };
     template <typename FirstT, typename... OtherTs>
     struct impl<std::tuple<FirstT, OtherTs...>>
