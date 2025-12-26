@@ -22,7 +22,7 @@ NTR_INLINE auto& nregistrar::factory_wrapper()
                            std::add_pointer_t<std::remove_cv_t<
                                std::remove_reference_t<std::remove_pointer_t<T>>>>,
                            std::remove_cv_t<std::remove_reference_t<T>>>>;
-    return ntype_factory<make_etype<ntr_type>(), ntr_type>::instance();
+    return ntype_factory<make_etype<ntr_type>::value, ntr_type>::instance();
 }
 
 template <typename T>
@@ -34,7 +34,7 @@ NTR_INLINE const auto* nregistrar::get_type()
 template <typename T>
 NTR_INLINE auto& nregistrar::regist_type(std::string_view name)
 {
-    static_assert(is_etype_type<T>(),
+    static_assert(is_etype_type<T>::value,
                   "nregistrar::regist_type : template parameter \"T\" is not valid type");
     auto& fact = factory_wrapper<T>();
     regist_type(name, &fact._type);
