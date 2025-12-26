@@ -89,6 +89,10 @@ protected:
     uint32_t _size;
     uint32_t _capacity;
     bucket_type* _buckets;
+
+private:
+    template<class ElementType>
+    NTR_INLINE void forward_insert(ElementType&& element);
 };
 
 } // namespace ntr

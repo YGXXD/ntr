@@ -32,7 +32,7 @@ template <typename T>
 static void hash_map_put(void* container, void* key_value)
 {
     std::pair<void*, void*> pair = *static_cast<std::pair<void*, void*>*>(key_value);
-    static_cast<T*>(container)->insert(
+    static_cast<T*>(container)->insert_or_assign(
         *static_cast<typename T::key_type*>(pair.first),
         *static_cast<typename T::value_type*>(pair.second));
 }

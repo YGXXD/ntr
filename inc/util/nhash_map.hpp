@@ -44,13 +44,16 @@ public:
     static_assert(std::is_same_v<Key, key_type>);
     static_assert(std::is_same_v<Value, value_type>);
 
-    using hash_table_type::insert;
-    NTR_INLINE void insert(const key_type& key, const value_type& value);
-    NTR_INLINE void insert(const key_type& key, value_type&& value);
+    NTR_INLINE void insert_or_assign(const key_type& key, const value_type& value);
+    NTR_INLINE void insert_or_assign(const key_type& key, value_type&& value);
     NTR_INLINE value_type& at(const key_type& key);
     NTR_INLINE const value_type& at(const key_type& key) const;
     NTR_INLINE value_type& operator[](const key_type& key);
     NTR_INLINE const value_type& operator[](const key_type& key) const;
+
+private:
+    template <class ValueType>
+    NTR_INLINE void forward_insert_or_assign(const key_type& key, ValueType&& value);
 };
 
 } // namespace ntr

@@ -64,7 +64,7 @@ public:
     NTR_INLINE void push_back(value_type&& value);
     NTR_INLINE void pop_back();
     NTR_INLINE void insert(uint32_t index, const value_type& value);
-    void insert(uint32_t index, value_type&& value);
+    NTR_INLINE void insert(uint32_t index, value_type&& value);
     void remove(uint32_t index);
     NTR_INLINE void remove(const iterator& it);
     NTR_INLINE void clear();
@@ -80,6 +80,11 @@ public:
     NTR_INLINE iterator end() const;
 
 private:
+    template <class ValueType>
+    NTR_INLINE void forward_push_back(ValueType&& value);
+    template <class ValueType>
+    void forward_insert(uint32_t index, ValueType&& value);
+
     uint32_t _size;
     uint32_t _capacity;
     value_type* _datas;
