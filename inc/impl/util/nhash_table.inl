@@ -54,14 +54,14 @@ template <typename T>
 NTR_INLINE typename nhash_table_iterator<T>::reference
 nhash_table_iterator<T>::operator*() const
 {
-    return _bucket->element;
+    return _bucket->value;
 }
 
 template <typename T>
 NTR_INLINE typename nhash_table_iterator<T>::pointer
 nhash_table_iterator<T>::operator->() const
 {
-    return &_bucket->element;
+    return &_bucket->value;
 }
 
 NTR_INLINE uint32_t nhash_table_growth_capacity(uint32_t capacity)
@@ -82,7 +82,7 @@ nhash_table<TableTraits, Hash, Allocator>::nhash_table(const nhash_table& other)
     if (_capacity > 0)
     {
         _buckets = Allocator().allocate(_capacity);
-        if constexpr (std::is_trivially_copyable_v<element_type>)
+        if constexpr (std::is_trivially_copyable_v<value_type>)
             std::memcpy(_buckets, other._buckets, _capacity * sizeof(bucket_type));
         else
         {
@@ -93,7 +93,7 @@ nhash_table<TableTraits, Hash, Allocator>::nhash_table(const nhash_table& other)
                 {
                     _buckets[i].valid = 1;
                     _buckets[i].distance = other._buckets[i].distance;
-                    new (&_buckets[i].element) element_type(other._buckets[i].element);
+                    new (&_buckets[i].value) value_type(other._buckets[i].value);
                 }
             }
         }
@@ -111,22 +111,22 @@ nhash_table<TableTraits, Hash, Allocator>::nhash_table(nhash_table&& other)
 
 template <class TableTraits, class Hash, class Allocator>
 nhash_table<TableTraits, Hash, Allocator>::nhash_table(
-    std::initializer_list<element_type> list)
+    std::initializer_list<value_type> list)
     : _size(0), _capacity(0), _buckets(nullptr)
 {
     reserve(list.size() * 2);
-    for (auto& element : list)
-        insert(element);
+    for (auto& value : list)
+        insert(value);
 }
 
 template <class TableTraits, class Hash, class Allocator>
 nhash_table<TableTraits, Hash, Allocator>::~nhash_table()
 {
-    if constexpr (!std::is_trivially_copyable_v<element_type>)
+    if constexpr (!std::is_trivially_copyable_v<value_type>)
     {
         for (uint32_t i = 0; i < _capacity; ++i)
             if (_buckets[i].valid)
-                _buckets[i].element.~element_type();
+                _buckets[i].value.~value_type();
     }
     if (_buckets)
         Allocator().deallocate(_buckets, _capacity);
@@ -178,9 +178,9 @@ void nhash_table<TableTraits, Hash, Allocator>::reserve(uint32_t new_capacity)
         {
             if (old_buckets[i].valid)
             {
-                insert_force(std::move(old_buckets[i].element));
-                if (!std::is_trivially_copyable_v<element_type>)
-                    old_buckets[i].element.~element_type();
+                insert_force(std::move(old_buckets[i].value));
+                if (!std::is_trivially_copyable_v<value_type>)
+                    old_buckets[i].value.~value_type();
             }
         }
     }
@@ -189,16 +189,15 @@ void nhash_table<TableTraits, Hash, Allocator>::reserve(uint32_t new_capacity)
 }
 
 template <class TableTraits, class Hash, class Allocator>
-NTR_INLINE void
-nhash_table<TableTraits, Hash, Allocator>::insert(const element_type& element)
+NTR_INLINE void nhash_table<TableTraits, Hash, Allocator>::insert(const value_type& value)
 {
-    forward_insert(element);
+    forward_insert(value);
 }
 
 template <class TableTraits, class Hash, class Allocator>
-NTR_INLINE void nhash_table<TableTraits, Hash, Allocator>::insert(element_type&& element)
+NTR_INLINE void nhash_table<TableTraits, Hash, Allocator>::insert(value_type&& value)
 {
-    forward_insert(std::move(element));
+    forward_insert(std::move(value));
 }
 
 template <class TableTraits, class Hash, class Allocator>
@@ -209,8 +208,8 @@ bool nhash_table<TableTraits, Hash, Allocator>::remove(const key_type& key)
     {
         _buckets[position].valid = 0;
         _buckets[position].distance = 0;
-        if constexpr (!std::is_trivially_copyable_v<element_type>)
-            _buckets[position].element.~element_type();
+        if constexpr (!std::is_trivially_copyable_v<value_type>)
+            _buckets[position].value.~value_type();
         --_size;
 
         uint32_t next_position = (position + 1) % _capacity;
@@ -244,7 +243,7 @@ void nhash_table<TableTraits, Hash, Allocator>::clear()
 {
     if (_size > 0)
     {
-        if constexpr (std::is_trivially_copyable_v<element_type>)
+        if constexpr (std::is_trivially_copyable_v<value_type>)
             std::memset(_buckets, 0, _capacity * sizeof(bucket_type));
         else
         {
@@ -253,7 +252,7 @@ void nhash_table<TableTraits, Hash, Allocator>::clear()
                 {
                     _buckets[i].valid = 0;
                     _buckets[i].distance = 0;
-                    _buckets[i].element.~element_type();
+                    _buckets[i].value.~value_type();
                 }
         }
         _size = 0;
@@ -300,22 +299,22 @@ nhash_table<TableTraits, Hash, Allocator>::end() const
 }
 
 template <class TableTraits, class Hash, class Allocator>
-uint32_t nhash_table<TableTraits, Hash, Allocator>::insert_force(element_type&& element)
+uint32_t nhash_table<TableTraits, Hash, Allocator>::insert_force(value_type&& value)
 {
     if (_size >= _capacity * 4 / 5)
         reserve(nhash_table_growth_capacity(_capacity));
 
-    element_type insert_element(std::move(element));
-    uint32_t position = Hash()(get_key(insert_element)) % _capacity;
+    value_type insert_value(std::move(value));
+    uint32_t position = Hash()(get_key(insert_value)) % _capacity;
     uint16_t distance = 0;
     while (true)
     {
         if (!_buckets[position].valid)
         {
-            if (std::is_trivially_copyable_v<element_type>)
-                _buckets[position].element = std::move(insert_element);
+            if (std::is_trivially_copyable_v<value_type>)
+                _buckets[position].value = std::move(insert_value);
             else
-                new (&_buckets[position].element) element_type(std::move(insert_element));
+                new (&_buckets[position].value) value_type(std::move(insert_value));
             _buckets[position].valid = 1;
             _buckets[position].distance = distance;
             ++_size;
@@ -323,7 +322,7 @@ uint32_t nhash_table<TableTraits, Hash, Allocator>::insert_force(element_type&& 
         }
         if (distance > _buckets[position].distance)
         {
-            std::swap(_buckets[position].element, insert_element);
+            std::swap(_buckets[position].value, insert_value);
             std::swap(_buckets[position].distance, distance);
         }
         position = (position + 1) % _capacity;
@@ -341,7 +340,7 @@ nhash_table<TableTraits, Hash, Allocator>::find_position(const key_type& key) co
     uint16_t distance = 0;
     while (_buckets[position].valid)
     {
-        if (get_key(_buckets[position].element) == key)
+        if (get_key(_buckets[position].value) == key)
             return position;
         if (distance > _buckets[position].distance)
             break;
@@ -352,19 +351,19 @@ nhash_table<TableTraits, Hash, Allocator>::find_position(const key_type& key) co
 }
 
 template <class TableTraits, class Hash, class Allocator>
-template <class ElementType>
+template <class ValueType>
 NTR_INLINE void
-nhash_table<TableTraits, Hash, Allocator>::forward_insert(ElementType&& element)
+nhash_table<TableTraits, Hash, Allocator>::forward_insert(ValueType&& value)
 {
-    uint32_t position = find_position(get_key(element));
+    uint32_t position = find_position(get_key(value));
     if (position == _capacity)
     {
-        if constexpr (std::is_rvalue_reference_v<ElementType>)
-            insert_force(std::forward<ElementType>(element));
+        if constexpr (std::is_rvalue_reference_v<ValueType>)
+            insert_force(std::forward<ValueType>(value));
         else
         {
-            element_type element_copy(std::forward<ElementType>(element));
-            insert_force(std::move(element_copy));
+            value_type value_copy(std::forward<ValueType>(value));
+            insert_force(std::move(value_copy));
         }
     }
 }

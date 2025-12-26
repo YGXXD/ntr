@@ -27,7 +27,7 @@ class NTR_API ntype_factory<ntype::etype::eunknown, void>
 {
 public:
     friend class nregistrar;
-    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::eunknown, void>)
+    NTR_SINGLETON_IMPL(ntype_factory)
 
 private:
     ntype_factory();
@@ -41,7 +41,7 @@ class ntype_factory<ntype::etype::eunknown, T>
 {
 public:
     friend class nregistrar;
-    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::eunknown, T>)
+    NTR_SINGLETON_IMPL(ntype_factory)
 
 private:
     ntype_factory();
@@ -59,7 +59,7 @@ class ntype_factory<ntype::etype::enumeric, T>
 
 public:
     friend class nregistrar;
-    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::enumeric, T>)
+    NTR_SINGLETON_IMPL(ntype_factory)
 
 private:
     ntype_factory();
@@ -77,7 +77,7 @@ class ntype_factory<ntype::etype::eenum, T>
 
 public:
     friend class nregistrar;
-    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::eenum, T>)
+    NTR_SINGLETON_IMPL(ntype_factory)
 
     NTR_INLINE ntype_factory& item(std::string_view name, T value);
     NTR_INLINE ntype_factory& remove(std::string_view name);
@@ -98,7 +98,7 @@ class ntype_factory<ntype::etype::eclass, T>
 
 public:
     friend class nregistrar;
-    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::eclass, T>)
+    NTR_SINGLETON_IMPL(ntype_factory)
 
     template <typename U, typename = std::enable_if_t<std::is_base_of_v<U, T>>>
     NTR_INLINE ntype_factory& base_type();
@@ -136,7 +136,7 @@ class ntype_factory<ntype::etype::epointer, T>
 
 public:
     friend class nregistrar;
-    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::epointer, T>)
+    NTR_SINGLETON_IMPL(ntype_factory)
 
 private:
     ntype_factory();
@@ -155,7 +155,7 @@ class ntype_factory<ntype::etype::econtainer, T>
 
 public:
     friend class nregistrar;
-    NTR_SINGLETON_IMPL(ntype_factory<ntype::etype::econtainer, T>)
+    NTR_SINGLETON_IMPL(ntype_factory)
 
 private:
     ntype_factory();

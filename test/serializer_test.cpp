@@ -26,6 +26,9 @@ struct kutori
     nhash_set<int> data_set;
     nhash_map<std::string, weapon> weapons;
     kutori* friend_kutori;
+    std::vector<float> vector_data;
+    std::map<int, int> map_data;
+    std::unordered_set<double> unordered_set_data;
 };
 
 void print_ntr_instance(std::string_view name, const nwrapper& instance, int depth)
@@ -130,7 +133,10 @@ int main()
             .property("data_map", &kutori::data_map)
             .property("data_set", &kutori::data_set)
             .property("weapons", &kutori::weapons)
-            .property("friend_kutori", &kutori::friend_kutori);
+            .property("friend_kutori", &kutori::friend_kutori)
+            .property("vector_data", &kutori::vector_data)
+            .property("map_data", &kutori::map_data)
+            .property("unordered_set_data", &kutori::unordered_set_data);
 
         kutori friend_kutori {};
         kutori test_kutori {};
@@ -155,6 +161,10 @@ int main()
             { "weapon1", { "bow", "arrow" } },
         };
         test_kutori.friend_kutori = &friend_kutori;
+        test_kutori.vector_data = { 1.1f, 2.2f, 3.3f, 4.4f };
+        test_kutori.map_data = { { 999, 222 }, { 888, 666 }, { 444, 333 } };
+        test_kutori.unordered_set_data = { 53231.533, 69982.6311 };
+
         nobject test_kutori_ref = nephren::get<kutori>()->ref_instance(test_kutori);
         print_ntr_instance("kutori", test_kutori_ref.wrapper(), 0);
         return 0;

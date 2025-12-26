@@ -16,9 +16,9 @@ template <class Value>
 struct nhash_set_table_traits
 {
     using key_type = Value;
+    using mapped_type = Value;
     using value_type = Value;
-    using element_type = Value;
-    NTR_INLINE static const key_type& get_key(const element_type& element);
+    NTR_INLINE static const key_type& get_key(const value_type& value);
 };
 
 template <class Value, class Hash = std::hash<Value>,

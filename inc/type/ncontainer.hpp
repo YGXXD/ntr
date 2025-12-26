@@ -14,6 +14,11 @@
 #include "../util/nhash_set.hpp"
 
 #include <functional>
+#include <vector>
+#include <map>
+#include <unordered_map>
+#include <set>
+#include <unordered_set>
 
 namespace ntr
 {
@@ -29,8 +34,9 @@ public:
         uint32_t (*size)(void*);
     };
 
-    using list_templates = ntemplate_list<nvector, nhash_set>;
-    using map_templates = ntemplate_list<nhash_map>;
+    using list_templates =
+        ntemplate_list<nvector, nhash_set, std::vector, std::set, std::unordered_set>;
+    using map_templates = ntemplate_list<nhash_map, std::map, std::unordered_map>;
 
     ncontainer(const ntype* key_type, const ntype* value_type, operations* container_ops,
                uint16_t size, uint16_t align, ntype::operations* ops);

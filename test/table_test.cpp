@@ -7,8 +7,6 @@
 
 #include "ntr_test.hpp"
 #include "util/nhash_set.hpp"
-#include <unordered_set>
-#include <unordered_map>
 #include <chrono>
 
 using namespace ntr;

@@ -151,8 +151,14 @@ ntype_factory<ntype::etype::econtainer, T>::ntype_factory()
         return nregistrar::get_type<typename T::key_type>();
     else
         return nullptr;
-}(), nregistrar::get_type<typename T::value_type>(),
-          &ncontainer_ops_factory<T>::instance().ops, static_cast<uint16_t>(sizeof(T)),
+}(),
+          []()
+{
+    if constexpr (is_econtainer_map<T>::value)
+        return nregistrar::get_type<typename T::mapped_type>();
+    else
+        return nregistrar::get_type<typename T::value_type>();
+}(), &ncontainer_ops_factory<T>::instance().ops, static_cast<uint16_t>(sizeof(T)),
           static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
 {
 }

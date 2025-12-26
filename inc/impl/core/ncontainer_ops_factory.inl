@@ -23,18 +23,18 @@ static void vector_put(void* container, void* value)
 }
 
 template <typename T>
-static void hash_set_put(void* container, void* value)
+static void set_put(void* container, void* value)
 {
     static_cast<T*>(container)->insert(*static_cast<typename T::value_type*>(value));
 }
 
 template <typename T>
-static void hash_map_put(void* container, void* key_value)
+static void map_put(void* container, void* key_value)
 {
     std::pair<void*, void*> pair = *static_cast<std::pair<void*, void*>*>(key_value);
     static_cast<T*>(container)->insert_or_assign(
         *static_cast<typename T::key_type*>(pair.first),
-        *static_cast<typename T::value_type*>(pair.second));
+        *static_cast<typename T::mapped_type*>(pair.second));
 }
 
 template <typename T>
@@ -54,7 +54,7 @@ static void map_for_each(void* container, void* callback)
     {
         (*static_cast<std::function<void(nobject&&, nobject&&)>*>(callback))(
             nregistrar::get_type<typename T::key_type>()->ref_instance(key),
-            nregistrar::get_type<typename T::value_type>()->ref_instance(value));
+            nregistrar::get_type<typename T::mapped_type>()->ref_instance(value));
     }
 }
 
@@ -86,7 +86,7 @@ ncontainer_ops_factory<nvector<Args...>>::ncontainer_ops_factory()
 template <typename... Args>
 ncontainer_ops_factory<nhash_map<Args...>>::ncontainer_ops_factory()
     : ops {
-          &ncontainer_ops_function::hash_map_put<nhash_map<Args...>>,
+          &ncontainer_ops_function::map_put<nhash_map<Args...>>,
           &ncontainer_ops_function::map_for_each<nhash_map<Args...>>,
           &ncontainer_ops_function::clear<nhash_map<Args...>>,
           &ncontainer_ops_function::size<nhash_map<Args...>>,
@@ -97,10 +97,61 @@ ncontainer_ops_factory<nhash_map<Args...>>::ncontainer_ops_factory()
 template <typename... Args>
 ncontainer_ops_factory<nhash_set<Args...>>::ncontainer_ops_factory()
     : ops {
-          &ncontainer_ops_function::hash_set_put<nhash_set<Args...>>,
+          &ncontainer_ops_function::set_put<nhash_set<Args...>>,
           &ncontainer_ops_function::list_for_each<nhash_set<Args...>>,
           &ncontainer_ops_function::clear<nhash_set<Args...>>,
           &ncontainer_ops_function::size<nhash_set<Args...>>,
+      }
+{
+}
+
+template <typename... Args>
+ncontainer_ops_factory<std::vector<Args...>>::ncontainer_ops_factory()
+    : ops {
+          &ncontainer_ops_function::vector_put<std::vector<Args...>>,
+          &ncontainer_ops_function::list_for_each<std::vector<Args...>>,
+          &ncontainer_ops_function::clear<std::vector<Args...>>,
+          &ncontainer_ops_function::size<std::vector<Args...>>,
+      }
+{
+}
+
+template <typename... Args>
+ncontainer_ops_factory<std::map<Args...>>::ncontainer_ops_factory()
+    : ops { &ncontainer_ops_function::map_put<std::map<Args...>>,
+            &ncontainer_ops_function::map_for_each<std::map<Args...>>,
+            &ncontainer_ops_function::clear<std::map<Args...>>,
+            &ncontainer_ops_function::size<std::map<Args...>> }
+{
+}
+
+template <typename... Args>
+ncontainer_ops_factory<std::unordered_map<Args...>>::ncontainer_ops_factory()
+    : ops { &ncontainer_ops_function::map_put<std::unordered_map<Args...>>,
+            &ncontainer_ops_function::map_for_each<std::unordered_map<Args...>>,
+            &ncontainer_ops_function::clear<std::unordered_map<Args...>>,
+            &ncontainer_ops_function::size<std::unordered_map<Args...>> }
+{
+}
+
+template <typename... Args>
+ncontainer_ops_factory<std::set<Args...>>::ncontainer_ops_factory()
+    : ops {
+          &ncontainer_ops_function::set_put<std::set<Args...>>,
+          &ncontainer_ops_function::list_for_each<std::set<Args...>>,
+          &ncontainer_ops_function::clear<std::set<Args...>>,
+          &ncontainer_ops_function::size<std::set<Args...>>,
+      }
+{
+}
+
+template <typename... Args>
+ncontainer_ops_factory<std::unordered_set<Args...>>::ncontainer_ops_factory()
+    : ops {
+          &ncontainer_ops_function::set_put<std::unordered_set<Args...>>,
+          &ncontainer_ops_function::list_for_each<std::unordered_set<Args...>>,
+          &ncontainer_ops_function::clear<std::unordered_set<Args...>>,
+          &ncontainer_ops_function::size<std::unordered_set<Args...>>,
       }
 {
 }

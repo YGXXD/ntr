@@ -21,7 +21,7 @@ struct nhash_table_bucket
 {
     uint16_t valid;
     uint16_t distance;
-    T element;
+    T value;
 };
 
 template <class T>
@@ -54,24 +54,24 @@ class nhash_table
 {
 protected:
     using key_type = typename TableTraits::key_type;
+    using mapped_type = typename TableTraits::mapped_type;
     using value_type = typename TableTraits::value_type;
-    using element_type = typename TableTraits::element_type;
-    using bucket_type = nhash_table_bucket<element_type>;
-    using iterator = nhash_table_iterator<element_type>;
+    using bucket_type = nhash_table_bucket<value_type>;
+    using iterator = nhash_table_iterator<value_type>;
     static constexpr auto get_key = TableTraits::get_key;
 
 public:
     nhash_table();
     nhash_table(const nhash_table& other);
     nhash_table(nhash_table&& other);
-    nhash_table(std::initializer_list<element_type> list);
+    nhash_table(std::initializer_list<value_type> list);
     ~nhash_table();
     NTR_INLINE nhash_table& operator=(const nhash_table& other);
     NTR_INLINE nhash_table& operator=(nhash_table&& other);
 
     void reserve(uint32_t new_capacity);
-    NTR_INLINE void insert(const element_type& element);
-    NTR_INLINE void insert(element_type&& element);
+    NTR_INLINE void insert(const value_type& value);
+    NTR_INLINE void insert(value_type&& value);
     bool remove(const key_type& key);
     NTR_INLINE bool remove(const iterator& it);
     NTR_INLINE bool contains(const key_type& key) const;
@@ -83,7 +83,7 @@ public:
     NTR_INLINE iterator end() const;
 
 protected:
-    uint32_t insert_force(element_type&& element);
+    uint32_t insert_force(value_type&& value);
     uint32_t find_position(const key_type& key) const;
 
     uint32_t _size;
@@ -91,8 +91,8 @@ protected:
     bucket_type* _buckets;
 
 private:
-    template<class ElementType>
-    NTR_INLINE void forward_insert(ElementType&& element);
+    template <class ValueType>
+    NTR_INLINE void forward_insert(ValueType&& value);
 };
 
 } // namespace ntr
