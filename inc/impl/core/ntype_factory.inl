@@ -27,7 +27,7 @@ ntype_factory<ntype::etype::eunknown, T>::ntype_factory()
 // ntype::etype::enumeric impl
 template <typename T>
 ntype_factory<ntype::etype::enumeric, T>::ntype_factory()
-    : _type(make_enumeric<T>(), static_cast<uint16_t>(sizeof(T)),
+    : _type(make_enumeric<T>::value, static_cast<uint16_t>(sizeof(T)),
             static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
 {
 }
@@ -147,7 +147,7 @@ ntype_factory<ntype::etype::econtainer, T>::ntype_factory()
     : _type(
           []()
 {
-    if constexpr (is_econtainer_map<T>())
+    if constexpr (is_econtainer_map<T>::value)
         return nregistrar::get_type<typename T::key_type>();
     else
         return nullptr;

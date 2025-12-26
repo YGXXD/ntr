@@ -7,23 +7,25 @@
 
 #pragma once
 
-#include "../setup.hpp"
-
-#include <cstddef>
+#include <type_traits>
 
 namespace ntr
 {
 
+template <template <typename...> class Tp1, template <typename...> class Tp2>
+struct is_template_same : std::false_type
+{
+};
+
+template <template <typename...> class Tp>
+struct is_template_same<Tp, Tp> : std::true_type
+{
+};
+
 template <template <typename...> class... Tps>
 struct ntemplate_list
 {
-    template <template <typename...> class Ftp>
-    NTR_INLINE static constexpr size_t find_index();
-
     constexpr static size_t size = sizeof...(Tps);
-
-    template <template <typename...> class Ctp>
-    constexpr static bool contains = find_index<Ctp>() < size;
 
     template <typename TpList>
     struct append;
@@ -31,6 +33,33 @@ struct ntemplate_list
     struct append<ntemplate_list<Aps...>>
     {
         using type = ntemplate_list<Tps..., Aps...>;
+    };
+
+    template <template <typename...> class Ftp>
+    struct find_index
+    {
+        template <template <typename...> class... AllTps>
+        struct impl;
+        template <>
+        struct impl<>
+        {
+            constexpr static size_t value = 0;
+        };
+        template <template <typename...> class FirstTp,
+                  template <typename...> class... OtherTps>
+        struct impl<FirstTp, OtherTps...>
+        {
+            constexpr static size_t value = std::conditional_t<
+                is_template_same<Ftp, FirstTp>::value, std::integral_constant<size_t, 0>,
+                std::integral_constant<size_t, 1 + impl<OtherTps...>::value>>::value;
+        };
+        constexpr static size_t value = impl<Tps...>::value;
+    };
+
+    template <template <typename...> class Ctp>
+    struct contains
+    {
+        constexpr static bool value = find_index<Ctp>::value < size;
     };
 
     template <typename T>
@@ -41,10 +70,8 @@ struct ntemplate_list
     template <template <typename...> class Ctp, typename... Args>
     struct contains_type<Ctp<Args...>>
     {
-        constexpr static bool value = contains<Ctp>;
+        constexpr static bool value = contains<Ctp>::value;
     };
 };
 
 } // namespace ntr
-
-#include "../impl/util/ntemplate_list.inl"
