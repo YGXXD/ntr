@@ -30,7 +30,6 @@ public:
     NTR_INLINE const auto& propertys() const { return _properties; }
     const nfunction* get_function(std::string_view name) const;
     const nproperty* get_property(std::string_view name) const;
-    void* cast_to(const nclass* type, void* pointer) const;
     bool has_base_type(const nclass* type) const;
     bool has_function(std::string_view name) const;
     bool has_property(std::string_view name) const;
@@ -39,6 +38,7 @@ public:
     nobject get(std::string_view name, const nwrapper& instance) const;
     void set(std::string_view name, const nwrapper& instance,
              const nwrapper& value) const;
+    void* cast_to(const nclass* type, void* pointer) const;
 
 private:
     bool check_base_type(const nclass* type, ptrdiff_t* out_offset) const;

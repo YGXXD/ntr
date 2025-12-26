@@ -7,6 +7,7 @@
 
 #include "nephren.hpp"
 #include <iostream>
+#include <sstream>
 
 #define NTR_TEST_ASSERT(condition)                                        \
     do                                                                    \
@@ -17,4 +18,16 @@
                       << " (" #condition ")" << std::endl;                \
             return 1;                                                     \
         }                                                                 \
+    } while (0)
+
+#define NTR_TEST_THROW(condition)                                  \
+    do                                                             \
+    {                                                              \
+        if (!(condition))                                          \
+        {                                                          \
+            std::stringstream ss;                                  \
+            ss << "Test failed at " << __FILE__ << ":" << __LINE__ \
+               << " (" #condition ")" << std::endl;                \
+            throw std::runtime_error(ss.str());                    \
+        }                                                          \
     } while (0)

@@ -20,7 +20,7 @@ private:
     ~ntype_ops_factory() = default;
 
 public:
-    NTR_SINGLETON_IMPL(ntype_ops_factory<T>)
+    NTR_SINGLETON_IMPL(ntype_ops_factory)
     ntype::operations ops;
 };
 
@@ -38,7 +38,7 @@ private:
     ~ntype_ops_factory() = default;
 
 public:
-    NTR_SINGLETON_IMPL(ntype_ops_factory<void*>)
+    NTR_SINGLETON_IMPL(ntype_ops_factory)
     ntype::operations ops;
 };
 

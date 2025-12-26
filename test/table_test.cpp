@@ -7,8 +7,6 @@
 
 #include "ntr_test.hpp"
 #include "util/nhash_set.hpp"
-#include <unordered_set>
-#include <unordered_map>
 #include <chrono>
 
 using namespace ntr;
@@ -67,10 +65,10 @@ int main()
         kutori_map["chen"] = kutori("qiudu");
         NTR_TEST_ASSERT(kutori_map.at("chen").get_name() == "qiudu");
         // insert key value
-        kutori_map.insert("du", kutori("qiuchen"));
+        kutori_map.insert_or_assign("du", kutori("qiuchen"));
         NTR_TEST_ASSERT(kutori_map.at("du").get_name() == "qiuchen");
-        kutori_map.insert("du", kutori("qiudu"));
-        NTR_TEST_ASSERT(kutori_map.at("du").get_name() == "qiuchen");
+        kutori_map.insert_or_assign("du", kutori("qiudu"));
+        NTR_TEST_ASSERT(kutori_map.at("du").get_name() == "qiudu");
         // insert pair
         kutori_map.insert({ "chen", kutori("chenchen") });
         NTR_TEST_ASSERT(kutori_map.at("chen").get_name() == "qiudu");
@@ -158,7 +156,8 @@ int main()
                       << "ms\n";
             std::cout << test2.size() << v2 << "\n";
         }
-
+        std::vector<int> a;
+        a.push_back(1);
         // performance test hash_map
         {
             auto t1 = std::chrono::high_resolution_clock::now();

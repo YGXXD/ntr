@@ -20,20 +20,6 @@
     class_name& operator=(const class_name&) = delete; \
     class_name& operator=(class_name&&) = delete;
 
-#include <cstdint>
-#include <cstddef>
-#include <cstring>
-#include <stdexcept>
-#include <array>
-#include <initializer_list>
-#include <string>
-#include <string_view>
-#include <memory>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <type_traits>
-
 #if defined(_WIN32)
 #    define _ntr_align_alloc(size, alignment) \
         _aligned_malloc(static_cast<size_t>(size), static_cast<size_t>(alignment))

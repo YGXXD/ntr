@@ -10,8 +10,9 @@
 #include "type/nenum.hpp"
 #include "type/nclass.hpp"
 #include "type/npointer.hpp"
-#include "type/nstd_pair.hpp"
 #include "type/ncontainer.hpp"
+
+#include <cstring>
 
 namespace ntr
 {
@@ -46,11 +47,6 @@ const nclass* ntype::as_class() const
 const npointer* ntype::as_pointer() const
 {
     return is_pointer() ? static_cast<const npointer*>(this) : nullptr;
-}
-
-const nstd_pair* ntype::as_std_pair() const
-{
-    return is_std_pair() ? static_cast<const nstd_pair*>(this) : nullptr;
 }
 
 const ncontainer* ntype::as_container() const
