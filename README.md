@@ -18,7 +18,8 @@
 - 支持任意类型的注册和查询，自动生成类型元数据；
 - 提供类类型反射，支持类中属性和函数注册查询机制；
 - 提供枚举类型反射，支持枚举项的注册查询机制；
-- 提供类型擦除容器，支持运行时创建任意类型实例；
+- 提供容器反射，支持ntr容器和常用std容器的元素遍历；
+- 提供类型擦除包装类，支持运行时创建任意类型实例；
 
 ### 构建和安装 
 
@@ -51,7 +52,7 @@ target_link_libraries(exemple PUBLIC ntr::ntr)
 ### 示例 
 
 ```c++
-#include "<ntr/nephren.hpp>"
+#include <ntr/nephren.hpp>
 #include <iostream>
 
 using namespace ntr;
