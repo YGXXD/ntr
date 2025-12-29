@@ -27,7 +27,7 @@ ntype_factory<ntype::etype::eunknown, T>::ntype_factory()
 // ntype::etype::enumeric impl
 template <typename T>
 ntype_factory<ntype::etype::enumeric, T>::ntype_factory()
-    : _type(make_enumeric<T>(), static_cast<uint16_t>(sizeof(T)),
+    : _type(make_enumeric<T>::value, static_cast<uint16_t>(sizeof(T)),
             static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
 {
 }
@@ -141,23 +141,25 @@ ntype_factory<ntype::etype::epointer, T>::ntype_factory()
 {
 }
 
-// ntype::etype::estd_pair impl
-template <typename T>
-ntype_factory<ntype::etype::estd_pair, T>::ntype_factory()
-    : _type(nregistrar::get_type<typename T::first_type>(),
-            nregistrar::get_type<typename T::second_type>(),
-            static_cast<uint16_t>(sizeof(T)), static_cast<uint16_t>(alignof(T)),
-            &ntype_ops_factory<T>::instance().ops)
-{
-}
-
 // ntype::etype::econtainer impl
 template <typename T>
 ntype_factory<ntype::etype::econtainer, T>::ntype_factory()
-    : _type(nregistrar::get_type<typename T::iterator>(),
-            nregistrar::get_type<typename T::element_type>(),
-            &ncontainer_ops_factory<T>::instance().ops, static_cast<uint16_t>(sizeof(T)),
-            static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
+    : _type(
+          []()
+{
+    if constexpr (is_econtainer_map<T>::value)
+        return nregistrar::get_type<typename T::key_type>();
+    else
+        return nullptr;
+}(),
+          []()
+{
+    if constexpr (is_econtainer_map<T>::value)
+        return nregistrar::get_type<typename T::mapped_type>();
+    else
+        return nregistrar::get_type<typename T::value_type>();
+}(), &ncontainer_ops_factory<T>::instance().ops, static_cast<uint16_t>(sizeof(T)),
+          static_cast<uint16_t>(alignof(T)), &ntype_ops_factory<T>::instance().ops)
 {
 }
 

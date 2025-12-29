@@ -10,6 +10,8 @@
 #include "nfield.hpp"
 #include "../core/nobject.hpp"
 
+#include <functional>
+
 namespace ntr
 {
 

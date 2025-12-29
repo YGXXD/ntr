@@ -9,6 +9,8 @@
 
 #include "ntype.hpp"
 
+#include <tuple>
+
 namespace ntr
 {
 

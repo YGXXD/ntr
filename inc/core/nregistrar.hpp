@@ -10,6 +10,8 @@
 #include "../setup.hpp"
 #include "../util/nhash_map.hpp"
 
+#include <string_view>
+
 namespace ntr
 {
 

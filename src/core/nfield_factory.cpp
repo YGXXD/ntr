@@ -12,9 +12,9 @@ namespace ntr
 
 std::unique_ptr<neitem> nfield_factory::make_eitem(ntype* parent_type,
                                                    std::string_view name,
-                                                   enum_integer_type value)
+                                                   nenum::enum_integer_type value)
 {
-    return std::make_unique<neitem>(parent_type, name, static_cast<long>(value));
+    return std::make_unique<neitem>(parent_type, name, value);
 }
 
 } // namespace ntr

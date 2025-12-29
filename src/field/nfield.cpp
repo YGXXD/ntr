@@ -7,6 +7,8 @@
 
 #include "field/nfield.hpp"
 
+#include <cstring>
+
 namespace ntr
 {
 

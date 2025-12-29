@@ -7,10 +7,11 @@
 
 #include "field/neitem.hpp"
 #include "type/nenum.hpp"
+
 namespace ntr
 {
 
-neitem::neitem(ntype* parent_type, std::string_view name, enum_integer_type value)
+neitem::neitem(ntype* parent_type, std::string_view name, nenum::enum_integer_type value)
     : nfield(parent_type, efield::eeitem, name), _value(value)
 {
     if (parent_type->kind() != ntype::etype::eenum)

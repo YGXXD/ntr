@@ -6,7 +6,6 @@
 //
 
 #include "ntr_test.hpp"
-#include <vector>
 #include <chrono>
 
 using namespace ntr;

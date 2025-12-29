@@ -26,9 +26,12 @@ struct kutori
     nhash_set<int> data_set;
     nhash_map<std::string, weapon> weapons;
     kutori* friend_kutori;
+    std::vector<float> vector_data;
+    std::map<int, int> map_data;
+    std::unordered_set<double> unordered_set_data;
 };
 
-int print_ntr_instance(std::string_view name, const nwrapper& instance, int depth)
+void print_ntr_instance(std::string_view name, const nwrapper& instance, int depth)
 {
     const nclass* type = instance.type()->as_class();
     for (int i = 0; i < depth; i++)
@@ -66,8 +69,8 @@ int print_ntr_instance(std::string_view name, const nwrapper& instance, int dept
             for (auto& property : instance.type()->as_class()->propertys())
             {
                 nobject value = property->get(instance);
-                NTR_TEST_ASSERT(value.is_valid());
-                NTR_TEST_ASSERT(value.is_ref());
+                NTR_TEST_THROW(value.is_valid());
+                NTR_TEST_THROW(value.is_ref());
                 print_ntr_instance(property->name(), value.wrapper(), depth + 1);
             }
             for (int i = 0; i < depth; i++)
@@ -76,35 +79,35 @@ int print_ntr_instance(std::string_view name, const nwrapper& instance, int dept
         }
     }
     break;
-    case ntr::ntype::etype::estd_pair:
-    {
-        std::pair<nobject, nobject> unpacked = nstd_pair::unpack(instance);
-        std::cout << "(" << std::endl;
-        NTR_TEST_ASSERT(unpacked.first.is_valid());
-        NTR_TEST_ASSERT(unpacked.first.is_ref());
-        print_ntr_instance("first", unpacked.first.wrapper(), depth + 1);
-        NTR_TEST_ASSERT(unpacked.second.is_valid());
-        NTR_TEST_ASSERT(unpacked.second.is_ref());
-        print_ntr_instance("second", unpacked.second.wrapper(), depth + 1);
-        for (int i = 0; i < depth; i++)
-            std::cout << "  ";
-        std::cout << ")";
-    }
-    break;
     case ntr::ntype::etype::econtainer:
     {
         const ncontainer* container = instance.type()->as_container();
-        nobject end = container->end(instance);
         std::cout << "[" << std::endl;
-        for (nobject it = container->begin(instance);
-             !container->equal(it.wrapper(), end.wrapper());
-             instance.type()->as_container()->next(it.wrapper()))
+        bool test = true;
+        if (!container->is_map())
         {
-            nobject value = instance.type()->as_container()->get(it.wrapper());
-            NTR_TEST_ASSERT(value.is_valid());
-            NTR_TEST_ASSERT(value.is_ref());
-            print_ntr_instance("", value.wrapper(), depth + 1);
+            auto lambda = [container, &test, depth](nobject&& value)
+            {
+                test = value.is_valid() && value.is_ref() ? test : false;
+                test = value.type() == container->value_type();
+                print_ntr_instance("", value.wrapper(), depth + 1);
+            };
+            container->for_each(instance, lambda);
         }
+        else
+        {
+            auto lambda = [container, &test, depth](nobject&& key, nobject&& value)
+            {
+                test = key.is_valid() && key.is_ref() ? test : false;
+                test = key.type() == container->key_type();
+                test = value.is_valid() && value.is_ref() ? test : false;
+                test = value.type() == container->value_type();
+                print_ntr_instance("key", key.wrapper(), depth + 1);
+                print_ntr_instance("value", value.wrapper(), depth + 1);
+            };
+            container->for_each(instance, lambda);
+        }
+        NTR_TEST_THROW(test);
         for (int i = 0; i < depth; i++)
             std::cout << "  ";
         std::cout << "]";
@@ -112,7 +115,6 @@ int print_ntr_instance(std::string_view name, const nwrapper& instance, int dept
     break;
     }
     std::cout << std::endl;
-    return 0;
 }
 
 int main()
@@ -131,7 +133,10 @@ int main()
             .property("data_map", &kutori::data_map)
             .property("data_set", &kutori::data_set)
             .property("weapons", &kutori::weapons)
-            .property("friend_kutori", &kutori::friend_kutori);
+            .property("friend_kutori", &kutori::friend_kutori)
+            .property("vector_data", &kutori::vector_data)
+            .property("map_data", &kutori::map_data)
+            .property("unordered_set_data", &kutori::unordered_set_data);
 
         kutori friend_kutori {};
         kutori test_kutori {};
@@ -156,8 +161,13 @@ int main()
             { "weapon1", { "bow", "arrow" } },
         };
         test_kutori.friend_kutori = &friend_kutori;
+        test_kutori.vector_data = { 1.1f, 2.2f, 3.3f, 4.4f };
+        test_kutori.map_data = { { 999, 222 }, { 888, 666 }, { 444, 333 } };
+        test_kutori.unordered_set_data = { 53231.533, 69982.6311 };
+
         nobject test_kutori_ref = nephren::get<kutori>()->ref_instance(test_kutori);
-        return print_ntr_instance("kutori", test_kutori_ref.wrapper(), 0);
+        print_ntr_instance("kutori", test_kutori_ref.wrapper(), 0);
+        return 0;
     }
     catch (const std::exception& e)
     {

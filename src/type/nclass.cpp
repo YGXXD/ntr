@@ -92,21 +92,6 @@ const nproperty* nclass::get_property(std::string_view name) const
     return field_it->second.second;
 }
 
-void* nclass::cast_to(const nclass* type, void* pointer) const
-{
-    if (type)
-    {
-        if (type == this)
-            return pointer;
-        ptrdiff_t offset;
-        if (check_base_type(type, &offset))
-            return static_cast<void*>(static_cast<char*>(pointer) + offset);
-        if (type->check_base_type(this, &offset))
-            return static_cast<void*>(static_cast<char*>(pointer) - offset);
-    }
-    return nullptr;
-}
-
 bool nclass::has_base_type(const nclass* type) const
 {
     return type && check_base_type(type, nullptr);
@@ -142,6 +127,21 @@ void nclass::set(std::string_view name, const nwrapper& instance,
                  const nwrapper& value) const
 {
     get_property(name)->set(instance, value);
+}
+
+void* nclass::cast_to(const nclass* type, void* pointer) const
+{
+    if (type)
+    {
+        if (type == this)
+            return pointer;
+        ptrdiff_t offset;
+        if (check_base_type(type, &offset))
+            return static_cast<void*>(static_cast<char*>(pointer) + offset);
+        if (type->check_base_type(this, &offset))
+            return static_cast<void*>(static_cast<char*>(pointer) - offset);
+    }
+    return nullptr;
 }
 
 bool nclass::check_base_type(const nclass* type, ptrdiff_t* out_offset) const

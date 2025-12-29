@@ -9,13 +9,16 @@
 
 #include "../setup.hpp"
 
+#include <cstdint>
+#include <string_view>
+
 namespace ntr
 {
 
 class NTR_API nfield
 {
 public:
-    enum class efield
+    enum class efield : uint8_t
     {
         eeitem,
         eproperty,

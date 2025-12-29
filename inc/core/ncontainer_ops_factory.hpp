@@ -8,9 +8,6 @@
 #pragma once
 
 #include "../type/ncontainer.hpp"
-#include "../util/nvector.hpp"
-#include "../util/nhash_map.hpp"
-#include "../util/nhash_set.hpp"
 
 namespace ntr
 {
@@ -26,7 +23,7 @@ private:
     ~ncontainer_ops_factory() = default;
 
 public:
-    NTR_SINGLETON_IMPL(ncontainer_ops_factory<nvector<Args...>>)
+    NTR_SINGLETON_IMPL(ncontainer_ops_factory)
     ncontainer::operations ops;
 };
 
@@ -38,7 +35,7 @@ private:
     ~ncontainer_ops_factory() = default;
 
 public:
-    NTR_SINGLETON_IMPL(ncontainer_ops_factory<nhash_map<Args...>>)
+    NTR_SINGLETON_IMPL(ncontainer_ops_factory)
     ncontainer::operations ops;
 };
 
@@ -50,7 +47,67 @@ private:
     ~ncontainer_ops_factory() = default;
 
 public:
-    NTR_SINGLETON_IMPL(ncontainer_ops_factory<nhash_set<Args...>>)
+    NTR_SINGLETON_IMPL(ncontainer_ops_factory)
+    ncontainer::operations ops;
+};
+
+template <typename... Args>
+struct ncontainer_ops_factory<std::vector<Args...>>
+{
+private:
+    ncontainer_ops_factory();
+    ~ncontainer_ops_factory() = default;
+
+public:
+    NTR_SINGLETON_IMPL(ncontainer_ops_factory)
+    ncontainer::operations ops;
+};
+
+template <typename... Args>
+struct ncontainer_ops_factory<std::map<Args...>>
+{
+private:
+    ncontainer_ops_factory();
+    ~ncontainer_ops_factory() = default;
+
+public:
+    NTR_SINGLETON_IMPL(ncontainer_ops_factory)
+    ncontainer::operations ops;
+};
+
+template <typename... Args>
+struct ncontainer_ops_factory<std::unordered_map<Args...>>
+{
+private:
+    ncontainer_ops_factory();
+    ~ncontainer_ops_factory() = default;
+
+public:
+    NTR_SINGLETON_IMPL(ncontainer_ops_factory)
+    ncontainer::operations ops;
+};
+
+template <typename... Args>
+struct ncontainer_ops_factory<std::set<Args...>>
+{
+private:
+    ncontainer_ops_factory();
+    ~ncontainer_ops_factory() = default;
+
+public:
+    NTR_SINGLETON_IMPL(ncontainer_ops_factory)
+    ncontainer::operations ops;
+};
+
+template <typename... Args>
+struct ncontainer_ops_factory<std::unordered_set<Args...>>
+{
+private:
+    ncontainer_ops_factory();
+    ~ncontainer_ops_factory() = default;
+
+public:
+    NTR_SINGLETON_IMPL(ncontainer_ops_factory)
     ncontainer::operations ops;
 };
 

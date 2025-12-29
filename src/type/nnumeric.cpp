@@ -6,26 +6,32 @@
 //
 
 #include "type/nnumeric.hpp"
-#include "util/ntype_traits.hpp"
+
+#include <type_traits>
+#include <stdexcept>
 
 namespace ntr
 {
 
-using b8 = make_numeric_type_t<nnumeric::enumeric::ebool>;
-using c8 = make_numeric_type_t<nnumeric::enumeric::echar>;
-using wc = make_numeric_type_t<nnumeric::enumeric::ewchar>;
-using c16 = make_numeric_type_t<nnumeric::enumeric::echar16>;
-using c32 = make_numeric_type_t<nnumeric::enumeric::echar32>;
-using i8 = make_numeric_type_t<nnumeric::enumeric::eint8>;
-using i16 = make_numeric_type_t<nnumeric::enumeric::eint16>;
-using i32 = make_numeric_type_t<nnumeric::enumeric::eint32>;
-using i64 = make_numeric_type_t<nnumeric::enumeric::eint64>;
-using u8 = make_numeric_type_t<nnumeric::enumeric::euint8>;
-using u16 = make_numeric_type_t<nnumeric::enumeric::euint16>;
-using u32 = make_numeric_type_t<nnumeric::enumeric::euint32>;
-using u64 = make_numeric_type_t<nnumeric::enumeric::euint64>;
-using f32 = make_numeric_type_t<nnumeric::enumeric::efloat>;
-using f64 = make_numeric_type_t<nnumeric::enumeric::edouble>;
+template <nnumeric::enumeric numeric_kind>
+using get_numeric_type_t =
+    std::tuple_element_t<static_cast<size_t>(numeric_kind), nnumeric::numeric_types>;
+
+using b8 = get_numeric_type_t<nnumeric::enumeric::ebool>;
+using c8 = get_numeric_type_t<nnumeric::enumeric::echar>;
+using wc = get_numeric_type_t<nnumeric::enumeric::ewchar>;
+using c16 = get_numeric_type_t<nnumeric::enumeric::echar16>;
+using c32 = get_numeric_type_t<nnumeric::enumeric::echar32>;
+using i8 = get_numeric_type_t<nnumeric::enumeric::eint8>;
+using i16 = get_numeric_type_t<nnumeric::enumeric::eint16>;
+using i32 = get_numeric_type_t<nnumeric::enumeric::eint32>;
+using i64 = get_numeric_type_t<nnumeric::enumeric::eint64>;
+using u8 = get_numeric_type_t<nnumeric::enumeric::euint8>;
+using u16 = get_numeric_type_t<nnumeric::enumeric::euint16>;
+using u32 = get_numeric_type_t<nnumeric::enumeric::euint32>;
+using u64 = get_numeric_type_t<nnumeric::enumeric::euint64>;
+using f32 = get_numeric_type_t<nnumeric::enumeric::efloat>;
+using f64 = get_numeric_type_t<nnumeric::enumeric::edouble>;
 
 double nnumeric::get_value(const nwrapper& numeric)
 {

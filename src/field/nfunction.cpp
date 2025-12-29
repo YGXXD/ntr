@@ -8,6 +8,8 @@
 #include "field/nfunction.hpp"
 #include "type/nclass.hpp"
 
+#include <string>
+
 namespace ntr
 {
 

@@ -15,12 +15,12 @@ namespace ntr
 class NTR_API npointer : public ntype
 {
 public:
+    static void* get_value(const nwrapper& pointer);
+    static void set_value(const nwrapper& pointer, void* value);
+
     npointer(const ntype* dereference_type);
     NTR_DELETE_COPY_MOVE_CONSTRUCTORS(npointer)
     ~npointer();
-
-    static void* get_value(const nwrapper& pointer);
-    static void set_value(const nwrapper& pointer, void* value);
 
     nobject dereference(const nwrapper& pointer) const;
     NTR_INLINE const ntype* dereference_type() const { return _dereference_type; }

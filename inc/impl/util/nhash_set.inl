@@ -14,9 +14,9 @@ namespace ntr
 
 template <class Value>
 const typename nhash_set_table_traits<Value>::key_type&
-nhash_set_table_traits<Value>::get_key(const element_type& element)
+nhash_set_table_traits<Value>::get_key(const value_type& value)
 {
-    return element;
+    return value;
 }
 
 } // namespace ntr
