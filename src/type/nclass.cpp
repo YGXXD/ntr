@@ -34,7 +34,7 @@ void nclass::add_property(std::unique_ptr<nproperty>&& property)
     {
         _field_map.insert({ property->name(), { nullptr, property.get() } });
         _properties.push_back(std::move(property));
-    } // namespace ntr
+    }
 }
 
 void nclass::add_base_type(const nclass* base_type, ptrdiff_t offset)
