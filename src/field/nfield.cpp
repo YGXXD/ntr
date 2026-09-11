@@ -16,7 +16,7 @@ nfield::nfield(const class ntype* parent_type, efield kind, std::string_view nam
     : _kind(kind), _name_size(name.size()), _name(new char[_name_size + 1]),
       _parent_type(parent_type)
 {
-    std::memcpy(_name, name.data(), _name_size);
+    std::memcpy(static_cast<void*>(_name), name.data(), _name_size);
     _name[_name_size] = '\0';
 }
 
