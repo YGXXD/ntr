@@ -89,7 +89,7 @@ void ntype::regist(std::string_view name)
         throw std::logic_error("ntype::set_name : type is already registered");
     _name_size = name.size();
     _name = new char[_name_size + 1];
-    memcpy(_name, name.data(), _name_size);
+    memcpy(static_cast<void*>(_name), name.data(), _name_size);
     _name[_name_size] = '\0';
     _is_registered = true;
 }

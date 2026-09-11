@@ -83,10 +83,11 @@ nhash_table<TableTraits, Hash, Allocator>::nhash_table(const nhash_table& other)
     {
         _buckets = Allocator().allocate(_capacity);
         if constexpr (std::is_trivially_copyable_v<value_type>)
-            std::memcpy(_buckets, other._buckets, _capacity * sizeof(bucket_type));
+            std::memcpy(static_cast<void*>(_buckets), other._buckets,
+                        _capacity * sizeof(bucket_type));
         else
         {
-            std::memset(_buckets, 0, _capacity * sizeof(bucket_type));
+            std::memset(static_cast<void*>(_buckets), 0, _capacity * sizeof(bucket_type));
             for (uint32_t i = 0; i < _capacity; ++i)
             {
                 if (other._buckets[i].valid)
@@ -170,7 +171,7 @@ void nhash_table<TableTraits, Hash, Allocator>::reserve(uint32_t new_capacity)
     uint32_t old_capacity = _capacity;
     _capacity = new_capacity;
     _buckets = allocator.allocate(_capacity);
-    std::memset(_buckets, 0, _capacity * sizeof(bucket_type));
+    std::memset(static_cast<void*>(_buckets), 0, _capacity * sizeof(bucket_type));
     if (_size > 0)
     {
         _size = 0;
@@ -244,7 +245,7 @@ void nhash_table<TableTraits, Hash, Allocator>::clear()
     if (_size > 0)
     {
         if constexpr (std::is_trivially_copyable_v<value_type>)
-            std::memset(_buckets, 0, _capacity * sizeof(bucket_type));
+            std::memset(static_cast<void*>(_buckets), 0, _capacity * sizeof(bucket_type));
         else
         {
             for (uint32_t i = 0; i < _capacity; ++i)

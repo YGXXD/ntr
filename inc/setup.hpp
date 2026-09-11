@@ -30,7 +30,7 @@
 #    define _ntr_align_free(ptr) std::free((ptr))
 #endif
 
-#if defined(__clang__) && defined(__GNUC__)
+#if defined(__clang__)
 #    define NTR_COMPILER_CLANG
 #elif defined(__GNUC__) || defined(__MINGW32__)
 #    define NTR_COMPILER_GCC
@@ -59,9 +59,7 @@
 #endif
 
 #if defined(NTR_LIB_EXPORT)
-#    if defined(NTR_COMPILER_CLANG)
-#        define NTR_API __attribute__((visibility("default")))
-#    elif defined(NTR_COMPILER_GCC)
+#    if defined(NTR_COMPILER_GCC) || defined(NTR_COMPILER_CLANG)
 #        if defined(_WIN32)
 #            if defined(NTR_BUILDING_LIB)
 #                define NTR_API __attribute__((dllexport))

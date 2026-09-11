@@ -131,7 +131,8 @@ nvector<Value, Allocator>::nvector(const nvector& other)
     if (_size > 0)
     {
         if constexpr (std::is_trivially_copyable_v<value_type>)
-            std::memcpy(_datas, other._datas, _size * sizeof(value_type));
+            std::memcpy(static_cast<void*>(_datas), other._datas,
+                        _size * sizeof(value_type));
         else
             std::uninitialized_copy_n(other._datas, _size, _datas);
     }
@@ -201,7 +202,8 @@ void nvector<Value, Allocator>::reserve(uint32_t new_capacity)
     if (_datas)
     {
         if constexpr (std::is_trivially_copyable_v<value_type>)
-            std::memcpy(new_datas, _datas, _size * sizeof(value_type));
+            std::memcpy(static_cast<void*>(new_datas), _datas,
+                        _size * sizeof(value_type));
         else
         {
             std::uninitialized_move_n(_datas, _size, new_datas);
