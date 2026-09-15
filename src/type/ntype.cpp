@@ -61,32 +61,28 @@ nobject ntype::new_instance() const
 
 nobject ntype::copy_instance(const nwrapper& wrapper) const
 {
-    if (wrapper.type() != this)
-        throw std::invalid_argument(
-            "ntype::copy_instance : wrapper's type is different from this");
+    NTR_ASSERT(wrapper.type() == this,
+               "ntype::copy_instance : wrapper's type is different from this");
     return nobject::copy(wrapper);
 }
 
 nobject ntype::move_instance(const nwrapper& wrapper) const
 {
-    if (wrapper.type() != this)
-        throw std::invalid_argument(
-            "ntype::move_instance : wrapper's type is different from this");
+    NTR_ASSERT(wrapper.type() == this,
+               "ntype::move_instance : wrapper's type is different from this");
     return nobject::move(wrapper);
 }
 
 nobject ntype::ref_instance(const nwrapper& wrapper) const
 {
-    if (wrapper.type() != this)
-        throw std::invalid_argument(
-            "ntype::ref_instance : wrapper's type is different from this");
+    NTR_ASSERT(wrapper.type() == this,
+               "ntype::ref_instance : wrapper's type is different from this");
     return nobject::ref(wrapper);
 }
 
 void ntype::regist(std::string_view name)
 {
-    if (is_registered())
-        throw std::logic_error("ntype::set_name : type is already registered");
+    NTR_ASSERT(!is_registered(), "ntype::set_name : type is already registered");
     _name_size = name.size();
     _name = new char[_name_size + 1];
     memcpy(static_cast<void*>(_name), name.data(), _name_size);

@@ -18,9 +18,8 @@ nproperty::nproperty(const ntype* parent_type, std::string_view name,
     : nfield(parent_type, efield::eproperty, name), _property_type(property_type),
       _getter(std::move(getter)), _setter(std::move(setter))
 {
-    if (parent_type->kind() != ntype::etype::eclass)
-        throw std::invalid_argument(
-            "nproperty::nproperty : parent type is not class type");
+    NTR_ASSERT(parent_type->kind() == ntype::etype::eclass,
+               "nproperty::nproperty : parent type is not class type");
 }
 
 nproperty::~nproperty() = default;

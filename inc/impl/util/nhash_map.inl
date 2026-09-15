@@ -9,8 +9,6 @@
 
 #include "../../util/nhash_map.hpp"
 
-#include <stdexcept>
-
 namespace ntr
 {
 
@@ -42,9 +40,8 @@ NTR_INLINE typename nhash_map<Key, Value, Hash, Allocator>::mapped_type&
 nhash_map<Key, Value, Hash, Allocator>::at(const key_type& key)
 {
     uint32_t position = hash_table_type::find_position(key);
-    if (position == _capacity)
-        throw std::out_of_range(
-            "nhash_map<Key, Value, Hash, Allocator>::at : invalid key");
+    NTR_DASSERT(position != _capacity,
+                "nhash_map<Key, Value, Hash, Allocator>::at : invalid key");
     return _buckets[position].value.second;
 }
 
@@ -53,9 +50,8 @@ NTR_INLINE const typename nhash_map<Key, Value, Hash, Allocator>::mapped_type&
 nhash_map<Key, Value, Hash, Allocator>::at(const key_type& key) const
 {
     uint32_t position = hash_table_type::find_position(key);
-    if (position == _capacity)
-        throw std::out_of_range(
-            "nhash_map<Key, Value, Hash, Allocator>::at : invalid key");
+    NTR_DASSERT(position != _capacity,
+                "nhash_map<Key, Value, Hash, Allocator>::at : invalid key");
     return _buckets[position].value.second;
 }
 

@@ -10,7 +10,6 @@
 #include "../../util/nvector.hpp"
 
 #include <cstring>
-#include <stdexcept>
 #include <algorithm>
 
 namespace ntr
@@ -319,8 +318,7 @@ template <class Value, class Allocator>
 NTR_INLINE typename nvector<Value, Allocator>::value_type&
 nvector<Value, Allocator>::at(uint32_t index)
 {
-    if (index >= _size)
-        throw std::out_of_range("nvector<Value, Allocator>::at : invalid index");
+    NTR_DASSERT(index < _size, "nvector<Value, Allocator>::at : invalid index");
     return _datas[index];
 }
 
@@ -328,8 +326,7 @@ template <class Value, class Allocator>
 NTR_INLINE const typename nvector<Value, Allocator>::value_type&
 nvector<Value, Allocator>::at(uint32_t index) const
 {
-    if (index >= _size)
-        throw std::out_of_range("nvector<Value, Allocator>::at : invalid index");
+    NTR_DASSERT(index < _size, "nvector<Value, Allocator>::at : invalid index");
     return _datas[index];
 }
 

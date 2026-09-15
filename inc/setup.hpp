@@ -58,6 +58,12 @@
 #    define NTR_INLINE __forceinline
 #endif
 
+#if defined(NTR_COMPILER_CLANG) || defined(NTR_COMPILER_GCC)
+#    define NTR_UNLIKELY(condition) __builtin_expect(!!(condition), 0)
+#else
+#    define NTR_UNLIKELY(condition) (condition)
+#endif
+
 #if defined(NTR_LIB_EXPORT)
 #    if defined(NTR_COMPILER_GCC) || defined(NTR_COMPILER_CLANG)
 #        if defined(_WIN32)
@@ -79,3 +85,23 @@
 #else
 #    define NTR_API
 #endif
+
+#include <cstdio>
+#include <exception>
+
+#ifdef NDEBUG
+#    define NTR_DASSERT(...)
+#else
+#    define NTR_DASSERT(condition, message) NTR_ASSERT(condition, message)
+#endif
+
+#define NTR_ASSERT(condition, message)                                               \
+    do                                                                               \
+    {                                                                                \
+        if (NTR_UNLIKELY(!(condition)))                                              \
+        {                                                                            \
+            std::fprintf(stderr, "ntr assertion %s:%d, '%s' failed: %s\n", __FILE__, \
+                         __LINE__, #condition, message);                             \
+            std::terminate();                                                        \
+        }                                                                            \
+    } while (0)
