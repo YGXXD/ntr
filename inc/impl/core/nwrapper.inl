@@ -27,8 +27,7 @@ NTR_INLINE auto&& nwrapper::unwrap() const
         std::conditional_t<std::is_lvalue_reference_v<T> &&
                                !std::is_const_v<std::remove_reference_t<T>>,
                            decay_type&, const decay_type&>>;
-    if (_type != nregistrar::get_type<T>())
-        throw std::runtime_error("nwrapper::unwrap : type mismatch");
+    NTR_DASSERT(_type == nregistrar::get_type<T>(), "nwrapper::unwrap : type mismatch");
     return static_cast<unwrap_type>(*static_cast<decay_type*>(_pdata));
 }
 

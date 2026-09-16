@@ -18,9 +18,8 @@ NTR_INLINE std::unique_ptr<nproperty>
 nfield_factory::make_property(const ntype* parent_type, std::string_view name,
                               T(ClassT::*member))
 {
-    if (parent_type != nregistrar::get_type<ClassT>())
-        throw std::invalid_argument(
-            "nfield_factory::make_property : parent type is not property's class type");
+    NTR_DASSERT(parent_type == nregistrar::get_type<ClassT>(),
+                "nfield_factory::make_property : parent type is not property's class type");
     std::function<nobject(const nwrapper&)> getter =
         [member](const nwrapper& instance) -> nobject
     {
@@ -42,9 +41,8 @@ nfield_factory::make_property(const ntype* parent_type, std::string_view name,
                               const T& (ClassT::*getter_fun)() const,
                               void (ClassT::*setter_fun)(const T&))
 {
-    if (parent_type != nregistrar::get_type<ClassT>())
-        throw std::invalid_argument(
-            "nfield_factory::make_property : parent type is not property's class type");
+    NTR_DASSERT(parent_type == nregistrar::get_type<ClassT>(),
+                "nfield_factory::make_property : parent type is not property's class type");
     std::function<nobject(const nwrapper&)> getter =
         [getter_fun](const nwrapper& instance) -> nobject
     {
@@ -80,9 +78,8 @@ NTR_INLINE std::unique_ptr<nfunction>
 nfield_factory::make_function(const ntype* parent_type, std::string_view name,
                               Ret (ClassT::*fun)(Args...))
 {
-    if (parent_type != nregistrar::get_type<ClassT>())
-        throw std::invalid_argument(
-            "nfield_factory::make_function : parent type is not function's class type");
+    NTR_DASSERT(parent_type == nregistrar::get_type<ClassT>(),
+                "nfield_factory::make_function : parent type is not function's class type");
     std::function<nobject(const nvector<nwrapper>&)> function =
         [fun](const nvector<nwrapper>& arg_arr) -> nobject
     {
@@ -101,9 +98,8 @@ NTR_INLINE std::unique_ptr<nfunction>
 nfield_factory::make_function(const ntype* parent_type, std::string_view name,
                               Ret (ClassT::*fun)(Args...) const)
 {
-    if (parent_type != nregistrar::get_type<ClassT>())
-        throw std::invalid_argument(
-            "nfield_factory::make_function : parent type is not function's class type");
+    NTR_DASSERT(parent_type == nregistrar::get_type<ClassT>(),
+                "nfield_factory::make_function : parent type is not function's class type");
     std::function<nobject(const nvector<nwrapper>&)> function =
         [fun](const nvector<nwrapper>& arg_arr) -> nobject
     {

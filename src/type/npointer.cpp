@@ -14,17 +14,15 @@ namespace ntr
 
 void* npointer::get_value(const nwrapper& pointer)
 {
-    if (!pointer.type()->is_pointer())
-        throw std::invalid_argument(
-            "npointer::get_value : pointer's type is not pointer type");
+    NTR_ASSERT(pointer.type()->is_pointer(),
+               "npointer::get_value : pointer's type is not pointer type");
     return *static_cast<void* const*>(pointer.data());
 }
 
 void npointer::set_value(const nwrapper& pointer, void* value)
 {
-    if (!pointer.type()->is_pointer())
-        throw std::invalid_argument(
-            "npointer::set_value : pointer's type is not pointer type");
+    NTR_ASSERT(pointer.type()->is_pointer(),
+               "npointer::set_value : pointer's type is not pointer type");
     *static_cast<void**>(pointer.data()) = value;
 }
 
@@ -51,8 +49,7 @@ nobject npointer::dereference(const nwrapper& pointer) const
                                                             ptr_value)
                         : nullptr;
     }
-    if (!ptr_value)
-        throw std::invalid_argument("npointer::dereference : pointer deference failed");
+    NTR_ASSERT(ptr_value, "npointer::dereference : pointer deference failed");
     return _dereference_type->ref_instance(nwrapper(_dereference_type, ptr_value));
 }
 

@@ -8,7 +8,6 @@
 #include "type/nnumeric.hpp"
 
 #include <type_traits>
-#include <stdexcept>
 
 namespace ntr
 {
@@ -35,9 +34,8 @@ using f64 = get_numeric_type_t<nnumeric::enumeric::edouble>;
 
 double nnumeric::get_value(const nwrapper& numeric)
 {
-    if (!numeric.type()->is_numeric())
-        throw std::invalid_argument(
-            "nnumeric::get_value : numeric's type is not numeric type");
+    NTR_ASSERT(numeric.type()->is_numeric(),
+               "nnumeric::get_value : numeric's type is not numeric type");
     double value = 0;
     switch (numeric.type()->as_numeric()->numeric_kind())
     {
@@ -92,9 +90,8 @@ double nnumeric::get_value(const nwrapper& numeric)
 
 void nnumeric::set_value(const nwrapper& numeric, double value)
 {
-    if (!numeric.type()->is_numeric())
-        throw std::invalid_argument(
-            "nnumeric::set_value : numeric's type is not numeric type");
+    NTR_ASSERT(numeric.type()->is_numeric(),
+               "nnumeric::set_value : numeric's type is not numeric type");
     switch (numeric.type()->as_numeric()->numeric_kind())
     {
     case enumeric::ebool:

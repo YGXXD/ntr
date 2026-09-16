@@ -14,8 +14,8 @@ namespace ntr
 neitem::neitem(ntype* parent_type, std::string_view name, nenum::enum_integer_type value)
     : nfield(parent_type, efield::eeitem, name), _value(value)
 {
-    if (parent_type->kind() != ntype::etype::eenum)
-        throw std::invalid_argument("neitem::neitem : parent type is not enum type");
+    NTR_ASSERT(parent_type->kind() == ntype::etype::eenum,
+               "neitem::neitem : parent type is not enum type");
 }
 
 neitem::~neitem() = default;

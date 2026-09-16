@@ -20,20 +20,19 @@ nfunction::nfunction(const ntype* parent_type, std::string_view name, bool is_st
       _return_type(return_type), _argument_types(std::move(argument_types)),
       _function(std::move(function))
 {
-    if (parent_type->kind() != ntype::etype::eclass)
-        throw std::invalid_argument(
-            "nfunction::nfunction : parent type is not class type");
+    NTR_ASSERT(parent_type->kind() == ntype::etype::eclass,
+               "nfunction::nfunction : parent type is not class type");
 }
 
 nfunction::~nfunction() = default;
 
 nobject nfunction::call(const nvector<nwrapper>& arg_arr) const
 {
-    if (arg_arr.size() != _argument_types.size())
-        throw std::invalid_argument("nfunction::call : argument size is wrong, need " +
-                                    std::to_string(_argument_types.size()) +
-                                    " arguments, but got " +
-                                    std::to_string(arg_arr.size()));
+    NTR_ASSERT(arg_arr.size() == _argument_types.size(),
+               ("nfunction::call : argument size is wrong, need " +
+                std::to_string(_argument_types.size()) + " arguments, but got " +
+                std::to_string(arg_arr.size()))
+                   .c_str());
     return _function(arg_arr);
 }
 
