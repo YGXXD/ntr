@@ -8,6 +8,8 @@
 #include "core/nregistrar.hpp"
 #include "type/ntype.hpp"
 
+#include <string>
+
 namespace ntr
 {
 
