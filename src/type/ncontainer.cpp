@@ -22,25 +22,20 @@ ncontainer::~ncontainer() = default;
 
 void ncontainer::put(const nwrapper& container, const nwrapper& value) const
 {
-    if (!is_list())
-        throw std::logic_error("nncontainer::put : container's type is not a list type");
-    if (container.type() != this)
-        throw std::invalid_argument(
-            "nncontainer::put : container's type is not this container type");
-    if (value.type() != _value_type)
-        throw std::invalid_argument(
-            "nncontainer::put : value's type is not this value type");
+    NTR_ASSERT(is_list(), "nncontainer::put : container's type is not a list type");
+    NTR_ASSERT(container.type() == this,
+               "nncontainer::put : container's type is not this container type");
+    NTR_ASSERT(value.type() == _value_type,
+               "nncontainer::put : value's type is not this value type");
     _container_ops->put(container.data(), value.data());
 }
 
 void ncontainer::for_each(const nwrapper& container,
                           const std::function<void(nobject&&)>& callback) const
 {
-    if (!is_list())
-        throw std::logic_error("nncontainer::put : container's type is not a list type");
-    if (container.type() != this)
-        throw std::invalid_argument(
-            "nncontainer::for_each : container's type is not this container type");
+    NTR_ASSERT(is_list(), "nncontainer::put : container's type is not a list type");
+    NTR_ASSERT(container.type() == this,
+               "nncontainer::for_each : container's type is not this container type");
     _container_ops->for_each(container.data(),
                              const_cast<std::function<void(nobject&&)>*>(&callback));
 }
@@ -48,16 +43,13 @@ void ncontainer::for_each(const nwrapper& container,
 void ncontainer::put(const nwrapper& container, const nwrapper& key,
                      const nwrapper& value) const
 {
-    if (!is_map())
-        throw std::logic_error("nncontainer::put : container's type is not a map type");
-    if (container.type() != this)
-        throw std::invalid_argument(
-            "nncontainer::put : container's type is not this container type");
-    if (key.type() != _key_type)
-        throw std::invalid_argument("nncontainer::put : key's type is not this key type");
-    if (value.type() != _value_type)
-        throw std::invalid_argument(
-            "nncontainer::put : value's type is not this value type");
+    NTR_ASSERT(is_map(), "nncontainer::put : container's type is not a map type");
+    NTR_ASSERT(container.type() == this,
+               "nncontainer::put : container's type is not this container type");
+    NTR_ASSERT(key.type() == _key_type,
+               "nncontainer::put : key's type is not this key type");
+    NTR_ASSERT(value.type() == _value_type,
+               "nncontainer::put : value's type is not this value type");
     std::pair<void*, void*> pair(key.data(), value.data());
     _container_ops->put(container.data(), &pair);
 }
@@ -65,11 +57,9 @@ void ncontainer::put(const nwrapper& container, const nwrapper& key,
 void ncontainer::for_each(const nwrapper& container,
                           const std::function<void(nobject&&, nobject&&)>& callback) const
 {
-    if (!is_map())
-        throw std::logic_error("nncontainer::put : container's type is not a map type");
-    if (container.type() != this)
-        throw std::invalid_argument(
-            "nncontainer::for_each : container's type is not this container type");
+    NTR_ASSERT(is_map(), "nncontainer::put : container's type is not a map type");
+    NTR_ASSERT(container.type() == this,
+               "nncontainer::for_each : container's type is not this container type");
     _container_ops->for_each(
         container.data(),
         const_cast<std::function<void(nobject&&, nobject&&)>*>(&callback));
@@ -77,17 +67,15 @@ void ncontainer::for_each(const nwrapper& container,
 
 void ncontainer::clear(const nwrapper& container) const
 {
-    if (container.type() != this)
-        throw std::invalid_argument(
-            "nncontainer::clear : container's type is not this container type");
+    NTR_ASSERT(container.type() == this,
+               "nncontainer::clear : container's type is not this container type");
     _container_ops->clear(container.data());
 }
 
 uint32_t ncontainer::size(const nwrapper& container) const
 {
-    if (container.type() != this)
-        throw std::invalid_argument(
-            "nncontainer::size : container's type is not this container type");
+    NTR_ASSERT(container.type() == this,
+               "nncontainer::size : container's type is not this container type");
     return _container_ops->size(container.data());
 }
 

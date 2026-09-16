@@ -7,29 +7,6 @@
 
 #pragma once
 
-#define NTR_SINGLETON_IMPL(...)               \
-    static NTR_INLINE __VA_ARGS__& instance() \
-    {                                         \
-        static __VA_ARGS__ _instance {};      \
-        return _instance;                     \
-    }
-
-#define NTR_DELETE_COPY_MOVE_CONSTRUCTORS(class_name)  \
-    class_name(const class_name&) = delete;            \
-    class_name(class_name&&) = delete;                 \
-    class_name& operator=(const class_name&) = delete; \
-    class_name& operator=(class_name&&) = delete;
-
-#if defined(_WIN32)
-#    define _ntr_align_alloc(size, alignment) \
-        _aligned_malloc(static_cast<size_t>(size), static_cast<size_t>(alignment))
-#    define _ntr_align_free(ptr) _aligned_free((ptr))
-#else
-#    define _ntr_align_alloc(size, alignment) \
-        std::aligned_alloc(static_cast<size_t>(alignment), static_cast<size_t>(size))
-#    define _ntr_align_free(ptr) std::free((ptr))
-#endif
-
 #if defined(__clang__)
 #    define NTR_COMPILER_CLANG
 #elif defined(__GNUC__) || defined(__MINGW32__)
@@ -58,6 +35,14 @@
 #    define NTR_INLINE __forceinline
 #endif
 
+#if defined(NTR_COMPILER_CLANG) || defined(NTR_COMPILER_GCC)
+#    define NTR_IF_UNLIKELY(condition) if (__builtin_expect(!!(condition), 0))
+#elif NTR_CPP_STANDARD >= 202002L
+#    define NTR_IF_UNLIKELY(condition) if (condition) [[unlikely]]
+#else
+#    define NTR_IF_UNLIKELY(condition) if (condition)
+#endif
+
 #if defined(NTR_LIB_EXPORT)
 #    if defined(NTR_COMPILER_GCC) || defined(NTR_COMPILER_CLANG)
 #        if defined(_WIN32)
@@ -79,3 +64,52 @@
 #else
 #    define NTR_API
 #endif
+
+#define NTR_SINGLETON_IMPL(...)               \
+    static NTR_INLINE __VA_ARGS__& instance() \
+    {                                         \
+        static __VA_ARGS__ _instance {};      \
+        return _instance;                     \
+    }
+
+#define NTR_DELETE_COPY_MOVE_CONSTRUCTORS(class_name)  \
+    class_name(const class_name&) = delete;            \
+    class_name(class_name&&) = delete;                 \
+    class_name& operator=(const class_name&) = delete; \
+    class_name& operator=(class_name&&) = delete;
+
+#include <cstdio>
+#include <cstdlib>
+
+#if defined(_WIN32)
+#    if defined(__MINGW32__)
+#        define _ntr_align_alloc(size, alignment) __mingw_aligned_malloc(size, alignment)
+#        define _ntr_align_free(ptr) __mingw_aligned_free((ptr))
+#    else
+#        include <malloc.h>
+#        define _ntr_align_alloc(size, alignment) \
+            _aligned_malloc(static_cast<size_t>(size), static_cast<size_t>(alignment))
+#        define _ntr_align_free(ptr) _aligned_free((ptr))
+#    endif
+#else
+#    define _ntr_align_alloc(size, alignment) \
+        std::aligned_alloc(static_cast<size_t>(alignment), static_cast<size_t>(size))
+#    define _ntr_align_free(ptr) std::free((ptr))
+#endif
+
+#ifdef NDEBUG
+#    define NTR_DASSERT(...)
+#else
+#    define NTR_DASSERT(condition, message) NTR_ASSERT(condition, message)
+#endif
+
+#define NTR_ASSERT(condition, message)                                               \
+    do                                                                               \
+    {                                                                                \
+        NTR_IF_UNLIKELY(!(condition))                                                \
+        {                                                                            \
+            std::fprintf(stderr, "ntr assertion %s:%d, '%s' failed: %s\n", __FILE__, \
+                         __LINE__, #condition, message);                             \
+            std::abort();                                                            \
+        }                                                                            \
+    } while (0)

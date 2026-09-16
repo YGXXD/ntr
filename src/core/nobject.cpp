@@ -8,8 +8,6 @@
 #include "core/nobject.hpp"
 #include "type/ntype.hpp"
 
-#include <stdexcept>
-
 namespace ntr
 {
 
@@ -25,9 +23,8 @@ nobject nobject::new_(const ntype* type)
     object._type = type;
     if (object._type->size() > 0)
     {
-        if (!type->ops()->default_construct)
-            throw std::invalid_argument(
-                "nobject::new_: type does not support default construction");
+        NTR_ASSERT(type->ops()->default_construct,
+                   "nobject::new_: type does not support default construction");
         if (use_sso<sizeof(nobject::_obtain)>(object._type))
         {
             object._handle = object._obtain;
@@ -49,9 +46,8 @@ nobject nobject::copy(const nwrapper& other)
     object._type = other.type();
     if (object._type->size() > 0)
     {
-        if (!other.type()->ops()->copy_construct)
-            throw std::invalid_argument(
-                "nobject::copy: type does not support default construction");
+        NTR_ASSERT(other.type()->ops()->copy_construct,
+                   "nobject::copy: type does not support default construction");
         if (use_sso<sizeof(nobject::_obtain)>(object._type))
         {
             object._handle = object._obtain;
@@ -73,9 +69,8 @@ nobject nobject::move(const nwrapper& other)
     object._type = other.type();
     if (object._type->size() > 0)
     {
-        if (!other.type()->ops()->move_construct)
-            throw std::invalid_argument(
-                "nobject::move: type does not support move construction");
+        NTR_ASSERT(other.type()->ops()->move_construct,
+                   "nobject::move: type does not support move construction");
         if (use_sso<sizeof(nobject::_obtain)>(object._type))
         {
             object._handle = object._obtain;

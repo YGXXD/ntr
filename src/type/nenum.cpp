@@ -13,8 +13,8 @@ namespace ntr
 
 nenum::enum_integer_type nenum::get_value(const nwrapper& enum_)
 {
-    if (!enum_.type()->is_enum())
-        throw std::invalid_argument("nenum::get_value : enum_'s type is not enum type");
+    NTR_ASSERT(enum_.type()->is_enum(),
+               "nenum::get_value : enum_'s type is not enum type");
     switch (enum_.type()->size())
     {
     case 1:
@@ -30,14 +30,14 @@ nenum::enum_integer_type nenum::get_value(const nwrapper& enum_)
         return static_cast<enum_integer_type>(
             *reinterpret_cast<const int64_t*>(enum_.data()));
     default:
-        throw std::runtime_error("nenum::get_value : size mismatch");
+        NTR_ASSERT(false, "nenum::get_value : size mismatch");
     }
 }
 
 void nenum::set_value(const nwrapper& enum_, enum_integer_type value)
 {
-    if (!enum_.type()->is_enum())
-        throw std::invalid_argument("nenum::set_value : enum_'s type is not enum type");
+    NTR_ASSERT(enum_.type()->is_enum(),
+               "nenum::set_value : enum_'s type is not enum type");
     switch (enum_.type()->size())
     {
     case 1:
