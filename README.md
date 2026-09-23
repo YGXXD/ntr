@@ -4,7 +4,7 @@
 
 ✨**如果你喜欢奈芙莲，请献上你宝贵的star**✨
 
-<img align='right' src='img/nephren.png' width="192"></img>
+<img align='right' src='img/nephren.png' width="224"></img>
 
 [![code-size](https://img.shields.io/github/languages/code-size/YGXXD/ntr?style=flat)](https://github.com/YGXXD/ntr/archive/main.zip) [![license](https://img.shields.io/github/license/YGXXD/ntr)](LICENSE) [![tag](https://img.shields.io/github/v/tag/YGXXD/ntr)](https://github.com/YGXXD/ntr/tags)
 
@@ -50,6 +50,8 @@ target_link_libraries(exemple PUBLIC ntr::ntr)
 ```
 
 ### 示例 
+
+**类型注册**
 
 ```c++
 #include <ntr/nephren.hpp>
@@ -104,6 +106,48 @@ int main()
     std::cout << "珂朵莉的身高是: " << height.as<float>() << "cm" << std::endl;
     std::cout << "珂朵莉的体重是: " << weight.as<float>() << "kg" << std::endl;
     std::cout << "珂朵莉的年龄是: " << age.as<int>() << "岁" << std::endl;
+
+    return 0;
+}
+```
+
+**容器反射**
+
+```c++
+#include <ntr/nephren.hpp>
+#include <iostream>
+
+using namespace ntr;
+
+int main()
+{
+    // 获取std::vector<int>和nvector<int>的容器类型
+    const ncontainer* std_vector_type = nephren::get<std::vector<int>>();
+    const ncontainer* ntr_vector_type = nephren::get<nvector<int>>();
+
+    std::vector<int> std_vector = { 1, 2, 3 };
+    nvector<int> ntr_vector = { 4, 5, 6 };
+
+    // 通过反射向容器中添加元素
+    std_vector_type->put(std_vector, 4);
+    ntr_vector_type->put(ntr_vector, 7);
+
+    // 获取容器大小
+    std::cout << "std::vector大小是: " << std_vector_type->size(std_vector) << std::endl;
+    std::cout << "nvector大小是: " << ntr_vector_type->size(ntr_vector) << std::endl;
+
+    // 遍历容器中的元素
+    std_vector_type->for_each(std_vector, [](nobject&& value)
+    { std::cout << value.as<int>() << " "; });
+    std::cout << std::endl;
+
+    ntr_vector_type->for_each(ntr_vector, [](nobject&& value)
+    { std::cout << value.as<int>() << " "; });
+    std::cout << std::endl;
+
+    // 清空容器
+    std_vector_type->clear(std_vector);
+    ntr_vector_type->clear(ntr_vector);
 
     return 0;
 }
